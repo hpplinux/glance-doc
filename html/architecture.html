@@ -52,23 +52,18 @@
             
   <div class="section" id="id1">
 <h1>基本的架构<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>OpenStack Glance是客户端/服务端架构，
-OpenStack Glance has a client-server architecture and provides a user
-REST API through which requests to the server are performed.</p>
-<p>Internal server operations are managed by a Glance Domain Controller
-divided into layers. Each layer implements its own task.</p>
-<p>All the files operations are performed using glance_store library
-which is responsible for interaction with external storage back ends or
-local filesystem, and provides a uniform interface to access.</p>
+<p>OpenStack Glance是客户端/服务端架构，它通过给服务端处理的请求向用户提供REST API。</p>
+<p>内部的服务器操作通过Glance域名控制器（Domain Controller）分层控制。每一层实线它自己的任务。</p>
+<p>所有的文件操作都是使用glace_store库执行的，它负责与外部的后端存储或本地文件系统交互，并且提供统一的访问接口。</p>
 <p>Glance uses an sql-based central database (Glance DB) that is shared
 with all the components in the system.</p>
 <div class="figure align-center" style="width: 100%">
 <img alt="OpenStack Glance Architecture" src="_images/architecture.png" />
 </div>
 <p class="centered">
-<strong>Image 1. OpenStack Glance Architecture</strong></p><p>The Glance architecture consists of several components:</p>
+<strong>Image 1. OpenStack Glance Architecture</strong></p><p>Glance架构包含几个组件：</p>
 <ul class="simple">
-<li><strong>A client</strong> - any application that uses Glance server.</li>
+<li><strong>客户端</strong> - any application that uses Glance server.</li>
 <li><strong>REST API</strong> - exposes Glance functionality via REST.</li>
 <li><strong>Database Abstraction Layer (DAL)</strong> - an application programming interface
 which unifies the communication between Glance and databases.</li>

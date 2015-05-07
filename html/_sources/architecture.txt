@@ -18,16 +18,11 @@
 基本的架构
 ========
 
-OpenStack Glance是客户端/服务端架构，
-OpenStack Glance has a client-server architecture and provides a user
-REST API through which requests to the server are performed.
+OpenStack Glance是客户端/服务端架构，它通过给服务端处理的请求向用户提供REST API。
 
-Internal server operations are managed by a Glance Domain Controller
-divided into layers. Each layer implements its own task.
+内部的服务器操作通过Glance域名控制器（Domain Controller）分层控制。每一层实线它自己的任务。
 
-All the files operations are performed using glance_store library
-which is responsible for interaction with external storage back ends or
-local filesystem, and provides a uniform interface to access.
+所有的文件操作都是使用glace_store库执行的，它负责与外部的后端存储或本地文件系统交互，并且提供统一的访问接口。
 
 Glance uses an sql-based central database (Glance DB) that is shared
 with all the components in the system.
@@ -39,9 +34,9 @@ with all the components in the system.
 
 .. centered:: Image 1. OpenStack Glance Architecture
 
-The Glance architecture consists of several components:
+Glance架构包含几个组件：
 
-* **A client** - any application that uses Glance server.
+* **客户端** - any application that uses Glance server.
 
 * **REST API** - exposes Glance functionality via REST.
 
