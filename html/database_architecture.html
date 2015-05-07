@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Glance database architecture &mdash; Glance 2015.1.1.dev9 documentation</title>
+    <title>Glance数据库架构 &mdash; Glance 2015.1.1.dev9 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
     <link rel="next" title="Image Identifiers" href="identifiers.html" />
-    <link rel="prev" title="Basic architecture" href="architecture.html" /> 
+    <link rel="prev" title="基本架构" href="architecture.html" /> 
   </head>
   <body role="document">
   <div id="header">
@@ -50,15 +50,15 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="glance-database-architecture">
-<h1>Glance database architecture<a class="headerlink" href="#glance-database-architecture" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="glance-database-public-api">
-<h2>Glance Database Public API<a class="headerlink" href="#glance-database-public-api" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="glance">
+<h1>Glance数据库架构<a class="headerlink" href="#glance" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="glanceapi">
+<h2>Glance数据库公共API<a class="headerlink" href="#glanceapi" title="Permalink to this headline">¶</a></h2>
 <p>Glance DB API contains several methods to process information from
 and to a persistent storage. Below you can find a list of public
 methods grouped by categories.</p>
-<div class="section" id="common-parameters-for-image-methods">
-<h3>Common parameters for image methods<a class="headerlink" href="#common-parameters-for-image-methods" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>镜像方法通用参数<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>The following parameters can be applied to all the below image methods:</dt>
 <dd><ul class="first last simple">
@@ -72,9 +72,9 @@ of the image.</li>
 </dd>
 </dl>
 </div>
-<div class="section" id="image-basic-methods">
-<h3>Image basic methods<a class="headerlink" href="#image-basic-methods" title="Permalink to this headline">¶</a></h3>
-<p><strong>Image processing methods:</strong></p>
+<div class="section" id="id2">
+<h3>镜像基本方法<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p><strong>镜像处理方法：</strong></p>
 <ol class="arabic simple">
 <li><code class="docutils literal"><span class="pre">image_create(context,</span> <span class="pre">values)</span></code> - creates a new image record
 with parameters listed in the <em>values</em> dictionary. Returns a
@@ -141,9 +141,9 @@ query performance and prevent using separated calls.</li>
 </dl>
 </div></blockquote>
 </div>
-<div class="section" id="image-location-methods">
-<h3>Image location methods<a class="headerlink" href="#image-location-methods" title="Permalink to this headline">¶</a></h3>
-<p><strong>Image location processing methods:</strong></p>
+<div class="section" id="id3">
+<h3>镜像位置方法<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p><strong>镜像位置处理方法：</strong></p>
 <ol class="arabic simple">
 <li><code class="docutils literal"><span class="pre">image_location_add(context,</span> <span class="pre">image_id,</span> <span class="pre">location)</span></code> -
 adds a new location to an image with an identifier image_id. This
@@ -158,15 +158,17 @@ the dictionary <em>location</em>.</li>
 <em>location_id</em> for an image with an identifier <em>image_id</em>.</li>
 </ol>
 </div>
-<div class="section" id="image-property-methods">
-<h3>Image property methods<a class="headerlink" href="#image-property-methods" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>镜像属性方法<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">There is no public property update method.
-So if you want to modify it, you have to delete it first
-and then create a new one.</p>
+<p class="last">There is no public property update method.</p>
 </div>
-<p><strong>Image property processing methods:</strong></p>
+<dl class="docutils">
+<dt>So if you want to modify it, you have to delete it first</dt>
+<dd>and then create a new one.</dd>
+</dl>
+<p><strong>镜像属性处理方法：</strong></p>
 <ol class="arabic simple">
 <li><code class="docutils literal"><span class="pre">image_property_create(context,</span> <span class="pre">values)</span></code> - creates
 a property record with parameters listed in the <em>values</em> dictionary
@@ -177,9 +179,9 @@ existing property record with a name <em>prop_ref</em> for an image with
 an identifier <em>image_ref</em>.</li>
 </ol>
 </div>
-<div class="section" id="image-member-methods">
-<h3>Image member methods<a class="headerlink" href="#image-member-methods" title="Permalink to this headline">¶</a></h3>
-<p><strong>Methods to handle image memberships:</strong></p>
+<div class="section" id="id5">
+<h3>镜像成员方法<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p><strong>处理镜像成员关系方法：</strong></p>
 <ol class="arabic simple">
 <li><code class="docutils literal"><span class="pre">image_member_create(context,</span> <span class="pre">values)</span></code> - creates a member record
 with properties listed in the <em>values</em> dictionary for an image
@@ -199,9 +201,9 @@ identifier (<em>image_id</em>), member name (<em>member</em>), and member status
 members for an image with <em>image_id</em>.</li>
 </ol>
 </div>
-<div class="section" id="image-tag-methods">
-<h3>Image tag methods<a class="headerlink" href="#image-tag-methods" title="Permalink to this headline">¶</a></h3>
-<p><strong>Methods to process images tags:</strong></p>
+<div class="section" id="tag">
+<h3>镜像标签（Tag）方法<a class="headerlink" href="#tag" title="Permalink to this headline">¶</a></h3>
+<p><strong>处理镜像标签方法：</strong></p>
 <ol class="arabic simple">
 <li><code class="docutils literal"><span class="pre">image_tag_set_all(context,</span> <span class="pre">image_id,</span> <span class="pre">tags)</span></code> - changes all the
 existing tags for an image with <em>image_id</em> to the tags listed
@@ -216,8 +218,8 @@ from tags for an image with <em>image_id</em>.</li>
 for a specific image.</li>
 </ol>
 </div>
-<div class="section" id="image-info-methods">
-<h3>Image info methods<a class="headerlink" href="#image-info-methods" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>镜像信息方法<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>The next two methods inform a user about his ability to modify
 and view an image. <em>image</em> param here is a dictionary representation
 of an <em>Image</em> object.</p>
@@ -230,10 +232,30 @@ the possibility to observe the image details with a given context
 and optionally with a status. Returns True if the image is visible
 in this context.</li>
 </ol>
-<p><strong>Glance database schema</strong></p>
-<div class="figure align-center" style="width: 100%">
-<img alt="Glance images DB schema" src="_images/glance_db.png" />
+<p><strong>Glance数据库Schema</strong></p>
+<div class="figure">
+<img alt="_images/glance_db.png" src="_images/glance_db.png" />
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">figwidth:</th><td class="field-body"><p class="first">100%
+:align: center</p>
+<blockquote class="last">
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">alt:</th><td class="field-body">Glance images DB schema</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 <p class="centered">
 <strong>Image 1. Glance images DB schema</strong></p></div>
 </div>
@@ -247,15 +269,15 @@ in this context.</li>
     <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference internal" href="#">Glance database architecture</a><ul>
-<li><a class="reference internal" href="#glance-database-public-api">Glance Database Public API</a><ul>
-<li><a class="reference internal" href="#common-parameters-for-image-methods">Common parameters for image methods</a></li>
-<li><a class="reference internal" href="#image-basic-methods">Image basic methods</a></li>
-<li><a class="reference internal" href="#image-location-methods">Image location methods</a></li>
-<li><a class="reference internal" href="#image-property-methods">Image property methods</a></li>
-<li><a class="reference internal" href="#image-member-methods">Image member methods</a></li>
-<li><a class="reference internal" href="#image-tag-methods">Image tag methods</a></li>
-<li><a class="reference internal" href="#image-info-methods">Image info methods</a></li>
+<li><a class="reference internal" href="#">Glance数据库架构</a><ul>
+<li><a class="reference internal" href="#glanceapi">Glance数据库公共API</a><ul>
+<li><a class="reference internal" href="#id1">镜像方法通用参数</a></li>
+<li><a class="reference internal" href="#id2">镜像基本方法</a></li>
+<li><a class="reference internal" href="#id3">镜像位置方法</a></li>
+<li><a class="reference internal" href="#id4">镜像属性方法</a></li>
+<li><a class="reference internal" href="#id5">镜像成员方法</a></li>
+<li><a class="reference internal" href="#tag">镜像标签（Tag）方法</a></li>
+<li><a class="reference internal" href="#id6">镜像信息方法</a></li>
 </ul>
 </li>
 </ul>
@@ -264,7 +286,7 @@ in this context.</li>
 
             <h4>Previous topic</h4>
             <p class="topless"><a href="architecture.html"
-                                  title="previous chapter">Basic architecture</a></p>
+                                  title="previous chapter">基本架构</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="identifiers.html"
                                   title="next chapter">Image Identifiers</a></p>
@@ -298,7 +320,7 @@ in this context.</li>
           <a href="identifiers.html" title="Image Identifiers"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="architecture.html" title="Basic architecture"
+          <a href="architecture.html" title="基本架构"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
       </ul>

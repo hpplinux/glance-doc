@@ -14,19 +14,19 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-============================
-Glance database architecture
-============================
+==============
+Glance数据库架构
+==============
 
-Glance Database Public API
+Glance数据库公共API
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Glance DB API contains several methods to process information from
 and to a persistent storage. Below you can find a list of public
 methods grouped by categories.
 
-Common parameters for image methods
------------------------------------
+镜像方法通用参数
+-------------
 
 The following parameters can be applied to all the below image methods:
  - ``context`` corresponds to a value with glance.context.RequestContext
@@ -36,10 +36,10 @@ The following parameters can be applied to all the below image methods:
  - ``memb_id`` — a string corresponding to the member identifier
    of the image.
 
-Image basic methods
--------------------
+镜像基本方法
+----------
 
-**Image processing methods:**
+**镜像处理方法：**
 
 #. ``image_create(context, values)`` - creates a new image record
    with parameters listed in the *values* dictionary. Returns a
@@ -92,10 +92,10 @@ Image basic methods
        includes its relevant tag entries. This can improve upper-layer
        query performance and prevent using separated calls.
 
-Image location methods
-----------------------
+镜像位置方法
+----------
 
-**Image location processing methods:**
+**镜像位置处理方法：**
 
 #. ``image_location_add(context, image_id, location)`` -
    adds a new location to an image with an identifier image_id. This
@@ -109,14 +109,14 @@ Image location methods
    *status* to an existing location record with an identifier
    *location_id* for an image with an identifier *image_id*.
 
-Image property methods
-----------------------
+镜像属性方法
+----------
 
 .. warning:: There is no public property update method.
-   So if you want to modify it, you have to delete it first
+So if you want to modify it, you have to delete it first
    and then create a new one.
 
-**Image property processing methods:**
+**镜像属性处理方法：**
 
 #. ``image_property_create(context, values)`` - creates
    a property record with parameters listed in the *values* dictionary
@@ -126,10 +126,10 @@ Image property methods
    existing property record with a name *prop_ref* for an image with
    an identifier *image_ref*.
 
-Image member methods
---------------------
+镜像成员方法
+----------
 
-**Methods to handle image memberships:**
+**处理镜像成员关系方法：**
 
 #. ``image_member_create(context, values)`` - creates a member record
    with properties listed in the *values* dictionary for an image
@@ -148,10 +148,10 @@ Image member methods
 #. ``image_member_count(context, image_id)`` - returns a number of image
    members for an image with *image_id*.
 
-Image tag methods
------------------
+镜像标签（Tag）方法
+----------------
 
-**Methods to process images tags:**
+**处理镜像标签方法：**
 
 #. ``image_tag_set_all(context, image_id, tags)`` - changes all the
    existing tags for an image with *image_id* to the tags listed
@@ -165,8 +165,8 @@ Image tag methods
 #. ``image_tag_get_all(context, image_id)`` - returns a list of tags
    for a specific image.
 
-Image info methods
-------------------
+镜像信息方法
+----------
 
 The next two methods inform a user about his ability to modify
 and view an image. *image* param here is a dictionary representation
@@ -180,11 +180,11 @@ of an *Image* object.
    and optionally with a status. Returns True if the image is visible
    in this context.
 
-**Glance database schema**
+**Glance数据库Schema**
 
 .. figure:: /images/glance_db.png
-   :figwidth: 100%
+:figwidth: 100%
    :align: center
-   :alt: Glance images DB schema
+       :alt: Glance images DB schema
 
 .. centered:: Image 1. Glance images DB schema
