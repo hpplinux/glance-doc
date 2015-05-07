@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Database Management &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
+    <link rel="next" title="The Glance Image Cache" href="cache.html" />
+    <link rel="prev" title="Controlling Glance Servers" href="controllingservers.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="database-management">
+<h1>Database Management<a class="headerlink" href="#database-management" title="Permalink to this headline">¶</a></h1>
+<p>The default metadata driver for glance uses sqlalchemy, which implies there
+exists a backend database which must be managed. The <code class="docutils literal"><span class="pre">glance-manage</span></code> binary
+provides a set of commands for making this easier.</p>
+<p>The commands should be executed as a subcommand of &#8216;db&#8217;:</p>
+<blockquote>
+<div>glance-manage db &lt;cmd&gt; &lt;args&gt;</div></blockquote>
+<div class="section" id="sync-the-database">
+<h2>Sync the Database<a class="headerlink" href="#sync-the-database" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>glance-manage db sync &lt;version&gt; &lt;current_version&gt;</div></blockquote>
+<p>Place a database under migration control and upgrade, creating it first if necessary.</p>
+</div>
+<div class="section" id="determining-the-database-version">
+<h2>Determining the Database Version<a class="headerlink" href="#determining-the-database-version" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>glance-manage db version</div></blockquote>
+<p>This will print the current migration level of a glance database.</p>
+</div>
+<div class="section" id="upgrading-an-existing-database">
+<h2>Upgrading an Existing Database<a class="headerlink" href="#upgrading-an-existing-database" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>glance-manage db upgrade &lt;VERSION&gt;</div></blockquote>
+<p>This will take an existing database and upgrade it to the specified VERSION.</p>
+</div>
+<div class="section" id="downgrading-an-existing-database">
+<h2>Downgrading an Existing Database<a class="headerlink" href="#downgrading-an-existing-database" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>glance-manage db downgrade &lt;VERSION&gt;</div></blockquote>
+<p>This will downgrade an existing database from the current version to the
+specified VERSION.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">Database Management</a><ul>
+<li><a class="reference internal" href="#sync-the-database">Sync the Database</a></li>
+<li><a class="reference internal" href="#determining-the-database-version">Determining the Database Version</a></li>
+<li><a class="reference internal" href="#upgrading-an-existing-database">Upgrading an Existing Database</a></li>
+<li><a class="reference internal" href="#downgrading-an-existing-database">Downgrading an Existing Database</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="controllingservers.html"
+                                  title="previous chapter">Controlling Glance Servers</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="cache.html"
+                                  title="next chapter">The Glance Image Cache</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/db.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="cache.html" title="The Glance Image Cache"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="controllingservers.html" title="Controlling Glance Servers"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

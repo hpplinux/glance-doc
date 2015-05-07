@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Authentication With Keystone &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
+    <link rel="next" title="Policies" href="policies.html" />
+    <link rel="prev" title="Basic Configuration" href="configuring.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="authentication-with-keystone">
+<h1>Authentication With Keystone<a class="headerlink" href="#authentication-with-keystone" title="Permalink to this headline">¶</a></h1>
+<p>Glance may optionally be integrated with Keystone.  Setting this up is
+relatively straightforward, as the Keystone distribution includes the
+necessary middleware. Once you have installed Keystone
+and edited your configuration files, newly created images will have
+their <cite>owner</cite> attribute set to the tenant of the authenticated users,
+and the <cite>is_public</cite> attribute will cause access to those images for
+which it is <cite>false</cite> to be restricted to only the owner, users with
+admin context, or tenants/users with whom the image has been shared.</p>
+<div class="section" id="configuring-the-glance-servers-to-use-keystone">
+<h2>Configuring the Glance servers to use Keystone<a class="headerlink" href="#configuring-the-glance-servers-to-use-keystone" title="Permalink to this headline">¶</a></h2>
+<p>Keystone is integrated with Glance through the use of middleware. The
+default configuration files for both the Glance API and the Glance
+Registry use a single piece of middleware called <code class="docutils literal"><span class="pre">unauthenticated-context</span></code>,
+which generates a request context containing blank authentication
+information. In order to configure Glance to use Keystone, the
+<code class="docutils literal"><span class="pre">authtoken</span></code> and <code class="docutils literal"><span class="pre">context</span></code> middlewares must be deployed in place of the
+<code class="docutils literal"><span class="pre">unauthenticated-context</span></code> middleware. The <code class="docutils literal"><span class="pre">authtoken</span></code> middleware performs
+the authentication token validation and retrieves actual user authentication
+information. It can be found in the Keystone distribution.</p>
+</div>
+<div class="section" id="configuring-glance-api-to-use-keystone">
+<h2>Configuring Glance API to use Keystone<a class="headerlink" href="#configuring-glance-api-to-use-keystone" title="Permalink to this headline">¶</a></h2>
+<p>Configuring Glance API to use Keystone is relatively straight
+forward.  The first step is to ensure that declarations for the two
+pieces of middleware exist in the <code class="docutils literal"><span class="pre">glance-api-paste.ini</span></code>.  Here is
+an example for <code class="docutils literal"><span class="pre">authtoken</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>[filter:authtoken]
+paste.filter_factory = keystonemiddleware.auth_token:filter_factory
+identity_uri = http://127.0.0.1:35357
+admin_user = glance_admin
+admin_tenant_name = service_admins
+admin_password = password1234
+</pre></div>
+</div>
+<p>The actual values for these variables will need to be set depending on
+your situation.  For more information, please refer to the Keystone
+documentation on the <code class="docutils literal"><span class="pre">auth_token</span></code> middleware, but in short:</p>
+<ul class="simple">
+<li>The <code class="docutils literal"><span class="pre">identity_uri</span></code> variable points to the Keystone Admin service.
+This information is used by the middleware to actually query Keystone about
+the validity of the authentication tokens.</li>
+<li>The admin auth credentials (<code class="docutils literal"><span class="pre">admin_user</span></code>, <code class="docutils literal"><span class="pre">admin_tenant_name</span></code>,
+<code class="docutils literal"><span class="pre">admin_password</span></code>) will be used to retrieve an admin token. That
+token will be used to authorize user tokens behind the scenes.</li>
+</ul>
+<p>Finally, to actually enable using Keystone authentication, the
+application pipeline must be modified.  By default, it looks like:</p>
+<div class="highlight-python"><div class="highlight"><pre>[pipeline:glance-api]
+pipeline = versionnegotiation unauthenticated-context apiv1app
+</pre></div>
+</div>
+<p>Your particular pipeline may vary depending on other options, such as
+the image cache. This must be changed by replacing <code class="docutils literal"><span class="pre">unauthenticated-context</span></code>
+with <code class="docutils literal"><span class="pre">authtoken</span></code> and <code class="docutils literal"><span class="pre">context</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>[pipeline:glance-api]
+pipeline = versionnegotiation authtoken context apiv1app
+</pre></div>
+</div>
+</div>
+<div class="section" id="configuring-glance-registry-to-use-keystone">
+<h2>Configuring Glance Registry to use Keystone<a class="headerlink" href="#configuring-glance-registry-to-use-keystone" title="Permalink to this headline">¶</a></h2>
+<p>Configuring Glance Registry to use Keystone is also relatively
+straight forward.  The same middleware needs to be added
+to <code class="docutils literal"><span class="pre">glance-registry-paste.ini</span></code> as was needed by Glance API;
+see above for an example of the <code class="docutils literal"><span class="pre">authtoken</span></code> configuration.</p>
+<p>Again, to enable using Keystone authentication, the appropriate
+application pipeline must be selected.  By default, it looks like:</p>
+<div class="highlight-python"><div class="highlight"><pre>[pipeline:glance-registry-keystone]
+pipeline = authtoken context registryapp
+</pre></div>
+</div>
+<p>To enable the above application pipeline, in your main <code class="docutils literal"><span class="pre">glance-registry.conf</span></code>
+configuration file, select the appropriate deployment flavor by adding a
+<code class="docutils literal"><span class="pre">flavor</span></code> attribute in the <code class="docutils literal"><span class="pre">paste_deploy</span></code> group:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">paste_deploy</span><span class="p">]</span>
+<span class="n">flavor</span> <span class="o">=</span> <span class="n">keystone</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If your authentication service uses a role other than <code class="docutils literal"><span class="pre">admin</span></code> to identify
+which users should be granted admin-level privileges, you must define it
+in the <code class="docutils literal"><span class="pre">admin_role</span></code> config attribute in both <code class="docutils literal"><span class="pre">glance-registry.conf</span></code> and
+<code class="docutils literal"><span class="pre">glance-api.conf</span></code>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">Authentication With Keystone</a><ul>
+<li><a class="reference internal" href="#configuring-the-glance-servers-to-use-keystone">Configuring the Glance servers to use Keystone</a></li>
+<li><a class="reference internal" href="#configuring-glance-api-to-use-keystone">Configuring Glance API to use Keystone</a></li>
+<li><a class="reference internal" href="#configuring-glance-registry-to-use-keystone">Configuring Glance Registry to use Keystone</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="configuring.html"
+                                  title="previous chapter">Basic Configuration</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="policies.html"
+                                  title="next chapter">Policies</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/authentication.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="policies.html" title="Policies"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="configuring.html" title="Basic Configuration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

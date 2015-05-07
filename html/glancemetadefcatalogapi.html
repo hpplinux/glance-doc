@@ -1,0 +1,678 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using Glance’s Metadata Definitions Catalog Public APIs &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
+    <link rel="prev" title="Using Glance’s Client Tools" href="glanceclient.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="using-glance-s-metadata-definitions-catalog-public-apis">
+<h1>Using Glance&#8217;s Metadata Definitions Catalog Public APIs<a class="headerlink" href="#using-glance-s-metadata-definitions-catalog-public-apis" title="Permalink to this headline">¶</a></h1>
+<p>A common API hosted by the Glance service for vendors, admins, services, and
+users to meaningfully define available key / value pair and tag metadata.
+The intent is to enable better metadata collaboration across artifacts,
+services, and projects for OpenStack users.</p>
+<p>This is about the definition of the available metadata that can be used on
+different types of resources (images, artifacts, volumes, flavors, aggregates,
+etc). A definition includes the properties type, its key, it&#8217;s description,
+and it&#8217;s constraints. This catalog will not store the values for specific
+instance properties.</p>
+<p>For example, a definition of a virtual CPU topology property for number of
+cores will include the key to use, a description, and value constraints like
+requiring it to be an integer. So, a user, potentially through Horizon, would
+be able to search this catalog to list the available properties they can add to
+a flavor or image. They will see the virtual CPU topology property in the list
+and know that it must be an integer. In the Horizon example, when the user adds
+the property, its key and value will be stored in the service that owns that
+resource (Nova for flavors and in Glance for images).</p>
+<p>Diagram: <a class="reference external" href="https://wiki.openstack.org/w/images/b/bb/Glance-Metadata-API.png">https://wiki.openstack.org/w/images/b/bb/Glance-Metadata-API.png</a></p>
+<p>Glance Metadata Definitions Catalog implementation started with API version v2.</p>
+<div class="section" id="authentication">
+<h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
+<p>Glance depends on Keystone and the OpenStack Identity API to handle
+authentication of clients. You must obtain an authentication token from
+Keystone send it along with all API requests to Glance through the
+<code class="docutils literal"><span class="pre">X-Auth-Token</span></code> header. Glance will communicate back to Keystone to verify
+the token validity and obtain your identity credentials.</p>
+<p>See <a class="reference internal" href="authentication.html"><em>Authentication With Keystone</em></a> for more information on integrating with Keystone.</p>
+</div>
+<div class="section" id="using-v2-x">
+<h2>Using v2.X<a class="headerlink" href="#using-v2-x" title="Permalink to this headline">¶</a></h2>
+<p>For the purpose of examples, assume there is a Glance API server running
+at the URL <code class="docutils literal"><span class="pre">http://glance.example.com</span></code> on the default port 80.</p>
+<div class="section" id="list-available-namespaces">
+<h3>List Available Namespaces<a class="headerlink" href="#list-available-namespaces" title="Permalink to this headline">¶</a></h3>
+<p>We want to see a list of available namespaces that the authenticated user
+has access to. This includes namespaces owned by the user,
+namespaces shared with the user and public namespaces.</p>
+<p>We issue a <code class="docutils literal"><span class="pre">GET</span></code> request to <code class="docutils literal"><span class="pre">http://glance.example.com/v2/metadefs/namespaces</span></code>
+to retrieve this list of available namespaces.
+The data is returned as a JSON-encoded mapping in the following format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;namespaces&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+          <span class="s">&quot;namespace&quot;</span><span class="p">:</span> <span class="s">&quot;MyNamespace&quot;</span><span class="p">,</span>
+          <span class="s">&quot;display_name&quot;</span><span class="p">:</span> <span class="s">&quot;My User Friendly Namespace&quot;</span><span class="p">,</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;My description&quot;</span><span class="p">,</span>
+          <span class="s">&quot;visibility&quot;</span><span class="p">:</span> <span class="s">&quot;public&quot;</span><span class="p">,</span>
+          <span class="s">&quot;protected&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+          <span class="s">&quot;owner&quot;</span><span class="p">:</span> <span class="s">&quot;The Test Owner&quot;</span><span class="p">,</span>
+          <span class="s">&quot;self&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/metadefs/namespaces/MyNamespace&quot;</span><span class="p">,</span>
+          <span class="s">&quot;schema&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/schemas/metadefs/namespace&quot;</span><span class="p">,</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;resource_type_associations&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="p">{</span>
+                  <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;OS::Nova::Aggregate&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span>
+              <span class="p">},</span>
+              <span class="p">{</span>
+                  <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;OS::Nova::Flavor&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;prefix&quot;</span><span class="p">:</span> <span class="s">&quot;aggregate_instance_extra_specs:&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span>
+              <span class="p">}</span>
+          <span class="p">]</span>
+      <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s">&quot;first&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/metadefs/namespaces?sort_key=created_at&amp;sort_dir=asc&quot;</span><span class="p">,</span>
+  <span class="s">&quot;schema&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/schemas/metadefs/namespaces&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Listing namespaces will only show the summary of each namespace including
+counts and resource type associations. Detailed response including all its
+objects definitions, property definitions etc. will only be available on
+each individual GET namespace request.</p>
+</div>
+</div>
+<div class="section" id="filtering-namespaces-lists">
+<h3>Filtering Namespaces Lists<a class="headerlink" href="#filtering-namespaces-lists" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/v2/metadefs/namespaces</span></code> requests take query parameters that serve to
+filter the returned list of namespaces. The following
+list details these query parameters.</p>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">resource_types=RESOURCE_TYPES</span></code></p>
+<p>Filters namespaces having a <code class="docutils literal"><span class="pre">resource_types</span></code> within the list of
+comma separated <code class="docutils literal"><span class="pre">RESOURCE_TYPES</span></code>.</p>
+</li>
+</ul>
+<p>GET resource also accepts additional query parameters:</p>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">sort_key=KEY</span></code></p>
+<p>Results will be ordered by the specified sort attribute <code class="docutils literal"><span class="pre">KEY</span></code>. Accepted
+values include <code class="docutils literal"><span class="pre">namespace</span></code>, <code class="docutils literal"><span class="pre">created_at</span></code> (default) and <code class="docutils literal"><span class="pre">updated_at</span></code>.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">sort_dir=DIR</span></code></p>
+<p>Results will be sorted in the direction <code class="docutils literal"><span class="pre">DIR</span></code>. Accepted values are <code class="docutils literal"><span class="pre">asc</span></code>
+for ascending or <code class="docutils literal"><span class="pre">desc</span></code> (default) for descending.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">marker=NAMESPACE</span></code></p>
+<p>A namespace identifier marker may be specified. When present only
+namespaces which occur after the identifier <code class="docutils literal"><span class="pre">NAMESPACE</span></code> will be listed,
+i.e. the namespaces which have a <cite>sort_key</cite> later than that of the marker
+<code class="docutils literal"><span class="pre">NAMESPACE</span></code> in the <cite>sort_dir</cite> direction.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">limit=LIMIT</span></code></p>
+<p>When present the maximum number of results returned will not exceed <code class="docutils literal"><span class="pre">LIMIT</span></code>.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the specified <code class="docutils literal"><span class="pre">LIMIT</span></code> exceeds the operator defined limit (api_limit_max)
+then the number of results returned may be less than <code class="docutils literal"><span class="pre">LIMIT</span></code>.</p>
+</div>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">visibility=PUBLIC</span></code></p>
+<p>An admin user may use the <cite>visibility</cite> parameter to control which results are
+returned (PRIVATE or PUBLIC).</p>
+</li>
+</ul>
+</div>
+<div class="section" id="retrieve-namespace">
+<h3>Retrieve Namespace<a class="headerlink" href="#retrieve-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to see a more detailed information about a namespace that the
+authenticated user has access to. The detail includes the properties, objects,
+and resource type associations.</p>
+<p>We issue a <code class="docutils literal"><span class="pre">GET</span></code> request to <code class="docutils literal"><span class="pre">http://glance.example.com/v2/metadefs/namespaces/{namespace}</span></code>
+to retrieve the namespace details.
+The data is returned as a JSON-encoded mapping in the following format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;namespace&quot;</span><span class="p">:</span> <span class="s">&quot;MyNamespace&quot;</span><span class="p">,</span>
+  <span class="s">&quot;display_name&quot;</span><span class="p">:</span> <span class="s">&quot;My User Friendly Namespace&quot;</span><span class="p">,</span>
+  <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;My description&quot;</span><span class="p">,</span>
+  <span class="s">&quot;visibility&quot;</span><span class="p">:</span> <span class="s">&quot;public&quot;</span><span class="p">,</span>
+  <span class="s">&quot;protected&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+  <span class="s">&quot;owner&quot;</span><span class="p">:</span> <span class="s">&quot;The Test Owner&quot;</span><span class="p">,</span>
+  <span class="s">&quot;schema&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/schemas/metadefs/namespace&quot;</span><span class="p">,</span>
+  <span class="s">&quot;resource_type_associations&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;OS::Glance::Image&quot;</span><span class="p">,</span>
+          <span class="s">&quot;prefix&quot;</span><span class="p">:</span> <span class="s">&quot;hw_&quot;</span><span class="p">,</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;OS::Cinder::Volume&quot;</span><span class="p">,</span>
+          <span class="s">&quot;prefix&quot;</span><span class="p">:</span> <span class="s">&quot;hw_&quot;</span><span class="p">,</span>
+          <span class="s">&quot;properties_target&quot;</span><span class="p">:</span> <span class="s">&quot;image&quot;</span><span class="p">,</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;OS::Nova::Flavor&quot;</span><span class="p">,</span>
+          <span class="s">&quot;prefix&quot;</span><span class="p">:</span> <span class="s">&quot;filter1:&quot;</span><span class="p">,</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span>
+      <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;nsprop1&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="s">&quot;My namespace property1&quot;</span><span class="p">,</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;More info here&quot;</span><span class="p">,</span>
+          <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;boolean&quot;</span><span class="p">,</span>
+          <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="n">true</span>
+      <span class="p">},</span>
+      <span class="s">&quot;nsprop2&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="s">&quot;My namespace property2&quot;</span><span class="p">,</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;More info here&quot;</span><span class="p">,</span>
+          <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;string&quot;</span><span class="p">,</span>
+          <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="s">&quot;value1&quot;</span>
+      <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="s">&quot;objects&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;object1&quot;</span><span class="p">,</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;my-description&quot;</span><span class="p">,</span>
+          <span class="s">&quot;self&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/metadefs/namespaces/MyNamespace/objects/object1&quot;</span><span class="p">,</span>
+          <span class="s">&quot;schema&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/schemas/metadefs/object&quot;</span><span class="p">,</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;required&quot;</span><span class="p">:</span> <span class="p">[],</span>
+          <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s">&quot;prop1&quot;</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="s">&quot;My object1 property1&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;More info here&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;array&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+                      <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;string&quot;</span>
+                  <span class="p">}</span>
+              <span class="p">}</span>
+          <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;object2&quot;</span><span class="p">,</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;my-description&quot;</span><span class="p">,</span>
+          <span class="s">&quot;self&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/metadefs/namespaces/MyNamespace/objects/object2&quot;</span><span class="p">,</span>
+          <span class="s">&quot;schema&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/schemas/metadefs/object&quot;</span><span class="p">,</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s">&quot;prop1&quot;</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="s">&quot;My object2 property1&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;More info here&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;integer&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="mi">20</span>
+              <span class="p">}</span>
+          <span class="p">}</span>
+      <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retrieve-available-resource-types">
+<h3>Retrieve available Resource Types<a class="headerlink" href="#retrieve-available-resource-types" title="Permalink to this headline">¶</a></h3>
+<p>We want to see the list of all resource types that are available in Glance</p>
+<p>We issue a <code class="docutils literal"><span class="pre">GET</span></code> request to <code class="docutils literal"><span class="pre">http://glance.example.com/v2/metadefs/resource_types</span></code>
+to retrieve all resource types.</p>
+<p>The data is returned as a JSON-encoded mapping in the following format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;resource_types&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;OS::Glance::Image&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;OS::Cinder::Volume&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;OS::Nova::Flavor&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;OS::Nova::Aggregate&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;OS::Nova::Instance&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span>
+      <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retrieve-resource-types-associated-with-a-namespace">
+<h3>Retrieve Resource Types associated with a Namespace<a class="headerlink" href="#retrieve-resource-types-associated-with-a-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to see the list of resource types that are associated for a specific
+namespace</p>
+<p>We issue a <code class="docutils literal"><span class="pre">GET</span></code> request to <code class="docutils literal"><span class="pre">http://glance.example.com/v2/metadefs/namespaces/{namespace}/resource_types</span></code>
+to retrieve resource types.</p>
+<p>The data is returned as a JSON-encoded mapping in the following format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;resource_type_associations&quot;</span> <span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;OS::Glance::Image&quot;</span><span class="p">,</span>
+         <span class="s">&quot;prefix&quot;</span> <span class="p">:</span> <span class="s">&quot;hw_&quot;</span><span class="p">,</span>
+         <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span><span class="p">,</span>
+         <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s">&quot;name&quot;</span> <span class="p">:</span><span class="s">&quot;OS::Cinder::Volume&quot;</span><span class="p">,</span>
+         <span class="s">&quot;prefix&quot;</span> <span class="p">:</span> <span class="s">&quot;hw_&quot;</span><span class="p">,</span>
+         <span class="s">&quot;properties_target&quot;</span> <span class="p">:</span> <span class="s">&quot;image&quot;</span><span class="p">,</span>
+         <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span><span class="p">,</span>
+         <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;OS::Nova::Flavor&quot;</span><span class="p">,</span>
+         <span class="s">&quot;prefix&quot;</span> <span class="p">:</span> <span class="s">&quot;hw:&quot;</span><span class="p">,</span>
+         <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span><span class="p">,</span>
+         <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span>
+      <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-namespace">
+<h3>Add Namespace<a class="headerlink" href="#add-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to create a new namespace that can contain the properties, objects,
+etc.</p>
+<p>We issue a <code class="docutils literal"><span class="pre">POST</span></code> request to add an namespace to Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>POST http://glance.example.com/v2/metadefs/namespaces/
+</pre></div>
+</div>
+<p>The input data is an JSON-encoded mapping in the following format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;namespace&quot;</span><span class="p">:</span> <span class="s">&quot;MyNamespace&quot;</span><span class="p">,</span>
+  <span class="s">&quot;display_name&quot;</span><span class="p">:</span> <span class="s">&quot;My User Friendly Namespace&quot;</span><span class="p">,</span>
+  <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;My description&quot;</span><span class="p">,</span>
+  <span class="s">&quot;visibility&quot;</span><span class="p">:</span> <span class="s">&quot;public&quot;</span><span class="p">,</span>
+  <span class="s">&quot;protected&quot;</span><span class="p">:</span> <span class="n">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Optionally properties, objects and resource type associations could be
+added in the same input. See GET Namespace output above(input will be
+similar).</p>
+</div>
+</div>
+<div class="section" id="update-namespace">
+<h3>Update Namespace<a class="headerlink" href="#update-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to update an existing namespace</p>
+<p>We issue a <code class="docutils literal"><span class="pre">PUT</span></code> request to update an namespace to Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>PUT http://glance.example.com/v2/metadefs/namespaces/{namespace}
+</pre></div>
+</div>
+<p>The input data is similar to Add Namespace</p>
+</div>
+<div class="section" id="delete-namespace">
+<h3>Delete Namespace<a class="headerlink" href="#delete-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to delete an existing namespace including all its objects,
+properties etc.</p>
+<p>We issue a <code class="docutils literal"><span class="pre">DELETE</span></code> request to delete an namespace to Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}
+</pre></div>
+</div>
+</div>
+<div class="section" id="associate-resource-type-with-namespace">
+<h3>Associate Resource Type with Namespace<a class="headerlink" href="#associate-resource-type-with-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to associate a resource type with an existing namespace</p>
+<p>We issue a <code class="docutils literal"><span class="pre">POST</span></code> request to associate resource type to Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>POST http://glance.example.com/v2/metadefs/namespaces/{namespace}/resource_types
+</pre></div>
+</div>
+<p>The input data is an JSON-encoded mapping in the following format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+        <span class="s">&quot;name&quot;</span> <span class="p">:</span><span class="s">&quot;OS::Cinder::Volume&quot;</span><span class="p">,</span>
+        <span class="s">&quot;prefix&quot;</span> <span class="p">:</span> <span class="s">&quot;hw_&quot;</span><span class="p">,</span>
+        <span class="s">&quot;properties_target&quot;</span> <span class="p">:</span> <span class="s">&quot;image&quot;</span><span class="p">,</span>
+        <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span><span class="p">,</span>
+        <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:04Z&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="remove-resource-type-associated-with-a-namespace">
+<h3>Remove Resource Type associated with a Namespace<a class="headerlink" href="#remove-resource-type-associated-with-a-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to de-associate namespace from a resource type</p>
+<p>We issue a <code class="docutils literal"><span class="pre">DELETE</span></code> request to de-associate namespace resource type to
+Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>DELETE http://glance.example.com/v2//metadefs/namespaces/{namespace}/resource_types/{resource_type}
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-objects-in-namespace">
+<h3>List Objects in Namespace<a class="headerlink" href="#list-objects-in-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to see the list of meta definition objects in a specific namespace</p>
+<p>We issue a <code class="docutils literal"><span class="pre">GET</span></code> request to <code class="docutils literal"><span class="pre">http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects</span></code>
+to retrieve objects.</p>
+<p>The data is returned as a JSON-encoded mapping in the following format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+      <span class="s">&quot;objects&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;object1&quot;</span><span class="p">,</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;my-description&quot;</span><span class="p">,</span>
+          <span class="s">&quot;self&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/metadefs/namespaces/MyNamespace/objects/object1&quot;</span><span class="p">,</span>
+          <span class="s">&quot;schema&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/schemas/metadefs/object&quot;</span><span class="p">,</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;required&quot;</span><span class="p">:</span> <span class="p">[],</span>
+          <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s">&quot;prop1&quot;</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="s">&quot;My object1 property1&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;More info here&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;array&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+                      <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;string&quot;</span>
+                  <span class="p">}</span>
+              <span class="p">}</span>
+          <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;object2&quot;</span><span class="p">,</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;my-description&quot;</span><span class="p">,</span>
+          <span class="s">&quot;self&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/metadefs/namespaces/MyNamespace/objects/object2&quot;</span><span class="p">,</span>
+          <span class="s">&quot;schema&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/schemas/metadefs/object&quot;</span><span class="p">,</span>
+          <span class="s">&quot;created_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s">&quot;2014-08-28T17:13:06Z&quot;</span><span class="p">,</span>
+          <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s">&quot;prop1&quot;</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="s">&quot;My object2 property1&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;More info here&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;integer&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="mi">20</span>
+              <span class="p">}</span>
+          <span class="p">}</span>
+      <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s">&quot;schema&quot;</span><span class="p">:</span> <span class="s">&quot;/v2/schemas/metadefs/objects&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-object-in-a-specific-namespace">
+<h3>Add object in a specific namespace<a class="headerlink" href="#add-object-in-a-specific-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to create a new object which can group the properties</p>
+<p>We issue a <code class="docutils literal"><span class="pre">POST</span></code> request to add object to a namespace in Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>POST http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects
+</pre></div>
+</div>
+<p>The input data is an JSON-encoded mapping in the following format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;StorageQOS&quot;</span><span class="p">,</span>
+  <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Our available storage QOS.&quot;</span><span class="p">,</span>
+  <span class="s">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s">&quot;minIOPS&quot;</span>
+  <span class="p">],</span>
+  <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;minIOPS&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;integer&quot;</span><span class="p">,</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;The minimum IOPs required&quot;</span><span class="p">,</span>
+          <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+          <span class="s">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+          <span class="s">&quot;maximum&quot;</span><span class="p">:</span> <span class="mi">30000369</span>
+      <span class="p">},</span>
+      <span class="s">&quot;burstIOPS&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;integer&quot;</span><span class="p">,</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;The expected burst IOPs&quot;</span><span class="p">,</span>
+          <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+          <span class="s">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+          <span class="s">&quot;maximum&quot;</span><span class="p">:</span> <span class="mi">30000377</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="update-object-in-a-specific-namespace">
+<h3>Update Object in a specific namespace<a class="headerlink" href="#update-object-in-a-specific-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to update an existing object</p>
+<p>We issue a <code class="docutils literal"><span class="pre">PUT</span></code> request to update an object to Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>PUT http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects/{object_name}
+</pre></div>
+</div>
+<p>The input data is similar to Add Object</p>
+</div>
+<div class="section" id="delete-object-in-a-specific-namespace">
+<h3>Delete Object in a specific namespace<a class="headerlink" href="#delete-object-in-a-specific-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to delete an existing object.</p>
+<p>We issue a <code class="docutils literal"><span class="pre">DELETE</span></code> request to delete object in a namespace to Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects/{object_name}
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-property-definition-in-a-specific-namespace">
+<h3>Add property definition in a specific namespace<a class="headerlink" href="#add-property-definition-in-a-specific-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to create a new property definition in a namespace</p>
+<p>We issue a <code class="docutils literal"><span class="pre">POST</span></code> request to add property definition to a namespace in
+Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>POST http://glance.example.com/v2/metadefs/namespaces/{namespace}/properties
+</pre></div>
+</div>
+<p>The input data is an JSON-encoded mapping in the following format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;hypervisor_type&quot;</span><span class="p">,</span>
+  <span class="s">&quot;title&quot;</span> <span class="p">:</span> <span class="s">&quot;Hypervisor&quot;</span><span class="p">,</span>
+  <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;array&quot;</span><span class="p">,</span>
+  <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;The type of hypervisor required&quot;</span><span class="p">,</span>
+  <span class="s">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;string&quot;</span><span class="p">,</span>
+      <span class="s">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="s">&quot;hyperv&quot;</span><span class="p">,</span>
+          <span class="s">&quot;qemu&quot;</span><span class="p">,</span>
+          <span class="s">&quot;kvm&quot;</span>
+      <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="update-property-definition-in-a-specific-namespace">
+<h3>Update property definition in a specific namespace<a class="headerlink" href="#update-property-definition-in-a-specific-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to update an existing object</p>
+<p>We issue a <code class="docutils literal"><span class="pre">PUT</span></code> request to update an property definition in a namespace to
+Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>PUT http://glance.example.com/v2/metadefs/namespaces/{namespace}/properties/{property_name}
+</pre></div>
+</div>
+<p>The input data is similar to Add property definition</p>
+</div>
+<div class="section" id="delete-property-definition-in-a-specific-namespace">
+<h3>Delete property definition in a specific namespace<a class="headerlink" href="#delete-property-definition-in-a-specific-namespace" title="Permalink to this headline">¶</a></h3>
+<p>We want to delete an existing object.</p>
+<p>We issue a <code class="docutils literal"><span class="pre">DELETE</span></code> request to delete property definition in a namespace to
+Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}/properties/{property_name}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="api-message-localization">
+<h2>API Message Localization<a class="headerlink" href="#api-message-localization" title="Permalink to this headline">¶</a></h2>
+<p>Glance supports HTTP message localization. For example, an HTTP client can
+receive API messages in Chinese even if the locale language of the server is
+English.</p>
+<div class="section" id="how-to-use-it">
+<h3>How to use it<a class="headerlink" href="#how-to-use-it" title="Permalink to this headline">¶</a></h3>
+<p>To receive localized API messages, the HTTP client needs to specify the
+<strong>Accept-Language</strong> header to indicate the language to use to translate the
+message. For more info about Accept-Language, please refer <a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html</a></p>
+<p>A typical curl API request will be like below:</p>
+<div class="highlight-python"><div class="highlight"><pre>curl -i -X GET -H &#39;Accept-Language: zh&#39; -H &#39;Content-Type: application/json&#39;
+http://127.0.0.1:9292/v2/metadefs/namespaces/{namespace}
+</pre></div>
+</div>
+<p>Then the response will be like the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>HTTP/1.1 404 Not Found
+Content-Length: 234
+Content-Type: text/html; charset=UTF-8
+X-Openstack-Request-Id: req-54d403a0-064e-4544-8faf-4aeef086f45a
+Date: Sat, 22 Feb 2014 06:26:26 GMT
+
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;404 Not Found&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;404 Not Found&lt;/h1&gt;
+&amp;#25214;&amp;#19981;&amp;#21040;&amp;#20219;&amp;#20309;&amp;#20855;&amp;#26377;&amp;#26631;&amp;#35782; aaa &amp;#30340;&amp;#26144;&amp;#20687;&lt;br /&gt;&lt;br /&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Be sure there is the language package under /usr/share/locale-langpack/ on
+the target Glance server.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">Using Glance&#8217;s Metadata Definitions Catalog Public APIs</a><ul>
+<li><a class="reference internal" href="#authentication">Authentication</a></li>
+<li><a class="reference internal" href="#using-v2-x">Using v2.X</a><ul>
+<li><a class="reference internal" href="#list-available-namespaces">List Available Namespaces</a></li>
+<li><a class="reference internal" href="#filtering-namespaces-lists">Filtering Namespaces Lists</a></li>
+<li><a class="reference internal" href="#retrieve-namespace">Retrieve Namespace</a></li>
+<li><a class="reference internal" href="#retrieve-available-resource-types">Retrieve available Resource Types</a></li>
+<li><a class="reference internal" href="#retrieve-resource-types-associated-with-a-namespace">Retrieve Resource Types associated with a Namespace</a></li>
+<li><a class="reference internal" href="#add-namespace">Add Namespace</a></li>
+<li><a class="reference internal" href="#update-namespace">Update Namespace</a></li>
+<li><a class="reference internal" href="#delete-namespace">Delete Namespace</a></li>
+<li><a class="reference internal" href="#associate-resource-type-with-namespace">Associate Resource Type with Namespace</a></li>
+<li><a class="reference internal" href="#remove-resource-type-associated-with-a-namespace">Remove Resource Type associated with a Namespace</a></li>
+<li><a class="reference internal" href="#list-objects-in-namespace">List Objects in Namespace</a></li>
+<li><a class="reference internal" href="#add-object-in-a-specific-namespace">Add object in a specific namespace</a></li>
+<li><a class="reference internal" href="#update-object-in-a-specific-namespace">Update Object in a specific namespace</a></li>
+<li><a class="reference internal" href="#delete-object-in-a-specific-namespace">Delete Object in a specific namespace</a></li>
+<li><a class="reference internal" href="#add-property-definition-in-a-specific-namespace">Add property definition in a specific namespace</a></li>
+<li><a class="reference internal" href="#update-property-definition-in-a-specific-namespace">Update property definition in a specific namespace</a></li>
+<li><a class="reference internal" href="#delete-property-definition-in-a-specific-namespace">Delete property definition in a specific namespace</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api-message-localization">API Message Localization</a><ul>
+<li><a class="reference internal" href="#how-to-use-it">How to use it</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="glanceclient.html"
+                                  title="previous chapter">Using Glance&#8217;s Client Tools</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/glancemetadefcatalogapi.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="glanceclient.html" title="Using Glance’s Client Tools"
+             accesskey="P">previous</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

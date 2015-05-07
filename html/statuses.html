@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Statuses &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
+    <link rel="next" title="Disk and Container Formats" href="formats.html" />
+    <link rel="prev" title="Image Identifiers" href="identifiers.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="image-statuses">
+<h1>Image Statuses<a class="headerlink" href="#image-statuses" title="Permalink to this headline">¶</a></h1>
+<p>Images in Glance can be in one the following statuses:</p>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">queued</span></code></p>
+<p>The image identifier has been reserved for an image in the Glance
+registry. No image data has been uploaded to Glance and the image
+size was not explicitly set to zero on creation.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">saving</span></code></p>
+<p>Denotes that an image&#8217;s raw data is currently being uploaded to Glance.
+When an image is registered with a call to <cite>POST /images</cite> and there
+is an <cite>x-image-meta-location</cite> header present, that image will never be in
+the <cite>saving</cite> status (as the image data is already available in some other
+location).</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">active</span></code></p>
+<p>Denotes an image that is fully available in Glance. This occurs when
+the image data is uploaded, or the image size is explicitly set to
+zero on creation.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">killed</span></code></p>
+<p>Denotes that an error occurred during the uploading of an image&#8217;s data,
+and that the image is not readable.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">deleted</span></code></p>
+<p>Glance has retained the information about the image, but it is no longer
+available to use. An image in this state will be removed automatically
+at a later date.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">pending_delete</span></code></p>
+<p>This is similar to <cite>deleted</cite>, however, Glance has not yet removed the
+image data. An image in this state is not recoverable.</p>
+</li>
+</ul>
+<div class="figure align-center" id="id1" style="width: 100%">
+<img alt="Image status transition" src="_images/image_status_transition.png" />
+<p class="caption"><span class="caption-text">This is a representation of how the image move from one status to the next.</span></p>
+<div class="legend">
+<ul class="simple">
+<li>Add location from zero to more than one.</li>
+<li>Remove location from one or more to zero by PATCH method which is only
+supported in v2.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="task-statuses">
+<h1>Task Statuses<a class="headerlink" href="#task-statuses" title="Permalink to this headline">¶</a></h1>
+<p>Tasks in Glance can be in one the following statuses:</p>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">pending</span></code></p>
+<p>The task identifier has been reserved for a task in the Glance.
+No processing has begun on it yet.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">processing</span></code></p>
+<p>The task has been picked up by the underlying executor and is being run
+using the backend Glance execution logic for that task type.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">success</span></code></p>
+<p>Denotes that the task has had a successful run within Glance. The <code class="docutils literal"><span class="pre">result</span></code>
+field of the task shows more details about the outcome.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">failure</span></code></p>
+<p>Denotes that an error occurred during the execution of the task and it
+cannot continue processing. The <code class="docutils literal"><span class="pre">message</span></code> field of the task shows what the
+error was.</p>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">Image Statuses</a></li>
+<li><a class="reference internal" href="#task-statuses">Task Statuses</a></li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="identifiers.html"
+                                  title="previous chapter">Image Identifiers</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="formats.html"
+                                  title="next chapter">Disk and Container Formats</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/statuses.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="formats.html" title="Disk and Container Formats"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="identifiers.html" title="Image Identifiers"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

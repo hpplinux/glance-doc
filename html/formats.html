@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Disk and Container Formats &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
+    <link rel="next" title="Common Image Properties" href="common-image-properties.html" />
+    <link rel="prev" title="Image Statuses" href="statuses.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="disk-and-container-formats">
+<h1>Disk and Container Formats<a class="headerlink" href="#disk-and-container-formats" title="Permalink to this headline">¶</a></h1>
+<p>When adding an image to Glance, you must specify what the virtual
+machine image&#8217;s <em>disk format</em> and <em>container format</em> are. Disk and container
+formats are configurable on a per-deployment basis. This document intends to
+establish a global convention for what specific values of <em>disk_format</em> and
+<em>container_format</em> mean.</p>
+<div class="section" id="disk-format">
+<h2>Disk Format<a class="headerlink" href="#disk-format" title="Permalink to this headline">¶</a></h2>
+<p>The disk format of a virtual machine image is the format of the underlying
+disk image. Virtual appliance vendors have different formats for laying out
+the information contained in a virtual machine disk image.</p>
+<p>You can set your image&#8217;s disk format to one of the following:</p>
+<ul>
+<li><p class="first"><strong>raw</strong></p>
+<p>This is an unstructured disk image format</p>
+</li>
+<li><p class="first"><strong>vhd</strong></p>
+<p>This is the VHD disk format, a common disk format used by virtual machine
+monitors from VMWare, Xen, Microsoft, VirtualBox, and others</p>
+</li>
+<li><p class="first"><strong>vmdk</strong></p>
+<p>Another common disk format supported by many common virtual machine monitors</p>
+</li>
+<li><p class="first"><strong>vdi</strong></p>
+<p>A disk format supported by VirtualBox virtual machine monitor and the QEMU
+emulator</p>
+</li>
+<li><p class="first"><strong>iso</strong></p>
+<p>An archive format for the data contents of an optical disc (e.g. CDROM).</p>
+</li>
+<li><p class="first"><strong>qcow2</strong></p>
+<p>A disk format supported by the QEMU emulator that can expand dynamically and
+supports Copy on Write</p>
+</li>
+<li><p class="first"><strong>aki</strong></p>
+<p>This indicates what is stored in Glance is an Amazon kernel image</p>
+</li>
+<li><p class="first"><strong>ari</strong></p>
+<p>This indicates what is stored in Glance is an Amazon ramdisk image</p>
+</li>
+<li><p class="first"><strong>ami</strong></p>
+<p>This indicates what is stored in Glance is an Amazon machine image</p>
+</li>
+</ul>
+</div>
+<div class="section" id="container-format">
+<h2>Container Format<a class="headerlink" href="#container-format" title="Permalink to this headline">¶</a></h2>
+<p>The container format refers to whether the virtual machine image is in a
+file format that also contains metadata about the actual virtual machine.</p>
+<p>Note that the container format string is not currently used by Glance or
+other OpenStack components, so it is safe to simply specify <strong>bare</strong> as
+the container format if you are unsure.</p>
+<p>You can set your image&#8217;s container format to one of the following:</p>
+<ul>
+<li><p class="first"><strong>bare</strong></p>
+<p>This indicates there is no container or metadata envelope for the image</p>
+</li>
+<li><p class="first"><strong>ovf</strong></p>
+<p>This is the OVF container format</p>
+</li>
+<li><p class="first"><strong>aki</strong></p>
+<p>This indicates what is stored in Glance is an Amazon kernel image</p>
+</li>
+<li><p class="first"><strong>ari</strong></p>
+<p>This indicates what is stored in Glance is an Amazon ramdisk image</p>
+</li>
+<li><p class="first"><strong>ami</strong></p>
+<p>This indicates what is stored in Glance is an Amazon machine image</p>
+</li>
+<li><p class="first"><strong>ova</strong></p>
+<p>This indicates what is stored in Glance is an OVA tar archive file</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">Disk and Container Formats</a><ul>
+<li><a class="reference internal" href="#disk-format">Disk Format</a></li>
+<li><a class="reference internal" href="#container-format">Container Format</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="statuses.html"
+                                  title="previous chapter">Image Statuses</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="common-image-properties.html"
+                                  title="next chapter">Common Image Properties</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/formats.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="common-image-properties.html" title="Common Image Properties"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="statuses.html" title="Image Statuses"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

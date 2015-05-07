@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>glance-manage &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="../index.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="glance-manage">
+<h1>glance-manage<a class="headerlink" href="#glance-manage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="glance-management-utility">
+<h2>Glance Management Utility<a class="headerlink" href="#glance-management-utility" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body"><a class="reference external" href="mailto:glance&#37;&#52;&#48;lists&#46;launchpad&#46;net">glance<span>&#64;</span>lists<span>&#46;</span>launchpad<span>&#46;</span>net</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">2014-01-16</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Copyright:</th><td class="field-body">OpenStack LLC</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Version:</th><td class="field-body">2014.1</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Manual section:</th><td class="field-body">1</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Manual group:</th><td class="field-body">cloud computing</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="synopsis">
+<h3>SYNOPSIS<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div>glance-manage [options]</div></blockquote>
+</div>
+<div class="section" id="description">
+<h3>DESCRIPTION<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p>glance-manage is a utility for managing and configuring a Glance installation.
+One important use of glance-manage is to setup the database. To do this run:</p>
+<div class="highlight-python"><div class="highlight"><pre>glance-manage db_sync
+</pre></div>
+</div>
+<p>Note: glance-manage commands can be run either like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>glance-manage db sync
+</pre></div>
+</div>
+<p>or with the db commands concatenated, like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>glance-manage db_sync
+</pre></div>
+</div>
+</div>
+<div class="section" id="commands">
+<h3>COMMANDS<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>db</strong></dt>
+<dd>This is the prefix for the commands below when used with a space
+rather than a _. For example &#8220;db version&#8221;.</dd>
+<dt><strong>db_version</strong></dt>
+<dd>This will print the current migration level of a glance database.</dd>
+<dt><strong>db_upgrade &lt;VERSION&gt;</strong></dt>
+<dd>This will take an existing database and upgrade it to the
+specified VERSION.</dd>
+<dt><strong>db_downgrade &lt;VERSION&gt;</strong></dt>
+<dd>This will take an existing database and downgrade it to the
+specified VERSION.</dd>
+<dt><strong>db_version_control</strong></dt>
+<dd>Place the database under migration control.</dd>
+<dt><strong>db_sync &lt;VERSION&gt; &lt;CURRENT_VERSION&gt;</strong></dt>
+<dd>Place a database under migration control and upgrade, creating
+it first if necessary.</dd>
+<dt><strong>db_export_metadefs</strong></dt>
+<dd>Export the metadata definitions into json format. By default the
+definitions are exported to /etc/glance/metadefs directory.</dd>
+<dt><strong>db_load_metadefs</strong></dt>
+<dd>Load the metadata definitions into glance database. By default the
+definitions are imported from /etc/glance/metadefs directory.</dd>
+<dt><strong>db_unload_metadefs</strong></dt>
+<dd>Unload the metadata definitions. Clears the contents of all the glance
+db tables including metadef_namespace_resource_types, metadef_tags,
+metadef_objects, metadef_resource_types, metadef_namespaces and
+metadef_properties.</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="options">
+<h3>OPTIONS<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p><strong>General Options</strong></p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>-h, &#8211;help</strong></dt>
+<dd>Show the help message and exit</dd>
+<dt><strong>&#8211;version</strong></dt>
+<dd>Print the version number and exit</dd>
+<dt><strong>-v, &#8211;verbose</strong></dt>
+<dd>Print more verbose output</dd>
+<dt><strong>&#8211;noverbose</strong></dt>
+<dd>Disable verbose output</dd>
+<dt><strong>-d, &#8211;debug</strong></dt>
+<dd>Print debugging output (set logging level to DEBUG instead of
+default WARNING level)</dd>
+<dt><strong>&#8211;nodebug</strong></dt>
+<dd>Disable debugging output</dd>
+<dt><strong>&#8211;use-syslog</strong></dt>
+<dd>Use syslog for logging</dd>
+<dt><strong>&#8211;nouse-syslog</strong></dt>
+<dd>Disable the use of syslog for logging</dd>
+<dt><strong>&#8211;syslog-log-facility SYSLOG_LOG_FACILITY</strong></dt>
+<dd>syslog facility to receive log lines</dd>
+<dt><strong>&#8211;config-dir DIR</strong></dt>
+<dd>Path to a config directory to pull *.conf files from. This
+file set is sorted, to provide a predictable parse order
+if individual options are over-ridden. The set is parsed after
+the file(s) specified via previous &#8211;config-file, arguments hence
+over-ridden options in the directory take precedence. This means
+that configuration from files in a specified config-dir will
+always take precedence over configuration from files specified
+by &#8211;config-file, regardless to argument order.</dd>
+<dt><strong>&#8211;config-file PATH</strong></dt>
+<dd>Path to a config file to use. Multiple config files can be
+specified by using this flag multiple times, for example,
+&#8211;config-file &lt;file1&gt; &#8211;config-file &lt;file2&gt;. Values in latter
+files take precedence.</dd>
+</dl>
+<p><strong>&#8211;log-config-append PATH</strong>
+<strong>&#8211;log-config PATH</strong></p>
+<blockquote>
+<div>The name of logging configuration file. It does not
+disable existing loggers, but just appends specified
+logging configuration to any other existing logging
+options. Please see the Python logging module documentation
+for details on logging configuration files. The log-config
+name for this option is depcrecated.</div></blockquote>
+<dl class="docutils">
+<dt><strong>&#8211;log-format FORMAT</strong></dt>
+<dd>A logging.Formatter log message format string which may use any
+of the available logging.LogRecord attributes. Default: None</dd>
+<dt><strong>&#8211;log-date-format DATE_FORMAT</strong></dt>
+<dd>Format string for %(asctime)s in log records. Default: None</dd>
+<dt><strong>&#8211;log-file PATH, &#8211;logfile PATH</strong></dt>
+<dd>(Optional) Name of log file to output to. If not set, logging
+will go to stdout.</dd>
+<dt><strong>&#8211;log-dir LOG_DIR, &#8211;logdir LOG_DIR</strong></dt>
+<dd>(Optional) The directory to keep log files in (will be prepended
+to &#8211;log-file)</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt><strong>&#8211;sql_connection=CONN_STRING</strong></dt>
+<dd>A proper SQLAlchemy connection string as described
+<a class="reference external" href="http://www.sqlalchemy.org/docs/05/reference/sqlalchemy/connections.html?highlight=engine#sqlalchemy.create_engine">here</a></dd>
+</dl>
+<ul class="simple">
+<li><a class="reference external" href="http://glance.openstack.org">OpenStack Glance</a></li>
+</ul>
+<ul class="simple">
+<li>Glance bugs are tracked in Launchpad so you can view current bugs at <a class="reference external" href="http://bugs.launchpad.net/glance">OpenStack Glance</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="configuration">
+<h3>CONFIGURATION<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h3>
+<p>The following paths are searched for a <code class="docutils literal"><span class="pre">glance-manage.conf</span></code> file in the
+following order:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">~/.glance</span></code></li>
+<li><code class="docutils literal"><span class="pre">~/</span></code></li>
+<li><code class="docutils literal"><span class="pre">/etc/glance</span></code></li>
+<li><code class="docutils literal"><span class="pre">/etc</span></code></li>
+</ul>
+<p>All options set in <code class="docutils literal"><span class="pre">glance-manage.conf</span></code> override those set in
+<code class="docutils literal"><span class="pre">glance-registry.conf</span></code> and <code class="docutils literal"><span class="pre">glance-api.conf</span></code>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">glance-manage</a><ul>
+<li><a class="reference internal" href="#glance-management-utility">Glance Management Utility</a><ul>
+<li><a class="reference internal" href="#synopsis">SYNOPSIS</a></li>
+<li><a class="reference internal" href="#description">DESCRIPTION</a></li>
+<li><a class="reference internal" href="#commands">COMMANDS</a></li>
+<li><a class="reference internal" href="#options">OPTIONS</a></li>
+<li><a class="reference internal" href="#configuration">CONFIGURATION</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/man/glancemanage.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

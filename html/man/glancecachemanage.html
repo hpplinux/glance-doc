@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>glance-cache-manage &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="../index.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="glance-cache-manage">
+<h1>glance-cache-manage<a class="headerlink" href="#glance-cache-manage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cache-management-utility">
+<h2>Cache management utility<a class="headerlink" href="#cache-management-utility" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body"><a class="reference external" href="mailto:glance&#37;&#52;&#48;lists&#46;launchpad&#46;net">glance<span>&#64;</span>lists<span>&#46;</span>launchpad<span>&#46;</span>net</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">2014-01-16</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Copyright:</th><td class="field-body">OpenStack LLC</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Version:</th><td class="field-body">2014.1</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Manual section:</th><td class="field-body">1</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Manual group:</th><td class="field-body">cloud computing</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="synopsis">
+<h3>SYNOPSIS<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div>glance-cache-manage &lt;command&gt; [options] [args]</div></blockquote>
+</div>
+<div class="section" id="commands">
+<h3>COMMANDS<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>help &lt;command&gt;</strong></dt>
+<dd>Output help for one of the commands below</dd>
+<dt><strong>list-cached</strong></dt>
+<dd>List all images currently cached</dd>
+<dt><strong>list-queued</strong></dt>
+<dd>List all images currently queued for caching</dd>
+<dt><strong>queue-image</strong></dt>
+<dd>Queue an image for caching</dd>
+<dt><strong>delete-cached-image</strong></dt>
+<dd>Purges an image from the cache</dd>
+<dt><strong>delete-all-cached-images</strong></dt>
+<dd>Removes all images from the cache</dd>
+<dt><strong>delete-queued-image</strong></dt>
+<dd>Deletes an image from the cache queue</dd>
+<dt><strong>delete-all-queued-images</strong></dt>
+<dd>Deletes all images from the cache queue</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="options">
+<h3>OPTIONS<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>&#8211;version</strong></dt>
+<dd>show program&#8217;s version number and exit</dd>
+<dt><strong>-h, &#8211;help</strong></dt>
+<dd>show this help message and exit</dd>
+<dt><strong>-v, &#8211;verbose</strong></dt>
+<dd>Print more verbose output</dd>
+<dt><strong>-d, &#8211;debug</strong></dt>
+<dd>Print more verbose output</dd>
+<dt><strong>-H ADDRESS, &#8211;host=ADDRESS</strong></dt>
+<dd>Address of Glance API host.
+Default: 0.0.0.0</dd>
+<dt><strong>-p PORT, &#8211;port=PORT</strong></dt>
+<dd>Port the Glance API host listens on.
+Default: 9292</dd>
+<dt><strong>-k, &#8211;insecure</strong></dt>
+<dd>Explicitly allow glance to perform &#8220;insecure&#8221; SSL
+(https) requests. The server&#8217;s certificate will not be
+verified against any certificate authorities. This
+option should be used with caution.</dd>
+<dt><strong>-A TOKEN, &#8211;auth_token=TOKEN</strong></dt>
+<dd>Authentication token to use to identify the client to the glance server</dd>
+<dt><strong>-f, &#8211;force</strong></dt>
+<dd>Prevent select actions from requesting user confirmation</dd>
+<dt><strong>-S STRATEGY, &#8211;os-auth-strategy=STRATEGY</strong></dt>
+<dd>Authentication strategy (keystone or noauth)</dd>
+</dl>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>-os-auth-token=OS_AUTH_TOKEN</strong></dt>
+<dd>Defaults to env[OS_AUTH_TOKEN]</dd>
+<dt><strong>&#8211;os-username=OS_USERNAME</strong></dt>
+<dd>Defaults to env[OS_USERNAME]</dd>
+<dt><strong>&#8211;os-password=OS_PASSWORD</strong></dt>
+<dd>Defaults to env[OS_PASSWORD]</dd>
+<dt><strong>&#8211;os-region-name=OS_REGION_NAME</strong></dt>
+<dd>Defaults to env[OS_REGION_NAME]</dd>
+<dt><strong>&#8211;os-tenant-id=OS_TENANT_ID</strong></dt>
+<dd>Defaults to env[OS_TENANT_ID]</dd>
+<dt><strong>&#8211;os-tenant-name=OS_TENANT_NAME</strong></dt>
+<dd>Defaults to env[OS_TENANT_NAME]</dd>
+<dt><strong>&#8211;os-auth-url=OS_AUTH_URL</strong></dt>
+<dd>Defaults to env[OS_AUTH_URL]</dd>
+</dl>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference external" href="http://glance.openstack.org">OpenStack Glance</a></li>
+</ul>
+<ul class="simple">
+<li>Glance bugs are tracked in Launchpad so you can view current bugs at <a class="reference external" href="http://bugs.launchpad.net/glance">OpenStack Glance</a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">glance-cache-manage</a><ul>
+<li><a class="reference internal" href="#cache-management-utility">Cache management utility</a><ul>
+<li><a class="reference internal" href="#synopsis">SYNOPSIS</a></li>
+<li><a class="reference internal" href="#commands">COMMANDS</a></li>
+<li><a class="reference internal" href="#options">OPTIONS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/man/glancecachemanage.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

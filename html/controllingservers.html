@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Controlling Glance Servers &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
+    <link rel="next" title="Database Management" href="db.html" />
+    <link rel="prev" title="Policies" href="policies.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="controlling-glance-servers">
+<h1>Controlling Glance Servers<a class="headerlink" href="#controlling-glance-servers" title="Permalink to this headline">¶</a></h1>
+<p>This section describes the ways to start, stop, and reload Glance&#8217;s server
+programs.</p>
+<div class="section" id="starting-a-server">
+<h2>Starting a server<a class="headerlink" href="#starting-a-server" title="Permalink to this headline">¶</a></h2>
+<p>There are two ways to start a Glance server (either the API server or the
+registry server):</p>
+<ul class="simple">
+<li>Manually calling the server program</li>
+<li>Using the <code class="docutils literal"><span class="pre">glance-control</span></code> server daemon wrapper program</li>
+</ul>
+<p>We recommend using the second method.</p>
+<div class="section" id="manually-starting-the-server">
+<h3>Manually starting the server<a class="headerlink" href="#manually-starting-the-server" title="Permalink to this headline">¶</a></h3>
+<p>The first is by directly calling the server program, passing in command-line
+options and a single argument for a <code class="docutils literal"><span class="pre">paste.deploy</span></code> configuration file to
+use when configuring the server application.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Glance ships with an <code class="docutils literal"><span class="pre">etc/</span></code> directory that contains sample <code class="docutils literal"><span class="pre">paste.deploy</span></code>
+configuration files that you can copy to a standard configuation directory and
+adapt for your own uses. Specifically, bind_host must be set properly.</p>
+</div>
+<p>If you do <cite>not</cite> specify a configuration file on the command line, Glance will
+do its best to locate a configuration file in one of the
+following directories, stopping at the first config file it finds:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">$CWD</span></code></li>
+<li><code class="docutils literal"><span class="pre">~/.glance</span></code></li>
+<li><code class="docutils literal"><span class="pre">~/</span></code></li>
+<li><code class="docutils literal"><span class="pre">/etc/glance</span></code></li>
+<li><code class="docutils literal"><span class="pre">/etc</span></code></li>
+</ul>
+<p>The filename that is searched for depends on the server application name. So,
+if you are starting up the API server, <code class="docutils literal"><span class="pre">glance-api.conf</span></code> is searched for,
+otherwise <code class="docutils literal"><span class="pre">glance-registry.conf</span></code>.</p>
+<p>If no configuration file is found, you will see an error, like:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; glance-api
+ERROR: Unable to locate any configuration file. Cannot load application glance-api
+</pre></div>
+</div>
+<p>Here is an example showing how you can manually start the <code class="docutils literal"><span class="pre">glance-api</span></code> server and <code class="docutils literal"><span class="pre">glance-registry</span></code> in a shell.:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo glance-api --config-file glance-api.conf --debug &amp;
+jsuh@mc-ats1:~$ 2011-04-13 14:50:12    DEBUG [glance-api] ********************************************************************************
+2011-04-13 14:50:12    DEBUG [glance-api] Configuration options gathered from config file:
+2011-04-13 14:50:12    DEBUG [glance-api] /home/jsuh/glance-api.conf
+2011-04-13 14:50:12    DEBUG [glance-api] ================================================
+2011-04-13 14:50:12    DEBUG [glance-api] bind_host                      65.114.169.29
+2011-04-13 14:50:12    DEBUG [glance-api] bind_port                      9292
+2011-04-13 14:50:12    DEBUG [glance-api] debug                          True
+2011-04-13 14:50:12    DEBUG [glance-api] default_store                  file
+2011-04-13 14:50:12    DEBUG [glance-api] filesystem_store_datadir       /home/jsuh/images/
+2011-04-13 14:50:12    DEBUG [glance-api] registry_host                  65.114.169.29
+2011-04-13 14:50:12    DEBUG [glance-api] registry_port                  9191
+2011-04-13 14:50:12    DEBUG [glance-api] verbose                        False
+2011-04-13 14:50:12    DEBUG [glance-api] ********************************************************************************
+2011-04-13 14:50:12    DEBUG [routes.middleware] Initialized with method overriding = True, and path info altering = True
+2011-04-13 14:50:12    DEBUG [eventlet.wsgi.server] (21354) wsgi starting up on http://65.114.169.29:9292/
+
+$ sudo glance-registry --config-file glance-registry.conf &amp;
+jsuh@mc-ats1:~$ 2011-04-13 14:51:16     INFO [sqlalchemy.engine.base.Engine.0x...feac] PRAGMA table_info(&quot;images&quot;)
+2011-04-13 14:51:16     INFO [sqlalchemy.engine.base.Engine.0x...feac] ()
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Col (&#39;cid&#39;, &#39;name&#39;, &#39;type&#39;, &#39;notnull&#39;, &#39;dflt_value&#39;, &#39;pk&#39;)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (0, u&#39;created_at&#39;, u&#39;DATETIME&#39;, 1, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (1, u&#39;updated_at&#39;, u&#39;DATETIME&#39;, 0, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (2, u&#39;deleted_at&#39;, u&#39;DATETIME&#39;, 0, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (3, u&#39;deleted&#39;, u&#39;BOOLEAN&#39;, 1, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (4, u&#39;id&#39;, u&#39;INTEGER&#39;, 1, None, 1)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (5, u&#39;name&#39;, u&#39;VARCHAR(255)&#39;, 0, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (6, u&#39;disk_format&#39;, u&#39;VARCHAR(20)&#39;, 0, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (7, u&#39;container_format&#39;, u&#39;VARCHAR(20)&#39;, 0, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (8, u&#39;size&#39;, u&#39;INTEGER&#39;, 0, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (9, u&#39;status&#39;, u&#39;VARCHAR(30)&#39;, 1, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (10, u&#39;is_public&#39;, u&#39;BOOLEAN&#39;, 1, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (11, u&#39;location&#39;, u&#39;TEXT&#39;, 0, None, 0)
+2011-04-13 14:51:16     INFO [sqlalchemy.engine.base.Engine.0x...feac] PRAGMA table_info(&quot;image_properties&quot;)
+2011-04-13 14:51:16     INFO [sqlalchemy.engine.base.Engine.0x...feac] ()
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Col (&#39;cid&#39;, &#39;name&#39;, &#39;type&#39;, &#39;notnull&#39;, &#39;dflt_value&#39;, &#39;pk&#39;)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (0, u&#39;created_at&#39;, u&#39;DATETIME&#39;, 1, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (1, u&#39;updated_at&#39;, u&#39;DATETIME&#39;, 0, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (2, u&#39;deleted_at&#39;, u&#39;DATETIME&#39;, 0, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (3, u&#39;deleted&#39;, u&#39;BOOLEAN&#39;, 1, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (4, u&#39;id&#39;, u&#39;INTEGER&#39;, 1, None, 1)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (5, u&#39;image_id&#39;, u&#39;INTEGER&#39;, 1, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (6, u&#39;key&#39;, u&#39;VARCHAR(255)&#39;, 1, None, 0)
+2011-04-13 14:51:16    DEBUG [sqlalchemy.engine.base.Engine.0x...feac] Row (7, u&#39;value&#39;, u&#39;TEXT&#39;, 0, None, 0)
+
+$ ps aux | grep glance
+root     20009  0.7  0.1  12744  9148 pts/1    S    12:47   0:00 /usr/bin/python /usr/bin/glance-api glance-api.conf --debug
+root     20012  2.0  0.1  25188 13356 pts/1    S    12:47   0:00 /usr/bin/python /usr/bin/glance-registry glance-registry.conf
+jsuh     20017  0.0  0.0   3368   744 pts/1    S+   12:47   0:00 grep glance
+</pre></div>
+</div>
+<p>Simply supply the configuration file as the parameter to the <code class="docutils literal"><span class="pre">--config-file</span></code> option
+(the <code class="docutils literal"><span class="pre">etc/glance-api.conf</span></code> and  <code class="docutils literal"><span class="pre">etc/glance-registry.conf</span></code> sample configuration
+files were used in the above example) and then any other options
+you want to use. (<code class="docutils literal"><span class="pre">--debug</span></code> was used above to show some of the debugging
+output that the server shows when starting up. Call the server program
+with <code class="docutils literal"><span class="pre">--help</span></code> to see all available options you can specify on the
+command line.)</p>
+<p>For more information on configuring the server via the <code class="docutils literal"><span class="pre">paste.deploy</span></code>
+configuration files, see the section entitled
+<a class="reference internal" href="configuring.html"><em>Configuring Glance servers</em></a></p>
+<p>Note that the server <cite>daemonizes</cite> itself by using the standard
+shell backgrounding indicator, <code class="docutils literal"><span class="pre">&amp;</span></code>, in the previous example. For most use cases, we recommend
+using the <code class="docutils literal"><span class="pre">glance-control</span></code> server daemon wrapper for daemonizing. See below
+for more details on daemonization with <code class="docutils literal"><span class="pre">glance-control</span></code>.</p>
+</div>
+<div class="section" id="using-the-glance-control-program-to-start-the-server">
+<h3>Using the <code class="docutils literal"><span class="pre">glance-control</span></code> program to start the server<a class="headerlink" href="#using-the-glance-control-program-to-start-the-server" title="Permalink to this headline">¶</a></h3>
+<p>The second way to start up a Glance server is to use the <code class="docutils literal"><span class="pre">glance-control</span></code>
+program. <code class="docutils literal"><span class="pre">glance-control</span></code> is a wrapper script that allows the user to
+start, stop, restart, and reload the other Glance server programs in
+a fashion that is more conducive to automation and scripting.</p>
+<p>Servers started via the <code class="docutils literal"><span class="pre">glance-control</span></code> program are always <cite>daemonized</cite>,
+meaning that the server program process runs in the background.</p>
+<p>To start a Glance server with <code class="docutils literal"><span class="pre">glance-control</span></code>, simply call
+<code class="docutils literal"><span class="pre">glance-control</span></code> with a server and the word &#8220;start&#8221;, followed by
+any command-line options you wish to provide. Start the server with <code class="docutils literal"><span class="pre">glance-control</span></code>
+in the following way:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; sudo glance-control [OPTIONS] &lt;SERVER&gt; start [CONFPATH]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You must use the <code class="docutils literal"><span class="pre">sudo</span></code> program to run <code class="docutils literal"><span class="pre">glance-control</span></code> currently, as the
+pid files for the server programs are written to /var/run/glance/</p>
+</div>
+<p>Here is an example that shows how to start the <code class="docutils literal"><span class="pre">glance-registry</span></code> server
+with the <code class="docutils literal"><span class="pre">glance-control</span></code> wrapper script.</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo glance-control api start glance-api.conf
+Starting glance-api with /home/jsuh/glance.conf
+
+$ sudo glance-control registry start glance-registry.conf
+Starting glance-registry with /home/jsuh/glance.conf
+
+$ ps aux | grep glance
+root     20038  4.0  0.1  12728  9116 ?        Ss   12:51   0:00 /usr/bin/python /usr/bin/glance-api /home/jsuh/glance-api.conf
+root     20039  6.0  0.1  25188 13356 ?        Ss   12:51   0:00 /usr/bin/python /usr/bin/glance-registry /home/jsuh/glance-registry.conf
+jsuh     20042  0.0  0.0   3368   744 pts/1    S+   12:51   0:00 grep glance
+</pre></div>
+</div>
+<p>The same configuration files are used by <code class="docutils literal"><span class="pre">glance-control</span></code> to start the
+Glance server programs, and you can specify (as the example above shows)
+a configuration file when starting the server.</p>
+<p>In order for your launched glance service to be monitored for unexpected death
+and respawned if necessary, use the following option:</p>
+<blockquote>
+<div>$ sudo glance-control [service] start &#8211;respawn ...</div></blockquote>
+<p>Note that this will cause <code class="docutils literal"><span class="pre">glance-control</span></code> itself to remain running. Also note
+that deliberately stopped services are not respawned, neither are rapidly bouncing
+services (where process death occurred within one second of the last launch).</p>
+<p>By default, output from glance services is discarded when launched with <code class="docutils literal"><span class="pre">glance-control</span></code>.
+In order to capture such output via syslog, use the following option:</p>
+<blockquote>
+<div>$ sudo glance-control &#8211;capture-output ...</div></blockquote>
+</div>
+</div>
+<div class="section" id="stopping-a-server">
+<h2>Stopping a server<a class="headerlink" href="#stopping-a-server" title="Permalink to this headline">¶</a></h2>
+<p>If you started a Glance server manually and did not use the <code class="docutils literal"><span class="pre">&amp;</span></code> backgrounding
+function, simply send a terminate signal to the server process by typing
+<code class="docutils literal"><span class="pre">Ctrl-C</span></code></p>
+<p>If you started the Glance server using the <code class="docutils literal"><span class="pre">glance-control</span></code> program, you can
+use the <code class="docutils literal"><span class="pre">glance-control</span></code> program to stop it. Simply do the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; sudo glance-control &lt;SERVER&gt; stop
+</pre></div>
+</div>
+<p>as this example shows:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; sudo glance-control registry stop
+Stopping glance-registry  pid: 17602  signal: 15
+</pre></div>
+</div>
+</div>
+<div class="section" id="restarting-a-server">
+<h2>Restarting a server<a class="headerlink" href="#restarting-a-server" title="Permalink to this headline">¶</a></h2>
+<p>You can restart a server with the <code class="docutils literal"><span class="pre">glance-control</span></code> program, as demonstrated
+here:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; sudo glance-control registry restart etc/glance-registry.conf
+Stopping glance-registry  pid: 17611  signal: 15
+Starting glance-registry with /home/jpipes/repos/glance/trunk/etc/glance-registry.conf
+</pre></div>
+</div>
+</div>
+<div class="section" id="reloading-a-server">
+<h2>Reloading a server<a class="headerlink" href="#reloading-a-server" title="Permalink to this headline">¶</a></h2>
+<p>You can reload a server with the <code class="docutils literal"><span class="pre">glance-control</span></code> program, as demonstrated
+here:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; sudo glance-control api reload
+Reloading glance-api (pid 18506) with signal(1)
+</pre></div>
+</div>
+<p>A reload sends a SIGHUP signal to the master process and causes new configuration
+settings to be picked up without any interruption to the running service (provided
+neither bind_host or bind_port has changed).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">Controlling Glance Servers</a><ul>
+<li><a class="reference internal" href="#starting-a-server">Starting a server</a><ul>
+<li><a class="reference internal" href="#manually-starting-the-server">Manually starting the server</a></li>
+<li><a class="reference internal" href="#using-the-glance-control-program-to-start-the-server">Using the <code class="docutils literal"><span class="pre">glance-control</span></code> program to start the server</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stopping-a-server">Stopping a server</a></li>
+<li><a class="reference internal" href="#restarting-a-server">Restarting a server</a></li>
+<li><a class="reference internal" href="#reloading-a-server">Reloading a server</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="policies.html"
+                                  title="previous chapter">Policies</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="db.html"
+                                  title="next chapter">Database Management</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/controllingservers.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="db.html" title="Database Management"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="policies.html" title="Policies"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

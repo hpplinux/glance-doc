@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Property Protections &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="property-protections">
+<h1>Property Protections<a class="headerlink" href="#property-protections" title="Permalink to this headline">¶</a></h1>
+<p>There are two types of image properties in Glance:</p>
+<ul class="simple">
+<li>Core Properties, as specified by the image schema.</li>
+<li>Meta Properties, which are arbitrary key/value pairs that can be added to an
+image.</li>
+</ul>
+<p>Access to meta properties through Glance&#8217;s public API calls may be
+restricted to certain sets of users, using a property protections configuration
+file.</p>
+<p>This document explains exactly how property protections are configured and what
+they apply to.</p>
+<div class="section" id="constructing-a-property-protections-configuration-file">
+<h2>Constructing a Property Protections Configuration File<a class="headerlink" href="#constructing-a-property-protections-configuration-file" title="Permalink to this headline">¶</a></h2>
+<p>A property protections configuration file follows the format of the Glance API
+configuration file, which consists of sections, led by a <code class="docutils literal"><span class="pre">[section]</span></code> header
+and followed by <code class="docutils literal"><span class="pre">name</span> <span class="pre">=</span> <span class="pre">value</span></code> entries.  Each section header is a regular
+expression matching a set of properties to be protected.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Section headers must compile to a valid regular expression, otherwise
+glance api service will not start. Regular expressions
+will be handled by python&#8217;s re module which is PERL like.</p>
+</div>
+<p>Each section describes four key-value pairs, where the key is one of
+<code class="docutils literal"><span class="pre">create/read/update/delete</span></code>, and the value is a comma separated list of user
+roles that are permitted to perform that operation in the Glance API. <strong>If any of
+the keys are not specified, then the glance api service will not start
+successfully.</strong></p>
+<p>In the list of user roles, <code class="docutils literal"><span class="pre">&#64;</span></code> means all roles and <code class="docutils literal"><span class="pre">!</span></code> means no role.
+<strong>If both &#64; and ! are specified for the same rule then the glance api service
+will not start</strong></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Only one policy rule is allowed per property operation. <strong>If multiple are
+specified, then the glance api service will not start.</strong></p>
+</div>
+<p>The path to the file should be specified in the <code class="docutils literal"><span class="pre">[DEFAULT]</span></code> section of
+<code class="docutils literal"><span class="pre">glance-api.conf</span></code> as follows.</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre>property_protection_file=/path/to/file
+</pre></div>
+</div>
+</div></blockquote>
+<p>If this config value is not specified, property protections are not enforced.
+<strong>If the path is invalid, glance api service will not start successfully.</strong></p>
+<p>The file may use either roles or policies to describe the property protections.
+The config value should be specified in the <code class="docutils literal"><span class="pre">[DEFAULT]</span></code> section of
+<code class="docutils literal"><span class="pre">glance-api.conf</span></code> as follows.</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre>property_protection_rule_format=&lt;roles|policies&gt;
+</pre></div>
+</div>
+</div></blockquote>
+<p>The default value for <code class="docutils literal"><span class="pre">property_protection_rule_format</span></code> is <code class="docutils literal"><span class="pre">roles</span></code>.</p>
+<p>Property protections are applied in the order specified in the configuration
+file.  This means that if for example you specify a section with <code class="docutils literal"><span class="pre">[.*]</span></code> at
+the top of the file, all proceeding sections will be ignored.</p>
+<p>If a property does not match any of the given rules, all operations will be
+disabled for all roles.</p>
+<p>If an operation is misspelled or omitted, that operation will be disabled for
+all roles.</p>
+<p>Disallowing <code class="docutils literal"><span class="pre">read</span></code> operations will also disallow <code class="docutils literal"><span class="pre">update/delete</span></code> operations.</p>
+<p>A successful HTTP request will return status <code class="docutils literal"><span class="pre">200</span> <span class="pre">OK</span></code>. If the user is not
+permitted to perform the requested action, <code class="docutils literal"><span class="pre">403</span> <span class="pre">Forbidden</span></code> will be returned.</p>
+</div>
+<div class="section" id="v1-api-x-glance-registry-purge-props">
+<h2>V1 API X-glance-registry-Purge-props<a class="headerlink" href="#v1-api-x-glance-registry-purge-props" title="Permalink to this headline">¶</a></h2>
+<p>Property protections will still be honoured if
+<code class="docutils literal"><span class="pre">X-glance-registry-Purge-props</span></code> is set to <code class="docutils literal"><span class="pre">True</span></code>. That is, if you request
+to modify properties with this header set to <code class="docutils literal"><span class="pre">True</span></code>, you will not be able to
+delete or update properties for which you do not have the relevant permissions.
+Properties which are not included in the request and for which you do have
+delete permissions will still be removed.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example 1</strong>. Limit all property interactions to admin only.</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre>[.*]
+create = admin
+read = admin
+update = admin
+delete = admin
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>Example 2</strong>. Allow both admins and users with the billing role to read
+and modify properties prefixed with <code class="docutils literal"><span class="pre">x_billing_code_</span></code>. Allow admins to
+read and modify any properties.</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre>[^x_billing_code_.*]
+create = admin,billing
+read = admin, billing
+update = admin,billing
+delete = admin,billing
+
+[.*]
+create = admin
+read = admin
+update = admin
+delete = admin
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>Example 3</strong>. Limit all property interactions to admin only using policy
+rule context_is_admin defined in policy.json.</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre>[.*]
+create = context_is_admin
+read = context_is_admin
+update = context_is_admin
+delete = context_is_admin
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">Property Protections</a><ul>
+<li><a class="reference internal" href="#constructing-a-property-protections-configuration-file">Constructing a Property Protections Configuration File</a></li>
+<li><a class="reference internal" href="#v1-api-x-glance-registry-purge-props">V1 API X-glance-registry-Purge-props</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/property-protections.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

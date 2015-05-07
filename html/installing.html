@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
+    <link rel="next" title="Basic Configuration" href="configuring.html" />
+    <link rel="prev" title="Metadata Definition Concepts" href="metadefs-concepts.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing-from-packages">
+<h2>Installing from packages<a class="headerlink" href="#installing-from-packages" title="Permalink to this headline">¶</a></h2>
+<p>To install the latest released version of Glance,
+follow the following instructions.</p>
+<div class="section" id="debian-ubuntu">
+<h3>Debian, Ubuntu<a class="headerlink" href="#debian-ubuntu" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Add the Glance PPA to your sources.lst:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; sudo add-apt-repository ppa:glance-core/trunk
+$&gt; sudo apt-get update
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; sudo apt-get install glance
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="red-hat-fedora">
+<h3>Red Hat, Fedora<a class="headerlink" href="#red-hat-fedora" title="Permalink to this headline">¶</a></h3>
+<p>Only RHEL 6, Fedora 18, and newer releases have the necessary
+components packaged.
+On RHEL 6, enable the EPEL repository.</p>
+<p>Install Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ su -
+# yum install openstack-glance
+</pre></div>
+</div>
+</div>
+<div class="section" id="opensuse-sle">
+<h3>openSUSE, SLE<a class="headerlink" href="#opensuse-sle" title="Permalink to this headline">¶</a></h3>
+<p>openSUSE 13.2, SLE 12, and the rolling release Factory needs an extra
+repository enabled to install all the OpenStack packages.</p>
+<p>Search the proper repository in the <a class="reference external" href="https://build.opensuse.org/project/repositories/Cloud:OpenStack:Master">Cloud:OpenStack:Master</a> project. For example, for openSUSE 13.2:</p>
+<ol class="arabic">
+<li><p class="first">Add the OpenStack master repository:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo zypper ar -f -g http://download.opensuse.org/repositories/Cloud:/OpenStack:/Master/openSUSE_13.2/ OpenStack
+$ sudo zypper ref
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo zypper in openstack-glance
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="installing-from-source-tarballs">
+<h2>Installing from source tarballs<a class="headerlink" href="#installing-from-source-tarballs" title="Permalink to this headline">¶</a></h2>
+<p>To install the latest version of Glance from the Launchpad Bazaar repositories,
+following the following instructions.</p>
+<ol class="arabic">
+<li><p class="first">Grab the source tarball from <a class="reference external" href="http://launchpad.net/glance/+download">Launchpad</a></p>
+</li>
+<li><p class="first">Untar the source tarball:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; tar -xzf &lt;FILE&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="first">Change into the package directory and build/install:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; cd glance-&lt;RELEASE&gt;
+$&gt; sudo python setup.py install
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="installing-from-git">
+<h2>Installing from Git<a class="headerlink" href="#installing-from-git" title="Permalink to this headline">¶</a></h2>
+<p>To install the latest version of Glance from the GitHub Git repositories,
+following the following instructions.</p>
+<div class="section" id="id1">
+<h3>Debian, Ubuntu<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Install Git and build dependencies:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; sudo apt-get install git
+$&gt; sudo apt-get build-dep glance
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to build the Glance documentation locally, you will also want
+to install the python-sphinx package</p>
+</div>
+<ol class="arabic" start="2">
+<li><p class="first">Clone Glance&#8217;s trunk branch from GitHub:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; git clone git://github.com/openstack/glance
+$&gt; cd glance
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; sudo python setup.py install
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="id2">
+<h3>Red Hat, Fedora<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>On Fedora, most developers and essentially all users install packages.
+Instructions below are not commonly used, and even then typically in a
+throw-away VM.</p>
+<p>Since normal build dependencies are resolved by mechanisms of RPM,
+there is no one-line command to install everything needed by
+the source repository in git. One common way to discover the dependencies
+is to search for <em>BuildRequires:</em> in the specfile of openstack-glance
+for the appropriate distro.</p>
+<p>In case of Fedora 16, for example, do this:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ su -
+# yum install git
+# yum install python2-devel python-setuptools python-distutils-extra
+# yum install python-webob python-eventlet
+# yum install python-virtualenv
+</pre></div>
+</div>
+<p>Build Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python setup.py build
+</pre></div>
+</div>
+<p>If any missing modules crop up, install them with yum, then retry the build.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to build the Glance documentation, you will also want
+to install the packages python-sphinx and graphviz, then run
+&#8220;python setup.py build_sphinx&#8221;. Due to required features of
+python-sphinx 1.0 or better, documentation can only be built
+on Fedora 15 or later.</p>
+</div>
+<p>Test the build:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ./run_tests.sh -s
+</pre></div>
+</div>
+<p>Once Glance is built and tested, install it:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ su -
+# python setup.py install
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>openSUSE, SLE<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>On openSUSE and SLE (also this is valid for Factory), we can install
+all the build dependencies using Zypper.</p>
+<ol class="arabic">
+<li><p class="first">Install Git and build dependencies:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo zypper install git
+$ sudo zypper source-install -d openstack-glance
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to build the Glance documentation locally, you will also want
+to install the packages python-sphinx and graphviz.</p>
+</div>
+<ol class="arabic" start="2">
+<li><p class="first">Clone Glance&#8217;s trunk branch from GitHub:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ git clone git://github.com/openstack/glance
+$ cd glance
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install Glance:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo python setup.py install
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#installing-from-packages">Installing from packages</a><ul>
+<li><a class="reference internal" href="#debian-ubuntu">Debian, Ubuntu</a></li>
+<li><a class="reference internal" href="#red-hat-fedora">Red Hat, Fedora</a></li>
+<li><a class="reference internal" href="#opensuse-sle">openSUSE, SLE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installing-from-source-tarballs">Installing from source tarballs</a></li>
+<li><a class="reference internal" href="#installing-from-git">Installing from Git</a><ul>
+<li><a class="reference internal" href="#id1">Debian, Ubuntu</a></li>
+<li><a class="reference internal" href="#id2">Red Hat, Fedora</a></li>
+<li><a class="reference internal" href="#id3">openSUSE, SLE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="metadefs-concepts.html"
+                                  title="previous chapter">Metadata Definition Concepts</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="configuring.html"
+                                  title="next chapter">Basic Configuration</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/installing.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="configuring.html" title="Basic Configuration"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="metadefs-concepts.html" title="Metadata Definition Concepts"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Policies &mdash; Glance 2015.1.1.dev9 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2015.1.1.dev9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
+    <link rel="next" title="Controlling Glance Servers" href="controllingservers.html" />
+    <link rel="prev" title="Authentication With Keystone" href="authentication.html" /> 
+  </head>
+  <body role="document">
+  <div id="header">
+    <h1 id="logo"><a href="http://www.openstack.org/">OpenStack</a></h1>
+    <ul id="navigation">
+      
+      <li><a href="http://www.openstack.org/" title="Go to the Home page" class="link">Home</a></li>
+      <li><a href="http://www.openstack.org/projects/" title="Go to the OpenStack Projects page">Projects</a></li>
+      <li><a href="http://www.openstack.org/user-stories/" title="Go to the User Stories page" class="link">User Stories</a></li>
+      <li><a href="http://www.openstack.org/community/" title="Go to the Community page" class="link">Community</a></li>
+      <li><a href="http://www.openstack.org/blog/" title="Go to the OpenStack Blog">Blog</a></li>
+      <li><a href="http://wiki.openstack.org/" title="Go to the OpenStack Wiki">Wiki</a></li>
+      <li><a href="http://docs.openstack.org/" title="Go to OpenStack Documentation" class="current">Documentation</a></li>
+      
+    </ul>
+  </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="policies">
+<h1>Policies<a class="headerlink" href="#policies" title="Permalink to this headline">¶</a></h1>
+<p>Glance&#8217;s public API calls may be restricted to certain sets of users using a
+policy configuration file. This document explains exactly how policies are
+configured and what they apply to.</p>
+<p>A policy is composed of a set of rules that are used by the policy &#8220;Brain&#8221; in
+determining if a particular action may be performed by the authorized tenant.</p>
+<div class="section" id="constructing-a-policy-configuration-file">
+<h2>Constructing a Policy Configuration File<a class="headerlink" href="#constructing-a-policy-configuration-file" title="Permalink to this headline">¶</a></h2>
+<p>A policy configuration file is a simply JSON object that contain sets of
+rules. Each top-level key is the name of a rule. Each rule
+is a string that describes an action that may be performed in the Glance API.</p>
+<p>The actions that may have a rule enforced on them are:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">get_images</span></code> - List available image entities<ul>
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/v1/images</span></code></li>
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/v1/images/detail</span></code></li>
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/v2/images</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">get_image</span></code> - Retrieve a specific image entity<ul>
+<li><code class="docutils literal"><span class="pre">HEAD</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;</span></code></li>
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;</span></code></li>
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">download_image</span></code> - Download binary image data<ul>
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;</span></code></li>
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;/file</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">upload_image</span></code> - Upload binary image data<ul>
+<li><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/v1/images</span></code></li>
+<li><code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;</span></code></li>
+<li><code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;/file</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">copy_from</span></code> - Copy binary image data from URL<ul>
+<li><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/v1/images</span></code></li>
+<li><code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">add_image</span></code> - Create an image entity<ul>
+<li><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/v1/images</span></code></li>
+<li><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/v2/images</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">modify_image</span></code> - Update an image entity<ul>
+<li><code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;</span></code></li>
+<li><code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">publicize_image</span></code> - Create or update images with attribute<ul>
+<li><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/v1/images</span></code> with attribute <code class="docutils literal"><span class="pre">is_public</span></code> = <code class="docutils literal"><span class="pre">true</span></code></li>
+<li><code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;</span></code> with attribute <code class="docutils literal"><span class="pre">is_public</span></code> = <code class="docutils literal"><span class="pre">true</span></code></li>
+<li><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/v2/images</span></code> with attribute <code class="docutils literal"><span class="pre">visibility</span></code> = <code class="docutils literal"><span class="pre">public</span></code></li>
+<li><code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;</span></code> with attribute <code class="docutils literal"><span class="pre">visibility</span></code> = <code class="docutils literal"><span class="pre">public</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">delete_image</span></code> - Delete an image entity and associated binary data<ul>
+<li><code class="docutils literal"><span class="pre">DELETE</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;</span></code></li>
+<li><code class="docutils literal"><span class="pre">DELETE</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">add_member</span></code> - Add a membership to the member repo of an image<ul>
+<li><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;/members</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">get_members</span></code> - List the members of an image<ul>
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;/members</span></code></li>
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;/members</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">delete_member</span></code> - Delete a membership of an image<ul>
+<li><code class="docutils literal"><span class="pre">DELETE</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;/members/&lt;MEMBER_ID&gt;</span></code></li>
+<li><code class="docutils literal"><span class="pre">DELETE</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;/members/&lt;MEMBER_ID&gt;</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">modify_member</span></code> - Create or update the membership of an image<ul>
+<li><code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;/members/&lt;MEMBER_ID&gt;</span></code></li>
+<li><code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/v1/images/&lt;IMAGE_ID&gt;/members</span></code></li>
+<li><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;/members</span></code></li>
+<li><code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/v2/images/&lt;IMAGE_ID&gt;/members/&lt;MEMBER_ID&gt;</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">manage_image_cache</span></code> - Allowed to use the image cache management API</li>
+</ul>
+<p>To limit an action to a particular role or roles, you list the roles like so</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;delete_image&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;role:admin&quot;</span><span class="p">,</span> <span class="s">&quot;role:superuser&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The above would add a rule that only allowed users that had roles of either
+&#8220;admin&#8221; or &#8220;superuser&#8221; to delete an image.</p>
+</div>
+<div class="section" id="writing-rules">
+<h2>Writing Rules<a class="headerlink" href="#writing-rules" title="Permalink to this headline">¶</a></h2>
+<p>Role checks are going to continue to work exactly as they already do. If the
+role defined in the check is one that the user holds, then that will pass,
+e.g., <code class="docutils literal"><span class="pre">role:admin</span></code>.</p>
+<p>To write a generic rule, you need to know that there are three values provided
+by Glance that can be used in a rule on the left side of the colon (<code class="docutils literal"><span class="pre">:</span></code>).
+Those values are the current user&#8217;s credentials in the form of:</p>
+<ul class="simple">
+<li>role</li>
+<li>tenant</li>
+<li>owner</li>
+</ul>
+<p>The left side of the colon can also contain any value that Python can
+understand, e.g.,:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">True</span></code></li>
+<li><code class="docutils literal"><span class="pre">False</span></code></li>
+<li><code class="docutils literal"><span class="pre">&quot;a</span> <span class="pre">string&quot;</span></code></li>
+<li>&amp;c.</li>
+</ul>
+<p>Using <code class="docutils literal"><span class="pre">tenant</span></code> and <code class="docutils literal"><span class="pre">owner</span></code> will only work with images. Consider the
+following rule:</p>
+<div class="highlight-python"><div class="highlight"><pre>tenant:%(owner)s
+</pre></div>
+</div>
+<p>This will use the <code class="docutils literal"><span class="pre">tenant</span></code> value of the currently authenticated user. It
+will also use <code class="docutils literal"><span class="pre">owner</span></code> from the image it is acting upon. If those two
+values are equivalent the check will pass. All attributes on an image (as well
+as extra image properties) are available for use on the right side of the
+colon. The most useful are the following:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">owner</span></code></li>
+<li><code class="docutils literal"><span class="pre">protected</span></code></li>
+<li><code class="docutils literal"><span class="pre">is_public</span></code></li>
+</ul>
+<p>Therefore, you could construct a set of rules like the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;not_protected&quot;</span><span class="p">:</span> <span class="s">&quot;False:</span><span class="si">%(protected)s</span><span class="s">&quot;</span><span class="p">,</span>
+    <span class="s">&quot;is_owner&quot;</span><span class="p">:</span> <span class="s">&quot;tenant:</span><span class="si">%(owner)s</span><span class="s">&quot;</span><span class="p">,</span>
+    <span class="s">&quot;is_owner_or_admin&quot;</span><span class="p">:</span> <span class="s">&quot;rule:is_owner or role:admin&quot;</span><span class="p">,</span>
+    <span class="s">&quot;not_protected_and_is_owner&quot;</span><span class="p">:</span> <span class="s">&quot;rule:not_protected and rule:is_owner&quot;</span><span class="p">,</span>
+
+    <span class="s">&quot;get_image&quot;</span><span class="p">:</span> <span class="s">&quot;rule:is_owner_or_admin&quot;</span><span class="p">,</span>
+    <span class="s">&quot;delete_image&quot;</span><span class="p">:</span> <span class="s">&quot;rule:not_protected_and_is_owner&quot;</span><span class="p">,</span>
+    <span class="s">&quot;add_member&quot;</span><span class="p">:</span> <span class="s">&quot;rule:not_protected_and_is_owner&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Example 1. (The default policy configuration)</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="s">&quot;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Note that an empty JSON list means that all methods of the
+Glance API are callable by anyone.</p>
+<p>Example 2. Disallow modification calls to non-admins</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+    <span class="s">&quot;add_image&quot;</span><span class="p">:</span> <span class="s">&quot;role:admin&quot;</span><span class="p">,</span>
+    <span class="s">&quot;modify_image&quot;</span><span class="p">:</span> <span class="s">&quot;role:admin&quot;</span><span class="p">,</span>
+    <span class="s">&quot;delete_image&quot;</span><span class="p">:</span> <span class="s">&quot;role:admin&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+<div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference internal" href="#">Policies</a><ul>
+<li><a class="reference internal" href="#constructing-a-policy-configuration-file">Constructing a Policy Configuration File</a></li>
+<li><a class="reference internal" href="#writing-rules">Writing Rules</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="authentication.html"
+                                  title="previous chapter">Authentication With Keystone</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="controllingservers.html"
+                                  title="next chapter">Controlling Glance Servers</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/policies.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+    </div>
+</div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="controllingservers.html" title="Controlling Glance Servers"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="authentication.html" title="Authentication With Keystone"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2010-2014, OpenStack Foundation..
+      Last updated on Sat May 2 03:07:23 2015, commit bcc7721.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>
