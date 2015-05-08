@@ -37,7 +37,7 @@ Glance架构包含几个组件：
 
 * **客户端** - 使用Glance服务器的任何应用。
 
-* **REST API** - 通过ＲＥＳＴ暴露Glance功能。
+* **REST API** - 通过REST公开Glance的功能。
 
 * **数据库抽象层（DAL）** - 统一Glance和数据通信的应用程序接口。
 

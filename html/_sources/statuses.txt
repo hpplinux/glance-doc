@@ -14,82 +14,65 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Image Statuses
-==============
+镜像状态
+=======
 
-Images in Glance can be in one the following statuses:
+在Glance中镜像可以是以下的任意一种状态：
 
-* ``queued``
+* ``在队列中（queued）``
 
-  The image identifier has been reserved for an image in the Glance
-  registry. No image data has been uploaded to Glance and the image
-  size was not explicitly set to zero on creation.
+  每个镜像的镜像标识符预留在Glance注册表（registry）中。在创建的时候不会上传镜像数据到Glance，并且镜像大小被显式设为0。
 
-* ``saving``
+* ``正在保存（saving）``
 
-  Denotes that an image's raw data is currently being uploaded to Glance.
-  When an image is registered with a call to `POST /images` and there
-  is an `x-image-meta-location` header present, that image will never be in
-  the `saving` status (as the image data is already available in some other
-  location).
+  表明镜像原始数据正在上传到Glance。当镜像调用 `POST /images` 并且 `x-image-meta-location` 头出现时镜像就注册了，这个镜像将永远不会再 `正在保存` 状态（因为镜像数据已经在其他位置可用了）。
 
-* ``active``
+* ``激活的（active）``
 
-  Denotes an image that is fully available in Glance. This occurs when
-  the image data is uploaded, or the image size is explicitly set to
-  zero on creation.
+  表明镜像在Glance完全可用了。当镜像数据已经上传，或者镜像大小在创建时显式设为0就会发生。
 
-* ``killed``
+* ``被停止的（killed）``
 
-  Denotes that an error occurred during the uploading of an image's data,
-  and that the image is not readable.
+  表明在上传镜像数据时发生了错误，并且镜像是不可读的。
 
-* ``deleted``
+* ``被删除的（deleted）``
 
-  Glance has retained the information about the image, but it is no longer
-  available to use. An image in this state will be removed automatically
-  at a later date.
+  Glance保留过镜像的信息，但它不再可用了。在这个状态的镜像在以后将会自动被移除。
 
-* ``pending_delete``
+* ``排队删除中（pending_delete）``
 
-  This is similar to `deleted`, however, Glance has not yet removed the
-  image data. An image in this state is not recoverable.
-
+  这更 `被删除的` 很像，然后Glance还没有完全移出镜像数据。在这个状态的镜像是不可恢复的。
 
 .. figure:: /images/image_status_transition.png
    :figwidth: 100%
    :align: center
-   :alt: Image status transition
+   :alt: Image状态转移
 
-   This is a representation of how the image move from one status to the next.
+   这展示了镜像是如何从一个状态转换成下一个状态的。
 
-   * Add location from zero to more than one.
+   * 从零开始添加一个或多个地址。
 
-   * Remove location from one or more to zero by PATCH method which is only
-     supported in v2.
+   * 通过PATCH方法将一个或多个地址全部移除，这只在v2中支持。
 
-Task Statuses
+任务（Task）状态
 ==============
 
-Tasks in Glance can be in one the following statuses:
+Glance中任务可以在以下任意一个状态：
 
-* ``pending``
+* ``等待中（pending）``
 
-  The task identifier has been reserved for a task in the Glance.
-  No processing has begun on it yet.
+  每个任务的任务标识符都在Glance中保留。当前还没开始执行。
 
-* ``processing``
+* ``正在处理（processing）``
 
+  任务已经被底层的执行器（Executor）选中，并且根据任务类型使用Glance后端处理罗辑执行中。
   The task has been picked up by the underlying executor and is being run
   using the backend Glance execution logic for that task type.
 
-* ``success``
+* ``成功（success）``
 
-  Denotes that the task has had a successful run within Glance. The ``result``
-  field of the task shows more details about the outcome.
+  表明任务在Glance中已经成功执行。任务的 ``result`` 字段展示了结果的更多细节。
 
-* ``failure``
+* ``失败（failure）``
 
-  Denotes that an error occurred during the execution of the task and it
-  cannot continue processing. The ``message`` field of the task shows what the
-  error was.
+  表明在任务执行过程中发生了错误，并且它不能继续执行。任务的 ``message`` 字段展示了具体的错误。

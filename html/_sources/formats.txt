@@ -14,8 +14,8 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Disk and Container Formats
-==========================
+磁盘和容器格式
+============
 
 When adding an image to Glance, you must specify what the virtual
 machine image's *disk format* and *container format* are. Disk and container
@@ -23,8 +23,8 @@ formats are configurable on a per-deployment basis. This document intends to
 establish a global convention for what specific values of *disk_format* and
 *container_format* mean.
 
-Disk Format
------------
+磁盘格式
+-------
 
 The disk format of a virtual machine image is the format of the underlying
 disk image. Virtual appliance vendors have different formats for laying out
@@ -71,8 +71,8 @@ You can set your image's disk format to one of the following:
 
   This indicates what is stored in Glance is an Amazon machine image
 
-Container Format
-----------------
+容器格式
+-------
 
 The container format refers to whether the virtual machine image is in a
 file format that also contains metadata about the actual virtual machine.
@@ -101,8 +101,8 @@ You can set your image's container format to one of the following:
 
 * **ami**
 
-  This indicates what is stored in Glance is an Amazon machine image
+  表明存储在Glance的是Amazon机器（Machine）镜像
 
 * **ova**
 
-  This indicates what is stored in Glance is an OVA tar archive file
+  表明存储在Glance的是OVA压缩文件

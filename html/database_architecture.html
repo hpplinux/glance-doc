@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
-    <link rel="next" title="Image Identifiers" href="identifiers.html" />
+    <link rel="next" title="镜像标识符（Identifier）" href="identifiers.html" />
     <link rel="prev" title="基本架构" href="architecture.html" /> 
   </head>
   <body role="document">
@@ -54,20 +54,15 @@
 <h1>Glance数据库架构<a class="headerlink" href="#glance" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="glanceapi">
 <h2>Glance数据库公共API<a class="headerlink" href="#glanceapi" title="Permalink to this headline">¶</a></h2>
-<p>Glance DB API contains several methods to process information from
-and to a persistent storage. Below you can find a list of public
-methods grouped by categories.</p>
+<p>Glance数据库API包含几个方法来初级给持久存储发送和接受的消息。在下面你可以找到一个列表按目录划分了公共方法。</p>
 <div class="section" id="id1">
 <h3>镜像方法通用参数<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt>The following parameters can be applied to all the below image methods:</dt>
+<dt>以下的参数可以用在下面所有的镜像方法中：</dt>
 <dd><ul class="first last simple">
-<li><code class="docutils literal"><span class="pre">context</span></code> corresponds to a value with glance.context.RequestContext
-object, which stores the information on how a user accesses
-the system, as well as additional request information;</li>
-<li><code class="docutils literal"><span class="pre">image_id</span></code> — a string corresponding to the image identifier;</li>
-<li><code class="docutils literal"><span class="pre">memb_id</span></code> — a string corresponding to the member identifier
-of the image.</li>
+<li><code class="docutils literal"><span class="pre">context</span></code> 对应glance.context.RequestContext对象的一个值，它存储了用户如何访问系统的信息和请求的额外信息；</li>
+<li><code class="docutils literal"><span class="pre">image_id</span></code> — 对应镜像标识（identifier）的一个字符串；</li>
+<li><code class="docutils literal"><span class="pre">memb_id</span></code> — 对应镜像的成员（member）标识的一个字符串。</li>
 </ul>
 </dd>
 </dl>
@@ -76,10 +71,7 @@ of the image.</li>
 <h3>镜像基本方法<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p><strong>镜像处理方法：</strong></p>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">image_create(context,</span> <span class="pre">values)</span></code> - creates a new image record
-with parameters listed in the <em>values</em> dictionary. Returns a
-dictionary representation of a newly created <em>glance.db.sqlalchemy.
-models.Image</em> object.</li>
+<li><code class="docutils literal"><span class="pre">image_create(context,</span> <span class="pre">values)</span></code> - 使用 <em>values</em> 字典（Dictionary）的参数创建一个新的镜像记录。返回一个 <em>glance.db.sqlalchemy.models.Image</em> 对象的字典表达式（Dictionary Representation）。</li>
 <li><code class="docutils literal"><span class="pre">image_update(context,</span> <span class="pre">image_id,</span> <span class="pre">values,</span> <span class="pre">purge_props=False,</span>
 <span class="pre">from_state=None)</span></code> - updates the existing image with an identifier
 <em>image_id</em> with values listed in the <em>values</em> dictionary. Returns a
@@ -87,7 +79,7 @@ dictionary representation of a newly created <em>Image</em> object.</li>
 </ol>
 <blockquote>
 <div><dl class="docutils">
-<dt>Optional parameters are:</dt>
+<dt>可选参数有：</dt>
 <dd><ul class="first last simple">
 <li><code class="docutils literal"><span class="pre">purge_props</span></code> - a flag indicating that all the existing
 properties not listed in the <em>values[‘properties’]</em> should be
@@ -115,7 +107,7 @@ all the images that match zero or more filters.</li>
 </ol>
 <blockquote>
 <div><dl class="docutils">
-<dt>Optional parameters are:</dt>
+<dt>可选参数有：</dt>
 <dd><ul class="first last simple">
 <li><code class="docutils literal"><span class="pre">filters</span></code> - dict of filter keys and values. If a &#8216;properties&#8217;
 key is present, it is treated as a dict of key/value filters in
@@ -160,14 +152,7 @@ the dictionary <em>location</em>.</li>
 </div>
 <div class="section" id="id4">
 <h3>镜像属性方法<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">There is no public property update method.</p>
-</div>
-<dl class="docutils">
-<dt>So if you want to modify it, you have to delete it first</dt>
-<dd>and then create a new one.</dd>
-</dl>
+<p>所以如果你想修改它，你必须先删除它然后重新创建新的。</p>
 <p><strong>镜像属性处理方法：</strong></p>
 <ol class="arabic simple">
 <li><code class="docutils literal"><span class="pre">image_property_create(context,</span> <span class="pre">values)</span></code> - creates
@@ -220,9 +205,7 @@ for a specific image.</li>
 </div>
 <div class="section" id="id6">
 <h3>镜像信息方法<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
-<p>The next two methods inform a user about his ability to modify
-and view an image. <em>image</em> param here is a dictionary representation
-of an <em>Image</em> object.</p>
+<p>下面两个方法告诉用户他修改和查看镜像的能力。这里的*image*参数是*Image*对象的字典表达式（Dictionary Representation）。</p>
 <ol class="arabic simple">
 <li><code class="docutils literal"><span class="pre">is_image_mutable(context,</span> <span class="pre">image)</span></code> - informs a user
 about the possibility to modify an image with a given context.
@@ -257,7 +240,7 @@ in this context.</li>
 </tbody>
 </table>
 <p class="centered">
-<strong>Image 1. Glance images DB schema</strong></p></div>
+<strong>Image 1. Glance镜像数据库Schema</strong></p></div>
 </div>
 </div>
 
@@ -289,7 +272,7 @@ in this context.</li>
                                   title="previous chapter">基本架构</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="identifiers.html"
-                                  title="next chapter">Image Identifiers</a></p>
+                                  title="next chapter">镜像标识符（Identifier）</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="_sources/database_architecture.txt"
@@ -317,7 +300,7 @@ in this context.</li>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="identifiers.html" title="Image Identifiers"
+          <a href="identifiers.html" title="镜像标识符（Identifier）"
              accesskey="N">next</a></li>
         <li class="right" >
           <a href="architecture.html" title="基本架构"

@@ -14,14 +14,11 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Image Identifiers
-=================
+镜像标识符（Identifier）
+=====================
 
-Images are uniquely identified by way of a URI that
-matches the following signature::
+镜像通过符合以下签名的URL来唯一标识::
 
   <Glance Server Location>/v1/images/<ID>
 
-where `<Glance Server Location>` is the resource location of the Glance service
-that knows about an image, and `<ID>` is the image's identifier. Image
-identifiers in Glance are *uuids*, making them *globally unique*.
+这里 `<Glance Server Location>` 是Glance服务的资源地址，它知道镜像的信息，而 `<ID>` 是镜像的标识符。在Glance中镜像标识符是 *uuids* ，确保他们是 *全局唯一* 的。

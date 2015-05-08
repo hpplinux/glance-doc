@@ -21,36 +21,28 @@ Glance数据库架构
 Glance数据库公共API
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Glance DB API contains several methods to process information from
-and to a persistent storage. Below you can find a list of public
-methods grouped by categories.
+Glance数据库API包含几个方法来初级给持久存储发送和接受的消息。在下面你可以找到一个列表按目录划分了公共方法。
 
 镜像方法通用参数
 -------------
 
-The following parameters can be applied to all the below image methods:
- - ``context`` corresponds to a value with glance.context.RequestContext
-   object, which stores the information on how a user accesses
-   the system, as well as additional request information;
- - ``image_id`` — a string corresponding to the image identifier;
- - ``memb_id`` — a string corresponding to the member identifier
-   of the image.
+以下的参数可以用在下面所有的镜像方法中：
+ - ``context`` 对应glance.context.RequestContext对象的一个值，它存储了用户如何访问系统的信息和请求的额外信息；
+ - ``image_id`` — 对应镜像标识（identifier）的一个字符串；
+ - ``memb_id`` — 对应镜像的成员（member）标识的一个字符串。
 
 镜像基本方法
 ----------
 
 **镜像处理方法：**
 
-#. ``image_create(context, values)`` - creates a new image record
-   with parameters listed in the *values* dictionary. Returns a
-   dictionary representation of a newly created *glance.db.sqlalchemy.
-   models.Image* object.
+#. ``image_create(context, values)`` - 使用 *values* 字典（Dictionary）的参数创建一个新的镜像记录。返回一个 *glance.db.sqlalchemy.models.Image* 对象的字典表达式（Dictionary Representation）。
 #. ``image_update(context, image_id, values, purge_props=False,
    from_state=None)`` - updates the existing image with an identifier
    *image_id* with values listed in the *values* dictionary. Returns a
    dictionary representation of a newly created *Image* object.
 
- Optional parameters are:
+ 可选参数有：
      - ``purge_props`` - a flag indicating that all the existing
        properties not listed in the *values[‘properties’]* should be
        deleted;
@@ -71,7 +63,7 @@ The following parameters can be applied to all the below image methods:
    is_public=None, admin_as_user=False, return_tag=False)`` - gets
    all the images that match zero or more filters.
 
- Optional parameters are:
+ 可选参数有：
      - ``filters`` - dict of filter keys and values. If a 'properties'
        key is present, it is treated as a dict of key/value filters in
        the attribute of the image properties.
@@ -112,9 +104,8 @@ The following parameters can be applied to all the below image methods:
 镜像属性方法
 ----------
 
-.. warning:: There is no public property update method.
-So if you want to modify it, you have to delete it first
-   and then create a new one.
+.. 警告:: 这里没有公共的属性更新方法。
+所以如果你想修改它，你必须先删除它然后重新创建新的。
 
 **镜像属性处理方法：**
 
@@ -168,9 +159,7 @@ So if you want to modify it, you have to delete it first
 镜像信息方法
 ----------
 
-The next two methods inform a user about his ability to modify
-and view an image. *image* param here is a dictionary representation
-of an *Image* object.
+下面两个方法告诉用户他修改和查看镜像的能力。这里的*image*参数是*Image*对象的字典表达式（Dictionary Representation）。
 
 #. ``is_image_mutable(context, image)`` - informs a user
    about the possibility to modify an image with a given context.
@@ -187,4 +176,4 @@ of an *Image* object.
    :align: center
        :alt: Glance images DB schema
 
-.. centered:: Image 1. Glance images DB schema
+.. centered:: Image 1. Glance镜像数据库Schema

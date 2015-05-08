@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Disk and Container Formats &mdash; Glance 2015.1.1.dev9 documentation</title>
+    <title>磁盘和容器格式 &mdash; Glance 2015.1.1.dev9 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
     <link rel="next" title="Common Image Properties" href="common-image-properties.html" />
-    <link rel="prev" title="Image Statuses" href="statuses.html" /> 
+    <link rel="prev" title="镜像状态" href="statuses.html" /> 
   </head>
   <body role="document">
   <div id="header">
@@ -50,15 +50,15 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="disk-and-container-formats">
-<h1>Disk and Container Formats<a class="headerlink" href="#disk-and-container-formats" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="id1">
+<h1>磁盘和容器格式<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>When adding an image to Glance, you must specify what the virtual
 machine image&#8217;s <em>disk format</em> and <em>container format</em> are. Disk and container
 formats are configurable on a per-deployment basis. This document intends to
 establish a global convention for what specific values of <em>disk_format</em> and
 <em>container_format</em> mean.</p>
-<div class="section" id="disk-format">
-<h2>Disk Format<a class="headerlink" href="#disk-format" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>磁盘格式<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>The disk format of a virtual machine image is the format of the underlying
 disk image. Virtual appliance vendors have different formats for laying out
 the information contained in a virtual machine disk image.</p>
@@ -96,8 +96,8 @@ supports Copy on Write</p>
 </li>
 </ul>
 </div>
-<div class="section" id="container-format">
-<h2>Container Format<a class="headerlink" href="#container-format" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>容器格式<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>The container format refers to whether the virtual machine image is in a
 file format that also contains metadata about the actual virtual machine.</p>
 <p>Note that the container format string is not currently used by Glance or
@@ -118,10 +118,10 @@ the container format if you are unsure.</p>
 <p>This indicates what is stored in Glance is an Amazon ramdisk image</p>
 </li>
 <li><p class="first"><strong>ami</strong></p>
-<p>This indicates what is stored in Glance is an Amazon machine image</p>
+<p>表明存储在Glance的是Amazon机器（Machine）镜像</p>
 </li>
 <li><p class="first"><strong>ova</strong></p>
-<p>This indicates what is stored in Glance is an OVA tar archive file</p>
+<p>表明存储在Glance的是OVA压缩文件</p>
 </li>
 </ul>
 </div>
@@ -135,16 +135,16 @@ the container format if you are unsure.</p>
     <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference internal" href="#">Disk and Container Formats</a><ul>
-<li><a class="reference internal" href="#disk-format">Disk Format</a></li>
-<li><a class="reference internal" href="#container-format">Container Format</a></li>
+<li><a class="reference internal" href="#">磁盘和容器格式</a><ul>
+<li><a class="reference internal" href="#id2">磁盘格式</a></li>
+<li><a class="reference internal" href="#id3">容器格式</a></li>
 </ul>
 </li>
 </ul>
 
             <h4>Previous topic</h4>
             <p class="topless"><a href="statuses.html"
-                                  title="previous chapter">Image Statuses</a></p>
+                                  title="previous chapter">镜像状态</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="common-image-properties.html"
                                   title="next chapter">Common Image Properties</a></p>
@@ -178,7 +178,7 @@ the container format if you are unsure.</p>
           <a href="common-image-properties.html" title="Common Image Properties"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="statuses.html" title="Image Statuses"
+          <a href="statuses.html" title="镜像状态"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
       </ul>

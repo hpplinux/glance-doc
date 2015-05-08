@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Image Identifiers &mdash; Glance 2015.1.1.dev9 documentation</title>
+    <title>镜像标识符（Identifier） &mdash; Glance 2015.1.1.dev9 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
-    <link rel="next" title="Image Statuses" href="statuses.html" />
-    <link rel="prev" title="Glance database architecture" href="database_architecture.html" /> 
+    <link rel="next" title="镜像状态" href="statuses.html" />
+    <link rel="prev" title="Glance数据库架构" href="database_architecture.html" /> 
   </head>
   <body role="document">
   <div id="header">
@@ -50,16 +50,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="image-identifiers">
-<h1>Image Identifiers<a class="headerlink" href="#image-identifiers" title="Permalink to this headline">¶</a></h1>
-<p>Images are uniquely identified by way of a URI that
-matches the following signature:</p>
+  <div class="section" id="identifier">
+<h1>镜像标识符（Identifier）<a class="headerlink" href="#identifier" title="Permalink to this headline">¶</a></h1>
+<p>镜像通过符合以下签名的URL来唯一标识:</p>
 <div class="highlight-python"><div class="highlight"><pre>&lt;Glance Server Location&gt;/v1/images/&lt;ID&gt;
 </pre></div>
 </div>
-<p>where <cite>&lt;Glance Server Location&gt;</cite> is the resource location of the Glance service
-that knows about an image, and <cite>&lt;ID&gt;</cite> is the image&#8217;s identifier. Image
-identifiers in Glance are <em>uuids</em>, making them <em>globally unique</em>.</p>
+<p>这里 <cite>&lt;Glance Server Location&gt;</cite> 是Glance服务的资源地址，它知道镜像的信息，而 <cite>&lt;ID&gt;</cite> 是镜像的标识符。在Glance中镜像标识符是 <em>uuids</em> ，确保他们是 <em>全局唯一</em> 的。</p>
 </div>
 
 
@@ -70,10 +67,10 @@ identifiers in Glance are <em>uuids</em>, making them <em>globally unique</em>.<
     <div class="sphinxsidebarwrapper">
             <h4>Previous topic</h4>
             <p class="topless"><a href="database_architecture.html"
-                                  title="previous chapter">Glance database architecture</a></p>
+                                  title="previous chapter">Glance数据库架构</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="statuses.html"
-                                  title="next chapter">Image Statuses</a></p>
+                                  title="next chapter">镜像状态</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="_sources/identifiers.txt"
@@ -101,10 +98,10 @@ identifiers in Glance are <em>uuids</em>, making them <em>globally unique</em>.<
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="statuses.html" title="Image Statuses"
+          <a href="statuses.html" title="镜像状态"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="database_architecture.html" title="Glance database architecture"
+          <a href="database_architecture.html" title="Glance数据库架构"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
       </ul>
