@@ -17,87 +17,75 @@
 磁盘和容器格式
 ============
 
-When adding an image to Glance, you must specify what the virtual
-machine image's *disk format* and *container format* are. Disk and container
-formats are configurable on a per-deployment basis. This document intends to
-establish a global convention for what specific values of *disk_format* and
-*container_format* mean.
+当添加镜像到Glance时，你必须指定虚拟机镜像的 *磁盘格式* 和 *容器格式* 。磁盘和容器格式每次部署时都可以配置的。这个文档为了公布 *磁盘格式* 和 *容器格式* 的值的全局预定。
 
 磁盘格式
 -------
 
-The disk format of a virtual machine image is the format of the underlying
-disk image. Virtual appliance vendors have different formats for laying out
-the information contained in a virtual machine disk image.
+虚拟机镜像的磁盘格式就是底层的磁盘镜像格式。虚拟设备供应商有不同的制定虚拟机磁盘镜像信息的格式。
 
-You can set your image's disk format to one of the following:
+你可以将你的镜像磁盘格式设置为以下任意一种：
 
 * **raw**
 
-  This is an unstructured disk image format
+  这是非结构化磁盘镜像格式
 
 * **vhd**
 
-  This is the VHD disk format, a common disk format used by virtual machine
-  monitors from VMWare, Xen, Microsoft, VirtualBox, and others
+  这是VHD磁盘格式，它是一种由VMWare、Xen、微软、VirtualBox和其他虚拟机提供商（Monitor）采用的常见磁盘格式
 
 * **vmdk**
 
-  Another common disk format supported by many common virtual machine monitors
+  这是另一个由很多通用虚拟机提供商支持的常见磁盘格式
 
 * **vdi**
 
-  A disk format supported by VirtualBox virtual machine monitor and the QEMU
-  emulator
+  这是由VirtualBox虚拟机提供商和QEMU模拟器支持的磁盘格式
 
 * **iso**
 
-  An archive format for the data contents of an optical disc (e.g. CDROM).
+  这是一种光学磁盘（例如CDROM）的数据内容的打包格式
 
 * **qcow2**
 
-  A disk format supported by the QEMU emulator that can expand dynamically and
-  supports Copy on Write
+  这是由QEMU模拟器支持并且能够支持动态拓展和支持写时复制（Copy on Write）的磁盘格式
 
 * **aki**
 
-  This indicates what is stored in Glance is an Amazon kernel image
+  这表明保存在Glance的是Amazon内核（Kernel）镜像
 
 * **ari**
 
-  This indicates what is stored in Glance is an Amazon ramdisk image
+  这表明保存在Glance的是Amazon Ramdisk镜像
 
 * **ami**
 
-  This indicates what is stored in Glance is an Amazon machine image
+  这表明保存在Glance的是Amazon机器（Machine）镜像
 
 容器格式
 -------
 
-The container format refers to whether the virtual machine image is in a
-file format that also contains metadata about the actual virtual machine.
+容器格式是指虚拟机镜像用的是哪一种文件格式，这文件格式同样包含了关于具体虚拟机的元数据。
 
-Note that the container format string is not currently used by Glance or
-other OpenStack components, so it is safe to simply specify **bare** as
-the container format if you are unsure.
+注意容器格式字符串目前并不在Glance和其他OpenStack组件中使用，所以如果你不确定容器格式，简单地使用 **bare** 也是安全的。
 
-You can set your image's container format to one of the following:
+你可以设置你镜像的容器格式为以下任意一种：
 
 * **bare**
 
-  This indicates there is no container or metadata envelope for the image
+  这表明没有此镜像的容器或元数据封装（Envelope）
 
 * **ovf**
 
-  This is the OVF container format
+  这是OVF容器格式
 
 * **aki**
 
-  This indicates what is stored in Glance is an Amazon kernel image
+  这表明保存在Glance的是Amazon内核镜像
 
 * **ari**
 
-  This indicates what is stored in Glance is an Amazon ramdisk image
+  这表明保存在Glance的是Amazon Ramdisk镜像
 
 * **ami**
 
