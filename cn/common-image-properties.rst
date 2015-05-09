@@ -14,47 +14,43 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Common Image Properties
-=======================
+常见镜像属性
+==========
 
-When adding an image to Glance, you may specify some common image properties
-that may prove useful to consumers of your image.
+当添加镜像到Glance时，你可以指定一些常见的镜像数据，这对使用你镜像的客户有好处。
 
-This document explains the names of these properties and the expected values.
+这个文档解释了这些属性名和它们预期的值。
 
-The common image properties are also described in a JSON schema, found in
-etc/schema-image.json in the Glance source code.
+常见的镜像属性是用JSON格式（Schema）来描述的，在Glance源代码的etc/schema-image.json中可以找到。
 
 **architecture**
 ----------------
 
-Operating system architecture as specified in
+操作系统架构在这里指定
 http://docs.openstack.org/trunk/openstack-compute/admin/content/adding-images.html
 
 **instance_uuid**
 -----------------
 
-The ID of the instance used to create this image.
+用于创建这个镜像的实例的ID。
 
 **kernel_id**
 -------------
 
-The ID of image stored in Glance that should be used as the kernel when booting
-an AMI-style image.
+保存在Glance的镜像ID，当启动一个类似AWS镜像时它应该当做内核来使用。
 
 **ramdisk_id**
 --------------
 
-The ID of image stored in Glance that should be used as the ramdisk when
-booting an AMI-style image.
+保存在Glance的镜像ID，当启动一个类似AWS镜像时它应该当做Ramdisk来使用。
 
 **os_distro**
 -------------
 
-The common name of the operating system distribution as specified in
+常见的操作系统分发版名字在这里定义
 http://docs.openstack.org/trunk/openstack-compute/admin/content/adding-images.html
 
 **os_version**
 --------------
 
-The operating system version as specified by the distributor.
+由发布者（Distributor）指定的操作系统版本。
