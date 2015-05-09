@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cp -r /home/tobe/code/openstack/glance/doc/* .
+cp -r ~/code/openstack/glance/doc/* .
