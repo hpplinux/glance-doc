@@ -14,32 +14,31 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Database Management
-===================
+数据库管理
+=========
 
-The default metadata driver for glance uses sqlalchemy, which implies there
-exists a backend database which must be managed. The ``glance-manage`` binary
-provides a set of commands for making this easier.
+Glance的默认元数据驱动使用了sqlalchemy，这意味着它存在一个必须管理的后端数据库。 ``glance-manage`` 工具提供了一组命令让管理更加容易。
 
-The commands should be executed as a subcommand of 'db':
+这些命令应该作为 'db' 的子命令来执行：
+
 
     glance-manage db <cmd> <args>
 
 
-Sync the Database
------------------
+同步数据库
+--------
 
     glance-manage db sync <version> <current_version>
 
-Place a database under migration control and upgrade, creating it first if necessary.
+如果需要，通过迁移（Migration）控制和升级，创建一个数据库来放置数据库。
 
 
-Determining the Database Version
---------------------------------
+确定数据库版本
+------------
 
     glance-manage db version
 
-This will print the current migration level of a glance database.
+这回打印Glance数据库当前的迁移级别（Level）。
 
 
 Upgrading an Existing Database
@@ -47,7 +46,7 @@ Upgrading an Existing Database
 
     glance-manage db upgrade <VERSION>
 
-This will take an existing database and upgrade it to the specified VERSION.
+这会将已经存在的数据库升级到指定的版本。
 
 
 Downgrading an Existing Database
@@ -55,6 +54,4 @@ Downgrading an Existing Database
 
     glance-manage db downgrade <VERSION>
 
-This will downgrade an existing database from the current version to the
-specified VERSION.
-
+这会让已经存在的数据库从当前版本降级到指定的版本。

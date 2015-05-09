@@ -14,8 +14,8 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Authentication With Keystone
-============================
+Keystone认证
+============
 
 Glance may optionally be integrated with Keystone.  Setting this up is
 relatively straightforward, as the Keystone distribution includes the
@@ -27,8 +27,8 @@ which it is `false` to be restricted to only the owner, users with
 admin context, or tenants/users with whom the image has been shared.
 
 
-Configuring the Glance servers to use Keystone
-----------------------------------------------
+配置Glance服务器来使用Keystone
+---------------------------
 
 Keystone is integrated with Glance through the use of middleware. The
 default configuration files for both the Glance API and the Glance
@@ -40,8 +40,8 @@ information. In order to configure Glance to use Keystone, the
 the authentication token validation and retrieves actual user authentication
 information. It can be found in the Keystone distribution.
 
-Configuring Glance API to use Keystone
---------------------------------------
+配置Glance API来使用Keystone
+--------------------------
 
 Configuring Glance API to use Keystone is relatively straight
 forward.  The first step is to ensure that declarations for the two
@@ -79,7 +79,7 @@ with ``authtoken`` and ``context``::
   [pipeline:glance-api]
   pipeline = versionnegotiation authtoken context apiv1app
 
-Configuring Glance Registry to use Keystone
+配置Glance Registry来使用Keystone
 -------------------------------------------
 
 Configuring Glance Registry to use Keystone is also relatively

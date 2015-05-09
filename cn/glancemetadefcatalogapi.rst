@@ -15,8 +15,8 @@
       See the License for the specific language governing permissions and
       limitations under the License.
 
-Using Glance's Metadata Definitions Catalog Public APIs
-=======================================================
+使用Glance元数据定义目录公共API
+===========================
 
 A common API hosted by the Glance service for vendors, admins, services, and
 users to meaningfully define available key / value pair and tag metadata.
@@ -600,6 +600,6 @@ Then the response will be like the following::
    </body>
    </html>
 
-.. note::
+.. 注意::
    Be sure there is the language package under /usr/share/locale-langpack/ on
    the target Glance server.

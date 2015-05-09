@@ -14,8 +14,8 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-The Glance Image Cache
-======================
+Glance镜像缓存
+=============
 
 The Glance API server may be configured to have an optional local image cache.
 A local image cache stores a copy of image files, essentially enabling multiple

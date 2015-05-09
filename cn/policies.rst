@@ -14,8 +14,8 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Policies
-========
+策略
+====
 
 Glance's public API calls may be restricted to certain sets of users using a
 policy configuration file. This document explains exactly how policies are
@@ -154,7 +154,7 @@ colon. The most useful are the following:
 - ``protected``
 - ``is_public``
 
-Therefore, you could construct a set of rules like the following::
+所以，你可以像下面这样构建一系列规则::
 
     {
         "not_protected": "False:%(protected)s",
@@ -167,10 +167,10 @@ Therefore, you could construct a set of rules like the following::
         "add_member": "rule:not_protected_and_is_owner"
     }
 
-Examples
---------
+实例
+----
 
-Example 1. (The default policy configuration)
+例子1。（默认的策略配置）
 
  ::
 
@@ -181,7 +181,7 @@ Example 1. (The default policy configuration)
 Note that an empty JSON list means that all methods of the
 Glance API are callable by anyone.
 
-Example 2. Disallow modification calls to non-admins
+例子2。不允许非管理员的修改调用。
 
  ::
 

@@ -14,14 +14,14 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Controlling Glance Servers
-==========================
+控制Glance服务器
+==============
 
 This section describes the ways to start, stop, and reload Glance's server
 programs.
 
-Starting a server
------------------
+启动服务器
+---------
 
 There are two ways to start a Glance server (either the API server or the
 registry server):

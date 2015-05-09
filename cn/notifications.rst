@@ -14,200 +14,183 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Notifications
-=============
+通知
+====
 
-Notifications can be generated for several events in the image lifecycle.
-These can be used for auditing, troubleshooting, etc.
+在镜像的生命周期中几种事件都能生成通知。这些通知能用于审计（Audit）和定位错误等等。
 
-Notification Drivers
---------------------
+通知驱动
+-------
 
-* log
+* 日志
 
-  This driver uses the standard Python logging infrastructure with
-  the notifications ending up in file specificed by the log_file
-  configuration directive.
+  这个驱动使用标准的Python日志系统，它通过log_file配置项指定的文件结束通知。
 
-* messaging
+* 消息
 
-  This strategy sends notifications to a message queue configured
-  using oslo.messaging configuration options.
+  这个策略向oslo.messaging配置项指定的消息队列发送通知。
 
-* noop
+* 无操作（noop）
 
-  This strategy produces no notifications. It is the default strategy.
+  这个策略不产生通知。它是默认的策略。
 
-Notification Types
-------------------
+通知类型
+-------
 
 * ``image.create``
 
-  Emitted when an image record is created in Glance.  Image record creation is
-  independent of image data upload.
+  在Glance创建镜像记录的时候发送。创建镜像记录与上传镜像数据是相互独立的。
+
 
 * ``image.prepare``
 
-  Emitted when Glance begins uploading image data to its store.
+  当Glance开始上传镜像数据到后端存储时发送。
 
 * ``image.upload``
 
-  Emitted when Glance has completed the upload of image data to its store.
+  当Glance完成镜像数据上传到后端存储时发送。
 
 * ``image.activate``
 
-  Emitted when an image goes to `active` status.  This occurs when Glance
-  knows where the image data is located.
+  当镜像变成 `active` 状态的时候发送。这在Glance能够定位镜像数据时发生。
 
 * ``image.send``
 
-  Emitted upon completion of an image being sent to a consumer.
+  当镜像完全发送给消费者时发送。
 
 * ``image.update``
 
-  Emitted when an image record is updated in Glance.
+  当镜像记录在Glance中更新时发送。
 
 * ``image.delete``
 
-  Emitted when an image deleted from Glance.
+  当镜像从Glance中删除时发送。
 
 * ``task.run``
 
-  Emitted when a task is picked up by the executor to be run.
+  当任务被执行器（Executor）选择去运行时发送。
 
 * ``task.processing``
 
-  Emitted when a task is sent over to the executor to begin processing.
+  当任务被发送给执行器开始执行时发送。
 
 * ``task.success``
 
-  Emitted when a task is successfully completed.
+  当任务成功完成时发送。
 
 * ``task.failure``
 
-  Emitted when a task fails.
+  当任务失败时发送。
 
-Content
--------
+内容
+----
 
-Every message contains a handful of attributes.
+每个消息都包含一些属性。
 
 * message_id
 
-  UUID identifying the message.
+  表示消息的UUID。
 
 * publisher_id
 
-  The hostname of the glance instance that generated the message.
+  产生消息的Glance实例的主机名。
 
 * event_type
 
-  Event that generated the message.
+  产生消息的时间。
 
 * priority
 
-  One of WARN, INFO or ERROR.
+  WARN、INOF或ERROR其中一个。
 
 * timestamp
 
-  UTC timestamp of when event was generated.
+  事件产生的UTC时间戳。
 
 * payload
 
-  Data specific to the event type.
+  事件类型的数据内容（Specific）。
 
-Payload
--------
+承载（Playload）
+--------------
 
 * image.send
 
-  The payload for INFO, WARN, and ERROR events contain the following:
+  INFO、WARN和ERROR事件的承载包含以下内容：
 
   image_id
-    ID of the image (UUID)
+    镜像的ID（UUID）
   owner_id
-    Tenant or User ID that owns this image (string)
+    拥有此镜像的租户（Tenant）或者用户的ID（string）
   receiver_tenant_id
-    Tenant ID of the account receiving the image (string)
+    接收镜像的租户账号ID（string）
   receiver_user_id
-    User ID of the account receiving the image (string)
-    destination_ip
+    接收镜像的用户账号ID（string）
+  destination_ip
+    目标IP。
   bytes_sent
-    The number of bytes actually sent
+    实际发送的Byte数
 
 * image.create
 
-  For INFO events, it is the image metadata.
-  WARN and ERROR events contain a text message in the payload.
+  对于INFO事件，这是镜像元数据。而WARN和ERROR事件包含了承载中的文本信息。
 
 * image.prepare
 
-  For INFO events, it is the image metadata.
-  WARN and ERROR events contain a text message in the payload.
+  对于INFO事件，这是镜像元数据。而WARN和ERROR事件包含了承载中的文本信息。
 
 * image.upload
 
-  For INFO events, it is the image metadata.
-  WARN and ERROR events contain a text message in the payload.
+  对于INFO事件，这是镜像元数据。而WARN和ERROR事件包含了承载中的文本信息。
 
 * image.activate
 
-  For INFO events, it is the image metadata.
-  WARN and ERROR events contain a text message in the payload.
+  对于INFO事件，这是镜像元数据。而WARN和ERROR事件包含了承载中的文本信息。
 
 * image.update
 
-  For INFO events, it is the image metadata.
-  WARN and ERROR events contain a text message in the payload.
+  对于INFO事件，这是镜像元数据。而WARN和ERROR事件包含了承载中的文本信息。
 
 * image.delete
 
-  For INFO events, it is the image id.
-  WARN and ERROR events contain a text message in the payload.
+  对于INFO事件，这是镜像元数据。而WARN和ERROR事件包含了承载中的文本信息。
 
 * task.run
 
-  The payload for INFO, WARN, and ERROR events contain the following:
+  INFO、WARN和ERROR事件的承载包含以下内容：
 
   task_id
-    ID of the task (UUID)
+    镜像的ID（UUID）
   owner
-    Tenant or User ID that created this task (string)
+    创建这个任务的租户或者用户ID（string）
   task_type
-    Type of the task. Example, task_type is "import". (string)
-  status,
-    status of the task. Status can be "pending", "processing",
-    "success" or "failure". (string)
+    任务的类型。例如，task_type是"import"。string）
+  status
+    任务的状态。状态可以是"pending"、"processing"、"success"或者"failure"。（string）
   task_input
-    Input provided by the user when attempting to create a task. (dict)
+    当尝试创建一个任务时提供的输入。（dict）
   result
-    Resulting output from a successful task. (dict)
+    成功执行的任务的结果输出。（dict）
   message
-    Message shown in the task if it fails. None if task succeeds. (string)
+    如果任务失败了它显示的消息。如果成功了就为空。（string）
   expires_at
-    UTC time at which the task would not be visible to the user. (string)
+    任务对用户不可见时的UTC时间。（string）
   created_at
-    UTC time at which the task was created. (string)
+    任务创建时的UTC时间。（string）
   updated_at
-    UTC time at which the task was latest updated. (string)
+    任务最后更新的UTC时间。（string）
 
-  The exceptions are:-
-    For INFO events, it is the task dict with result and message as None.
-    WARN and ERROR events contain a text message in the payload.
+  异常是:-
+    对于INFO事件，这是包含结果的任务dict数据而且消息为空。而WARN和ERROR事件包含了承载中的文本信息。
 
 * task.processing
 
-  For INFO events, it is the task dict with result and message as None.
-  WARN and ERROR events contain a text message in the payload.
+  对于INFO事件，这是包含结果的任务dict数据而且消息为空。而WARN和ERROR事件包含了承载中的文本信息。
 
 * task.success
 
-  For INFO events, it is the task dict with message as None and result is a
-  dict.
-  WARN and ERROR events contain a text message in the payload.
+  对于INFO事件，这是包含结果的任务dict数据而且消息为空，而result是dict。而WARN和ERROR事件包含了承载中的文本信息。
 
 * task.failure
 
-  For INFO events, it is the task dict with result as None and message is
-  text.
-  WARN and ERROR events contain a text message in the payload.
+  对于INFO事件，这是包含结果的任务dict数据而且消息为文本。而WARN和ERROR事件包含了承载中的文本信息。
