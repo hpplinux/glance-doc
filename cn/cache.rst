@@ -18,23 +18,28 @@ Glance镜像缓存
 =============
 
 The Glance API server may be configured to have an optional local image cache.
-A local image cache stores a copy of image files, essentially enabling multiple
+A local image cache stores a copy of image files, ssentially enabling multiple
 API servers to serve the same image file, resulting in an increase in
 scalability due to an increased number of endpoints serving an image file.
+Glance API服务器可以配置使用可选的本地镜像缓存。本地镜像缓存保存了镜像文件的拷贝，本质上是支持多个API服务器提供同一个镜像文件的服务，由于同一镜像文件的服务终端（Endpoint）的增加来提高可拓展性。
 
 This local image cache is transparent to the end user -- in other words, the
 end user doesn't know that the Glance API is streaming an image file from
 its local cache or from the actual backend storage system.
+这个本地镜像缓存对终端用户是透明的 -- 换句话说，终端用户并不知道Glance API是通过本地缓存还是实际的后端存储系统来传输镜像文件。
 
 Managing the Glance Image Cache
+管理Glance镜像缓存
 -------------------------------
 
 While image files are automatically placed in the image cache on successful
 requests to ``GET /images/<IMAGE_ID>``, the image cache is not automatically
 managed. Here, we describe the basics of how to manage the local image cache
 on Glance API servers and how to automate this cache management.
+当
 
 Controlling the Growth of the Image Cache
+控制镜像缓存的增长
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The image cache has a configurable maximum size (the ``image_cache_max_size``
@@ -51,6 +56,7 @@ The recommended practice is to use ``cron`` to fire ``glance-cache-pruner``
 at a regular interval.
 
 Cleaning the Image Cache
+清理镜像缓存
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Over time, the image cache can accumulate image files that are either in
@@ -65,6 +71,7 @@ The recommended practice is to use ``cron`` to fire ``glance-cache-cleaner``
 at a semi-regular interval.
 
 Prefetching Images into the Image Cache
+预读镜像到镜像缓存
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some installations have base (sometimes called "golden") images that are
@@ -92,6 +99,7 @@ Once you have queued the images you wish to prefetch, call the
 concurrently, logging the results of the fetch for each image.
 
 Finding Which Images are in the Image Cache
+查找哪些镜像在镜像缓存
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can find out which images are in the image cache using one of the
@@ -119,6 +127,7 @@ following methods:
     Note that the image's cache hit is not shown using this method.
 
 Manually Removing Images from the Image Cache
+手动从镜像胡那村中移除镜像
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the ``cachemanage`` middleware is enabled, you may call

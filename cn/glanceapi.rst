@@ -21,8 +21,8 @@ Glance fully implements versions 1.0, 1.1 and 2.0 of the OpenStack Images API.
 The Images API specification is developed alongside Glance, but is not
 considered part of the Glance project.
 
-Authentication
---------------
+认证
+----
 
 Glance depends on Keystone and the OpenStack Identity API to handle
 authentication of clients. You must obtain an authentication token from
@@ -32,14 +32,14 @@ verify the token validity and obtain your identity credentials.
 
 See :doc:`authentication` for more information on integrating with Keystone.
 
-Using v1.X
-----------
+使用v1.X
+--------
 
 For the purpose of examples, assume there is a Glance API server running
 at the URL ``http://glance.example.com`` on the default port 80.
 
-List Available Images
-*********************
+列举可用的镜像
+************
 
 We want to see a list of available images that the authenticated user has
 access to. This includes images owned by the user, images shared with the user
@@ -58,8 +58,8 @@ mapping in the following format::
     ...]}
 
 
-List Available Images in More Detail
-************************************
+详细得列举可用的镜像
+*****************
 
 We want to see a more detailed list of available images that the authenticated
 user has access to. This includes images owned by the user, images shared with
@@ -87,7 +87,7 @@ JSON-encoded mapping in the following format::
      'properties': {'distro': 'Ubuntu 10.04 LTS'}},
     ...]}
 
-.. note::
+.. 注意::
 
   All timestamps returned are in UTC
 
