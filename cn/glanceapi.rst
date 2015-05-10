@@ -20,6 +20,7 @@
 Glance fully implements versions 1.0, 1.1 and 2.0 of the OpenStack Images API.
 The Images API specification is developed alongside Glance, but is not
 considered part of the Glance project.
+Glance完全实现了OpenStack镜像API的1.0、1.1和2.0版本。镜像API定义（Specification）是随着Glance开发的，但这并不是Glance项目的一部分。
 
 认证
 ----
@@ -29,14 +30,16 @@ authentication of clients. You must obtain an authentication token from
 Keystone using and send it along with all API requests to Glance through
 the ``X-Auth-Token`` header. Glance will communicate back to Keystone to
 verify the token validity and obtain your identity credentials.
+Glance依赖Keystone和OpenStack认证API来处理客户端的认证。你必须从Keystone获得认证令牌（Token）并通过 ``X-Auth-Token`` 头来发送所有Glance API请求。Glance会与Keystone通信来认证令牌并获得你的认证签名（Credential）。
 
-See :doc:`authentication` for more information on integrating with Keystone.
+阅读 :doc:`authentication` 获得更多与Keystone集成的信息。
 
 使用v1.X
 --------
 
 For the purpose of examples, assume there is a Glance API server running
 at the URL ``http://glance.example.com`` on the default port 80.
+为了举例，假设有个Glance API服务器运行在地址 ``http://glance.example.com`` 并且默认端口是80.
 
 列举可用的镜像
 ************
@@ -44,10 +47,12 @@ at the URL ``http://glance.example.com`` on the default port 80.
 We want to see a list of available images that the authenticated user has
 access to. This includes images owned by the user, images shared with the user
 and public images.
+我们想要列举一个授权用户能够访问的可用镜像列表。这包括了用户拥有的镜像、其他用户分享的镜像和公共的镜像。
 
 We issue a ``GET`` request to ``http://glance.example.com/v1/images`` to
 retrieve this list of available images. The data is returned as a JSON-encoded
 mapping in the following format::
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v1/images`` 来请求这些可用镜像的列表。返回的数据是以下格式的JSON编码映射::
 
   {'images': [
     {'uri': 'http://glance.example.com/v1/images/71c675ab-d94f-49cd-a114-e12490b328d9',
@@ -64,10 +69,14 @@ mapping in the following format::
 We want to see a more detailed list of available images that the authenticated
 user has access to. This includes images owned by the user, images shared with
 the user and public images.
+我们想要列举一个授权用户能够访问更详细的可用镜像列表。这包括了用户拥有的镜像、其他用户分享的镜像和公共的镜像。
+
 
 We issue a ``GET`` request to ``http://glance.example.com/v1/images/detail`` to
 retrieve this list of available images. The data is returned as a
 JSON-encoded mapping in the following format::
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v1/images/detail`` 来请求这些可用镜像的列表。返回的数据是以下格式的JSON编码映射::
+
 
   {'images': [
     {'uri': 'http://glance.example.com/v1/images/71c675ab-d94f-49cd-a114-e12490b328d9',
@@ -90,56 +99,68 @@ JSON-encoded mapping in the following format::
 .. 注意::
 
   All timestamps returned are in UTC
+  所有返回的时间错都是UTC时间
 
   The `updated_at` timestamp is the timestamp when an image's metadata
   was last updated, not its image data, as all image data is immutable
   once stored in Glance
+   `updated_at` 时间戳是镜像元数据上次更新的时间戳，不是它的镜像数据更新时间，因为所有镜像数据一旦保存在Glance就是不可变的了
 
   The `properties` field is a mapping of free-form key/value pairs that
   have been saved with the image metadata
+   `properties` 字段是自由格式的键值对，保存了镜像的元数据
 
   The `checksum` field is an MD5 checksum of the image file data
+   `checksum` 字段是镜像文件数据的MD5校验和（Checksum）
 
   The `is_public` field is a boolean indicating whether the image is
   publicly available
+   `is_public` 字段是一个布尔值，表明镜像是不是共用的
 
   The `min_ram` field is an integer specifying the minimum amount of
   ram needed to run this image on an instance, in megabytes
+   `min_ram` 字段是一个整数，声明运行这个镜像所需的最小内存，单位是M（Megabyte）
 
   The `min_disk` field is an integer specifying the minimum amount of
   disk space needed to run this image on an instance, in gigabytes
+   `min_disk` 字段是一个整数，声明在实例中运行这个镜像所需要的最小磁盘空间，单位是（Gigabyte）
 
   The `owner` field is a string which may either be null or which will
   indicate the owner of the image
+   `owner` 字段是一个字符串，它要么是空要么就申明了这个镜像的拥有者
 
-Filtering Images Lists
+过滤镜像列表Filtering Images Lists
 **********************
 
 Both the ``GET /v1/images`` and ``GET /v1/images/detail`` requests take query
 parameters that serve to filter the returned list of images. The following
 list details these query parameters.
+ ``GET /v1/images`` 和 ``GET /v1/images/detail`` 请求都可用接受查询参数来过滤返回的镜像列表。下面的列表详细介绍这些请求参数。
 
 * ``name=NAME``
 
   Filters images having a ``name`` attribute matching ``NAME``.
+  过滤拥有能够匹配 ``NAME`` 的 ``name`` 属性的镜像。
 
 * ``container_format=FORMAT``
 
   Filters images having a ``container_format`` attribute matching ``FORMAT``
+  过滤拥有能够匹配 ``FORMAT`` 的 ``container_format`` 属性的镜像。
 
-  For more information, see :doc:`About Disk and Container Formats <formats>`
+  更详细的信息可参考 :doc:`About Disk and Container Formats <formats>`
 
 * ``disk_format=FORMAT``
 
   Filters images having a ``disk_format`` attribute matching ``FORMAT``
+  过滤拥有能够匹配 ``FORMAT`` 的 ``disk_format`` 属性的镜像。
 
-  For more information, see :doc:`About Disk and Container Formats <formats>`
+  更详细的信息可参考 :doc:`About Disk and Container Formats <formats>`
 
 * ``status=STATUS``
 
   Filters images having a ``status`` attribute matching ``STATUS``
 
-  For more information, see :doc:`About Image Statuses <statuses>`
+  更详细的信息可参考 :doc:`About Image Statuses <statuses>`
 
 * ``size_min=BYTES``
 
@@ -172,7 +193,7 @@ These two resources also accept additional query parameters:
 
   When present the maximum number of results returned will not exceed ``LIMIT``.
 
-.. note::
+.. 注意::
 
   If the specified ``LIMIT`` exceeds the operator defined limit (api_limit_max)
   then the number of results returned may be less than ``LIMIT``.
@@ -192,12 +213,12 @@ These two resources also accept additional query parameters:
   When the `is_public` parameter is set to `None` all images will be listed
   irrespective of owner, shared status or the `is_public` field.
 
-.. note::
+.. 注意::
 
   Use of the `is_public` parameter is restricted to admin users. For all other
   users it will be ignored.
 
-Retrieve Image Metadata
+获得镜像元数据Retrieve Image Metadata
 ***********************
 
 We want to see detailed information for a specific virtual machine image
@@ -235,7 +256,7 @@ following shows an example of the HTTP headers returned from the above
   x-image-meta-owner            null
   x-image-meta-property-distro  Ubuntu 10.04 LTS
 
-.. note::
+.. 注意::
 
   All timestamps returned are in UTC
 
@@ -258,7 +279,7 @@ following shows an example of the HTTP headers returned from the above
   be null or which will indicate the owner of the image
 
 
-Retrieve Raw Image Data
+获得镜像原始数据Retrieve Raw Image Data
 ***********************
 
 We want to retrieve that actual raw data for a specific virtual machine image
@@ -298,7 +319,7 @@ returned from the above ``GET`` request::
   x-image-meta-owner            null
   x-image-meta-property-distro  Ubuntu 10.04 LTS
 
-.. note::
+.. 注意::
 
   All timestamps returned are in UTC
 
@@ -328,7 +349,7 @@ returned from the above ``GET`` request::
   `application/octet-stream`.
 
 
-Add a New Image
+添加新的镜像Add a New Image
 ***************
 
 We have created a new virtual machine image in some way (created a
@@ -350,7 +371,7 @@ of the HTTP request to the Glance API will be the MIME-encoded disk
 image data.
 
 
-Reserve a New Image
+保留新的镜像Reserve a New Image
 *******************
 
 We can also perform the activities described in `Add a New Image`_ using two
@@ -372,7 +393,7 @@ The image data can then be added using a ``PUT`` to
 The image status will then be set to ``active`` by Glance.
 
 
-**Image Metadata in HTTP Headers**
+**镜像元数据的HTTP头Image Metadata in HTTP Headers**
 
 Glance will view as image metadata any HTTP header that it receives in a
 ``POST`` request where the header key is prefixed with the strings
@@ -525,7 +546,7 @@ headers.
 See more about image statuses here: :doc:`Image Statuses <statuses>`
 
 
-List Image Memberships
+列举镜像成员关系（Membership）List Image Memberships
 **********************
 
 We want to see a list of the other system tenants (or users, if
@@ -549,7 +570,7 @@ that tenant is authorized to further share the image, the `can_share` field is
 `true`.
 
 
-List Shared Images
+列举共享的镜像List Shared Images
 ******************
 
 We want to see a list of images which are shared with a given tenant.  We issue
@@ -566,7 +587,7 @@ The `image_id` field identifies an image shared with the tenant named by
 `can_share` field is `true`.
 
 
-Add a Member to an Image
+添加镜像成员Add a Member to an Image
 ************************
 
 We want to authorize a tenant to access a private image.  We issue a ``PUT``
@@ -585,7 +606,7 @@ If such a body is provided, both existing and new memberships will have
 will return a 204 ("No Content") status code.
 
 
-Remove a Member from an Image
+从镜像中移除成员Remove a Member from an Image
 *****************************
 
 We want to revoke a tenant's right to access a private image.  We issue a
@@ -593,7 +614,7 @@ We want to revoke a tenant's right to access a private image.  We issue a
 This query will return a 204 ("No Content") status code.
 
 
-Replace a Membership List for an Image
+代替镜像的成员关系列表Replace a Membership List for an Image
 **************************************
 
 The full membership list for a given image may be replaced.  We issue a ``PUT``
@@ -613,7 +634,7 @@ setting to remain unchanged in the existing memberships.)  All new memberships
 will be created, with `can_share` defaulting to `false` if it is not specified.
 
 
-Image Membership Changes in Version 2.0
+在2.0版本镜像成员的修改Image Membership Changes in Version 2.0
 ---------------------------------------
 
 Version 2.0 of the Images API eliminates the ``can_share`` attribute of image
@@ -635,7 +656,7 @@ image should be treated with respect to that image member's image list.
   status of a member.
 
 
-Distinctions from Version 1.x API Calls
+1.x API调用的区别Distinctions from Version 1.x API Calls
 ***************************************
 
 * The response to a request to list the members of an image has changed.
@@ -656,7 +677,7 @@ Distinctions from Version 1.x API Calls
 
   The member status of a newly created image member is ``pending``.
 
-New API Calls
+新API调用New API Calls
 *************
 
 * Change the status of an image member
@@ -671,13 +692,13 @@ New API Calls
   The {memberId} is the tenant ID of the image member.
 
 
-API Message Localization
+API消息的本地化 Message Localization
 ---------------------------------------
 Glance supports HTTP message localization. For example, an HTTP client can
 receive API messages in Chinese even if the locale language of the server is
 English.
 
-How to use it
+如何使用它How to use it
 *************
 To receive localized API messages, the HTTP client needs to specify the
 **Accept-Language** header to indicate the language to use to translate the
@@ -706,6 +727,6 @@ Then the response will be like the following::
    </body>
    </html>
 
-.. note::
+.. 注意::
    Be sure there is the language package under /usr/share/locale-langpack/ on
    the target Glance server.

@@ -42,8 +42,8 @@ Diagram: https://wiki.openstack.org/w/images/b/bb/Glance-Metadata-API.png
 
 Glance Metadata Definitions Catalog implementation started with API version v2.
 
-Authentication
---------------
+认证
+----
 
 Glance depends on Keystone and the OpenStack Identity API to handle
 authentication of clients. You must obtain an authentication token from
@@ -53,14 +53,14 @@ the token validity and obtain your identity credentials.
 
 See :doc:`authentication` for more information on integrating with Keystone.
 
-Using v2.X
-----------
+使用v2.X
+--------
 
 For the purpose of examples, assume there is a Glance API server running
 at the URL ``http://glance.example.com`` on the default port 80.
 
-List Available Namespaces
-*************************
+列举可用的命名空间（Namespace）
+**************************
 
 We want to see a list of available namespaces that the authenticated user
 has access to. This includes namespaces owned by the user,
@@ -103,14 +103,14 @@ The data is returned as a JSON-encoded mapping in the following format::
   }
 
 
-.. note::
+.. 注意::
    Listing namespaces will only show the summary of each namespace including
    counts and resource type associations. Detailed response including all its
    objects definitions, property definitions etc. will only be available on
    each individual GET namespace request.
 
-Filtering Namespaces Lists
-**************************
+过滤命名空间列表
+**************
 
 ``GET /v2/metadefs/namespaces`` requests take query parameters that serve to
 filter the returned list of namespaces. The following
@@ -144,7 +144,7 @@ GET resource also accepts additional query parameters:
 
   When present the maximum number of results returned will not exceed ``LIMIT``.
 
-.. note::
+.. 注意::
 
   If the specified ``LIMIT`` exceeds the operator defined limit (api_limit_max)
   then the number of results returned may be less than ``LIMIT``.
@@ -155,8 +155,8 @@ GET resource also accepts additional query parameters:
   returned (PRIVATE or PUBLIC).
 
 
-Retrieve Namespace
-******************
+获得Namespace
+*************
 
 We want to see a more detailed information about a namespace that the
 authenticated user has access to. The detail includes the properties, objects,
@@ -324,7 +324,7 @@ The data is returned as a JSON-encoded mapping in the following format::
     ]
   }
 
-Add Namespace
+添加命名空间Add Namespace
 *************
 
 We want to create a new namespace that can contain the properties, objects,
@@ -344,12 +344,12 @@ The input data is an JSON-encoded mapping in the following format::
     "protected": true
   }
 
-.. note::
+.. 注意::
    Optionally properties, objects and resource type associations could be
    added in the same input. See GET Namespace output above(input will be
    similar).
 
-Update Namespace
+更新命名空间Update Namespace
 ****************
 
 We want to update an existing namespace
@@ -361,7 +361,7 @@ We issue a ``PUT`` request to update an namespace to Glance::
 The input data is similar to Add Namespace
 
 
-Delete Namespace
+删除命名空间Delete Namespace
 ****************
 
 We want to delete an existing namespace including all its objects,
@@ -372,7 +372,7 @@ We issue a ``DELETE`` request to delete an namespace to Glance::
   DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}
 
 
-Associate Resource Type with Namespace
+关联资源类型和命名空间Associate Resource Type with Namespace
 **************************************
 
 We want to associate a resource type with an existing namespace
@@ -392,7 +392,7 @@ The input data is an JSON-encoded mapping in the following format::
    }
 
 
-Remove Resource Type associated with a Namespace
+移除命名空间关联的资源类型Remove Resource Type associated with a Namespace
 ************************************************
 
 We want to de-associate namespace from a resource type
@@ -403,7 +403,7 @@ Glance::
   DELETE http://glance.example.com/v2//metadefs/namespaces/{namespace}/resource_types/{resource_type}
 
 
-List Objects in Namespace
+列举命名空间的对象List Objects in Namespace
 *************************
 
 We want to see the list of meta definition objects in a specific namespace
@@ -454,7 +454,7 @@ The data is returned as a JSON-encoded mapping in the following format::
     "schema": "/v2/schemas/metadefs/objects"
   }
 
-Add object in a specific namespace
+添加对象到命名空间Add object in a specific namespace
 **********************************
 
 We want to create a new object which can group the properties
@@ -490,7 +490,7 @@ The input data is an JSON-encoded mapping in the following format::
     }
   }
 
-Update Object in a specific namespace
+更新特定命名空间的对象Update Object in a specific namespace
 *************************************
 
 We want to update an existing object
@@ -502,7 +502,7 @@ We issue a ``PUT`` request to update an object to Glance::
 The input data is similar to Add Object
 
 
-Delete Object in a specific namespace
+删除特定命名空间的对象Delete Object in a specific namespace
 *************************************
 
 We want to delete an existing object.
@@ -541,7 +541,7 @@ The input data is an JSON-encoded mapping in the following format::
   }
 
 
-Update property definition in a specific namespace
+更新指定命名空间的属性定义Update property definition in a specific namespace
 **************************************************
 
 We want to update an existing object
@@ -554,7 +554,7 @@ Glance::
 The input data is similar to Add property definition
 
 
-Delete property definition in a specific namespace
+删除指定命名空间的属性定义Delete property definition in a specific namespace
 **************************************************
 
 We want to delete an existing object.
@@ -565,13 +565,13 @@ Glance::
   DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}/properties/{property_name}
 
 
-API Message Localization
+API消息的本地化 Message Localization
 ------------------------
 Glance supports HTTP message localization. For example, an HTTP client can
 receive API messages in Chinese even if the locale language of the server is
 English.
 
-How to use it
+如何使用它How to use it
 *************
 To receive localized API messages, the HTTP client needs to specify the
 **Accept-Language** header to indicate the language to use to translate the
