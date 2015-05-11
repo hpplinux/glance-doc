@@ -17,19 +17,11 @@
 使用Glance镜像公共API
 ===================
 
-Glance fully implements versions 1.0, 1.1 and 2.0 of the OpenStack Images API.
-The Images API specification is developed alongside Glance, but is not
-considered part of the Glance project.
 Glance完全实现了OpenStack镜像API的1.0、1.1和2.0版本。镜像API定义（Specification）是随着Glance开发的，但这并不是Glance项目的一部分。
 
 认证
 ----
 
-Glance depends on Keystone and the OpenStack Identity API to handle
-authentication of clients. You must obtain an authentication token from
-Keystone using and send it along with all API requests to Glance through
-the ``X-Auth-Token`` header. Glance will communicate back to Keystone to
-verify the token validity and obtain your identity credentials.
 Glance依赖Keystone和OpenStack认证API来处理客户端的认证。你必须从Keystone获得认证令牌（Token）并通过 ``X-Auth-Token`` 头来发送所有Glance API请求。Glance会与Keystone通信来认证令牌并获得你的认证签名（Credential）。
 
 阅读 :doc:`authentication` 获得更多与Keystone集成的信息。
@@ -37,21 +29,13 @@ Glance依赖Keystone和OpenStack认证API来处理客户端的认证。你必须
 使用v1.X
 --------
 
-For the purpose of examples, assume there is a Glance API server running
-at the URL ``http://glance.example.com`` on the default port 80.
 为了举例，假设有个Glance API服务器运行在地址 ``http://glance.example.com`` 并且默认端口是80.
 
 列举可用的镜像
 ************
 
-We want to see a list of available images that the authenticated user has
-access to. This includes images owned by the user, images shared with the user
-and public images.
 我们想要列举一个授权用户能够访问的可用镜像列表。这包括了用户拥有的镜像、其他用户分享的镜像和公共的镜像。
 
-We issue a ``GET`` request to ``http://glance.example.com/v1/images`` to
-retrieve this list of available images. The data is returned as a JSON-encoded
-mapping in the following format::
 我们发送 ``GET`` 请求到 ``http://glance.example.com/v1/images`` 来请求这些可用镜像的列表。返回的数据是以下格式的JSON编码映射::
 
   {'images': [
@@ -66,17 +50,9 @@ mapping in the following format::
 详细得列举可用的镜像
 *****************
 
-We want to see a more detailed list of available images that the authenticated
-user has access to. This includes images owned by the user, images shared with
-the user and public images.
 我们想要列举一个授权用户能够访问更详细的可用镜像列表。这包括了用户拥有的镜像、其他用户分享的镜像和公共的镜像。
 
-
-We issue a ``GET`` request to ``http://glance.example.com/v1/images/detail`` to
-retrieve this list of available images. The data is returned as a
-JSON-encoded mapping in the following format::
 我们发送 ``GET`` 请求到 ``http://glance.example.com/v1/images/detail`` 来请求这些可用镜像的列表。返回的数据是以下格式的JSON编码映射::
-
 
   {'images': [
     {'uri': 'http://glance.example.com/v1/images/71c675ab-d94f-49cd-a114-e12490b328d9',
@@ -98,60 +74,39 @@ JSON-encoded mapping in the following format::
 
 .. 注意::
 
-  All timestamps returned are in UTC
   所有返回的时间错都是UTC时间
 
-  The `updated_at` timestamp is the timestamp when an image's metadata
-  was last updated, not its image data, as all image data is immutable
-  once stored in Glance
    `updated_at` 时间戳是镜像元数据上次更新的时间戳，不是它的镜像数据更新时间，因为所有镜像数据一旦保存在Glance就是不可变的了
 
-  The `properties` field is a mapping of free-form key/value pairs that
-  have been saved with the image metadata
    `properties` 字段是自由格式的键值对，保存了镜像的元数据
 
-  The `checksum` field is an MD5 checksum of the image file data
    `checksum` 字段是镜像文件数据的MD5校验和（Checksum）
 
-  The `is_public` field is a boolean indicating whether the image is
-  publicly available
    `is_public` 字段是一个布尔值，表明镜像是不是共用的
 
-  The `min_ram` field is an integer specifying the minimum amount of
-  ram needed to run this image on an instance, in megabytes
    `min_ram` 字段是一个整数，声明运行这个镜像所需的最小内存，单位是M（Megabyte）
 
-  The `min_disk` field is an integer specifying the minimum amount of
-  disk space needed to run this image on an instance, in gigabytes
    `min_disk` 字段是一个整数，声明在实例中运行这个镜像所需要的最小磁盘空间，单位是（Gigabyte）
 
-  The `owner` field is a string which may either be null or which will
-  indicate the owner of the image
    `owner` 字段是一个字符串，它要么是空要么就申明了这个镜像的拥有者
 
-过滤镜像列表Filtering Images Lists
-**********************
+过滤镜像列表
+**********
 
-Both the ``GET /v1/images`` and ``GET /v1/images/detail`` requests take query
-parameters that serve to filter the returned list of images. The following
-list details these query parameters.
  ``GET /v1/images`` 和 ``GET /v1/images/detail`` 请求都可用接受查询参数来过滤返回的镜像列表。下面的列表详细介绍这些请求参数。
 
 * ``name=NAME``
 
-  Filters images having a ``name`` attribute matching ``NAME``.
   过滤拥有能够匹配 ``NAME`` 的 ``name`` 属性的镜像。
 
 * ``container_format=FORMAT``
 
-  Filters images having a ``container_format`` attribute matching ``FORMAT``
   过滤拥有能够匹配 ``FORMAT`` 的 ``container_format`` 属性的镜像。
 
   更详细的信息可参考 :doc:`About Disk and Container Formats <formats>`
 
 * ``disk_format=FORMAT``
 
-  Filters images having a ``disk_format`` attribute matching ``FORMAT``
   过滤拥有能够匹配 ``FORMAT`` 的 ``disk_format`` 属性的镜像。
 
   更详细的信息可参考 :doc:`About Disk and Container Formats <formats>`
@@ -223,6 +178,10 @@ These two resources also accept additional query parameters:
 
 We want to see detailed information for a specific virtual machine image
 that the Glance server knows about.
+todo
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
 
 We have queried the Glance server for a list of images and the
 data returned includes the `uri` field for each available image. This
@@ -692,24 +651,20 @@ image should be treated with respect to that image member's image list.
   The {memberId} is the tenant ID of the image member.
 
 
-API消息的本地化 Message Localization
----------------------------------------
-Glance supports HTTP message localization. For example, an HTTP client can
-receive API messages in Chinese even if the locale language of the server is
-English.
+API消息本地化
+------------
+Glance支持HTTP消息的本地化。举个例子，一个HTTP客户端即使服务器本地（Locale）语言是英文也可以接收到中文的API信息。
 
-如何使用它How to use it
-*************
-To receive localized API messages, the HTTP client needs to specify the
-**Accept-Language** header to indicate the language to use to translate the
-message. For more info about Accept-Language, please refer http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+如何使用它
+*********
+要获得本地化的API消息，HTTP客户端需要指定 **Accept-Language** 头来申明用什么语言翻译消息。关于Accept-Language更多的内容请参考 http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
 
-A typical curl API request will be like below::
+一个典型的API请求是类似下面这样子的::
 
    curl -i -X GET -H 'Accept-Language: zh' -H 'Content-Type: application/json'
    http://127.0.0.1:9292/v2/images/aaa
 
-Then the response will be like the following::
+然后响应信息是类似下面这样子的::
 
    HTTP/1.1 404 Not Found
    Content-Length: 234
@@ -728,5 +683,4 @@ Then the response will be like the following::
    </html>
 
 .. 注意::
-   Be sure there is the language package under /usr/share/locale-langpack/ on
-   the target Glance server.
+   请确保目标Glance服务器在/usr/share/locale-langpack/有语言包。

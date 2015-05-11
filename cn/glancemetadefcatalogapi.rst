@@ -18,57 +18,34 @@
 使用Glance元数据定义目录公共API
 ===========================
 
-A common API hosted by the Glance service for vendors, admins, services, and
-users to meaningfully define available key / value pair and tag metadata.
-The intent is to enable better metadata collaboration across artifacts,
-services, and projects for OpenStack users.
+Glance服务提供通用的API给供应商、管理员、服务和用户来定义可用的键值对和标签（Tag）元数据。目标是为OpenStack用户支持更好的跨域（Artifact）、服务和项目的元数据协作（Collaboration）。
 
-This is about the definition of the available metadata that can be used on
-different types of resources (images, artifacts, volumes, flavors, aggregates,
-etc). A definition includes the properties type, its key, it's description,
-and it's constraints. This catalog will not store the values for specific
-instance properties.
+这是关于可用元数据的定义，这能用于不同类型的资源（镜像、Artifacts、卷、Flavors、Aggregates等等）。一种定义包含了属性类型、它的键、它的描述和它的约束（Constraint）。这个目录（Catalog）不会存储特定实例属性的值。
 
-For example, a definition of a virtual CPU topology property for number of
-cores will include the key to use, a description, and value constraints like
-requiring it to be an integer. So, a user, potentially through Horizon, would
-be able to search this catalog to list the available properties they can add to
-a flavor or image. They will see the virtual CPU topology property in the list
-and know that it must be an integer. In the Horizon example, when the user adds
-the property, its key and value will be stored in the service that owns that
-resource (Nova for flavors and in Glance for images).
+举个例子，对虚拟CPU拓扑属性的核数的定义包含了可以使用的键、一种描述和值的约束，例如要求它必须是整数。所以，一个有可能通过Horizon使用的用户能够搜索这个目录列出所有可用的值，然后加到Flavor或镜像内。他们可以在列表内见到虚拟CPU拓扑属性并且知道它必须是整数，它的键和值将保存在拥有这资源的服务中（Nova是Flavor而Glance是镜像）。
 
 Diagram: https://wiki.openstack.org/w/images/b/bb/Glance-Metadata-API.png
 
-Glance Metadata Definitions Catalog implementation started with API version v2.
+Glance元数据定义目录实现是从v2版本的API开始。
 
 认证
 ----
 
-Glance depends on Keystone and the OpenStack Identity API to handle
-authentication of clients. You must obtain an authentication token from
-Keystone send it along with all API requests to Glance through the
-``X-Auth-Token`` header. Glance will communicate back to Keystone to verify
-the token validity and obtain your identity credentials.
+Glance依赖于Keystone和OpenStack认证API来处理客户端的认证。你必须从Keystone获得认证令牌并通过 ``X-Auth-Token`` 头发送所有API请求给Glance。Glance会与Keystone通信验证令牌的有效性和获得认证信息（Credential）。
 
-See :doc:`authentication` for more information on integrating with Keystone.
+参考 :doc:`authentication` for more information on integrating with Keystone.
 
 使用v2.X
 --------
 
-For the purpose of examples, assume there is a Glance API server running
-at the URL ``http://glance.example.com`` on the default port 80.
+为了举例，我们假设Glance API服务器运行在 ``http://glance.example.com`` 和默认端口为80。
 
 列举可用的命名空间（Namespace）
 **************************
 
-We want to see a list of available namespaces that the authenticated user
-has access to. This includes namespaces owned by the user,
-namespaces shared with the user and public namespaces.
+我们想列举授权用户可以访问的命名空间列表。这包括了用户拥有的命名空间、其他用户分享的命名空间和公共的命名空间。
 
-We issue a ``GET`` request to ``http://glance.example.com/v2/metadefs/namespaces``
-to retrieve this list of available namespaces.
-The data is returned as a JSON-encoded mapping in the following format::
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces`` 来请求这些可用命名空间的列表。返回的数据是以下格式的JSON编码映射::
 
   {
     "namespaces": [
@@ -104,17 +81,12 @@ The data is returned as a JSON-encoded mapping in the following format::
 
 
 .. 注意::
-   Listing namespaces will only show the summary of each namespace including
-   counts and resource type associations. Detailed response including all its
-   objects definitions, property definitions etc. will only be available on
-   each individual GET namespace request.
+   列举命名空间只显示每个命名空间的概要信息，包括总数和资源类型相关信息。详细的响应包含了它所有的对象定义、属性定义等等可以通过独立的GET命名空间请求来获得。
 
 过滤命名空间列表
 **************
 
-``GET /v2/metadefs/namespaces`` requests take query parameters that serve to
-filter the returned list of namespaces. The following
-list details these query parameters.
+``GET /v2/metadefs/namespaces`` 请求接受请求参数来过滤返回的命名空间列表。下面列举这些查询参数的详细信息。
 
 * ``resource_types=RESOURCE_TYPES``
 
@@ -158,13 +130,9 @@ GET resource also accepts additional query parameters:
 获得Namespace
 *************
 
-We want to see a more detailed information about a namespace that the
-authenticated user has access to. The detail includes the properties, objects,
-and resource type associations.
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
 
-We issue a ``GET`` request to ``http://glance.example.com/v2/metadefs/namespaces/{namespace}``
-to retrieve the namespace details.
-The data is returned as a JSON-encoded mapping in the following format::
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
 
   {
     "namespace": "MyNamespace",
@@ -248,15 +216,14 @@ The data is returned as a JSON-encoded mapping in the following format::
     ]
   }
 
-Retrieve available Resource Types
-*********************************
+获得可用资源类型
+**************
 
-We want to see the list of all resource types that are available in Glance
+我们想列举Glance中所有可用的资源类型。
 
-We issue a ``GET`` request to ``http://glance.example.com/v2/metadefs/resource_types``
-to retrieve all resource types.
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/resource_types`` 来获得所有资源类型。
 
-The data is returned as a JSON-encoded mapping in the following format::
+返回的数据是以下格式的JSON编码映射::
 
   {
     "resource_types": [
@@ -289,16 +256,14 @@ The data is returned as a JSON-encoded mapping in the following format::
   }
 
 
-Retrieve Resource Types associated with a Namespace
-***************************************************
+获得命名空间相关的资源类型
+**********************
 
-We want to see the list of resource types that are associated for a specific
-namespace
+我们想列特定命名空间相关的资源类型列表
 
-We issue a ``GET`` request to ``http://glance.example.com/v2/metadefs/namespaces/{namespace}/resource_types``
-to retrieve resource types.
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}/resource_types`` 来获得资源类型。
 
-The data is returned as a JSON-encoded mapping in the following format::
+返回的数据是以下格式的JSON编码映射::
 
   {
     "resource_type_associations" : [
@@ -327,14 +292,15 @@ The data is returned as a JSON-encoded mapping in the following format::
 添加命名空间Add Namespace
 *************
 
-We want to create a new namespace that can contain the properties, objects,
-etc.
+我们想创建包含属性、对象等的新命名空间。
 
-We issue a ``POST`` request to add an namespace to Glance::
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
+
+我们发送 ``GET`` 请求来添加命名空间到Glance中::
 
   POST http://glance.example.com/v2/metadefs/namespaces/
 
-The input data is an JSON-encoded mapping in the following format::
+输入的JSON编码格式如下::
 
   {
     "namespace": "MyNamespace",
@@ -348,11 +314,16 @@ The input data is an JSON-encoded mapping in the following format::
    Optionally properties, objects and resource type associations could be
    added in the same input. See GET Namespace output above(input will be
    similar).
+   todo
 
 更新命名空间Update Namespace
 ****************
 
 We want to update an existing namespace
+
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
 
 We issue a ``PUT`` request to update an namespace to Glance::
 
@@ -367,6 +338,10 @@ The input data is similar to Add Namespace
 We want to delete an existing namespace including all its objects,
 properties etc.
 
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
+
 We issue a ``DELETE`` request to delete an namespace to Glance::
 
   DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}
@@ -376,6 +351,10 @@ We issue a ``DELETE`` request to delete an namespace to Glance::
 **************************************
 
 We want to associate a resource type with an existing namespace
+
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
 
 We issue a ``POST`` request to associate resource type to Glance::
 
@@ -397,6 +376,10 @@ The input data is an JSON-encoded mapping in the following format::
 
 We want to de-associate namespace from a resource type
 
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
+
 We issue a ``DELETE`` request to de-associate namespace resource type to
 Glance::
 
@@ -407,6 +390,10 @@ Glance::
 *************************
 
 We want to see the list of meta definition objects in a specific namespace
+
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
 
 We issue a ``GET`` request to ``http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects``
 to retrieve objects.
@@ -459,6 +446,10 @@ The data is returned as a JSON-encoded mapping in the following format::
 
 We want to create a new object which can group the properties
 
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
+
 We issue a ``POST`` request to add object to a namespace in Glance::
 
   POST http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects
@@ -495,6 +486,10 @@ The input data is an JSON-encoded mapping in the following format::
 
 We want to update an existing object
 
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
+
 We issue a ``PUT`` request to update an object to Glance::
 
   PUT http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects/{object_name}
@@ -507,6 +502,10 @@ The input data is similar to Add Object
 
 We want to delete an existing object.
 
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
+
 We issue a ``DELETE`` request to delete object in a namespace to Glance::
 
   DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects/{object_name}
@@ -516,6 +515,10 @@ Add property definition in a specific namespace
 ***********************************************
 
 We want to create a new property definition in a namespace
+
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
 
 We issue a ``POST`` request to add property definition to a namespace in
 Glance::
@@ -545,6 +548,9 @@ The input data is an JSON-encoded mapping in the following format::
 **************************************************
 
 We want to update an existing object
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
 
 We issue a ``PUT`` request to update an property definition in a namespace to
 Glance::
@@ -558,6 +564,9 @@ The input data is similar to Add property definition
 **************************************************
 
 We want to delete an existing object.
+我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
 
 We issue a ``DELETE`` request to delete property definition in a namespace to
 Glance::
@@ -565,24 +574,20 @@ Glance::
   DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}/properties/{property_name}
 
 
-API消息的本地化 Message Localization
-------------------------
-Glance supports HTTP message localization. For example, an HTTP client can
-receive API messages in Chinese even if the locale language of the server is
-English.
+API消息的本地化
+-------------
+Glance支持HTTP消息的本地化。举个例子，一个HTTP客户端即使服务器本地（Locale）语言是英文也可以接收到中文的API信息。
 
-如何使用它How to use it
-*************
-To receive localized API messages, the HTTP client needs to specify the
-**Accept-Language** header to indicate the language to use to translate the
-message. For more info about Accept-Language, please refer http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+如何使用它
+*********
+要获得本地化的API消息，HTTP客户端需要指定 **Accept-Language** 头来申明用什么语言翻译消息。关于Accept-Language更多的内容请参考 http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
 
-A typical curl API request will be like below::
+一个典型的API请求是类似下面这样子的::
 
    curl -i -X GET -H 'Accept-Language: zh' -H 'Content-Type: application/json'
    http://127.0.0.1:9292/v2/metadefs/namespaces/{namespace}
 
-Then the response will be like the following::
+然后响应信息是类似下面这样子的::
 
    HTTP/1.1 404 Not Found
    Content-Length: 234
@@ -601,5 +606,4 @@ Then the response will be like the following::
    </html>
 
 .. 注意::
-   Be sure there is the language package under /usr/share/locale-langpack/ on
-   the target Glance server.
+   请确保目标Glance服务器在/usr/share/locale-langpack/有语言包。
