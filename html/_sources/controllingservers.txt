@@ -14,40 +14,32 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Controlling Glance Servers
-==========================
+控制Glance服务器
+==============
 
-This section describes the ways to start, stop, and reload Glance's server
-programs.
+这部分描述了启动、停止、重新加载（Reload）Glance服务器程序的方法。
 
-Starting a server
------------------
+启动服务器
+---------
 
-There are two ways to start a Glance server (either the API server or the
-registry server):
+有两种方法可以启动Glance服务器（通过API服务器或者Registry服务器）：
 
-* Manually calling the server program
+* 手动调用服务器程序
 
-* Using the ``glance-control`` server daemon wrapper program
+* 使用包装过服务器守护进程的 ``glance-control`` 服务器
 
-We recommend using the second method.
+我们推荐使用第二种方法。
 
-Manually starting the server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+手动启动服务器
+~~~~~~~~~~~~
 
-The first is by directly calling the server program, passing in command-line
-options and a single argument for a ``paste.deploy`` configuration file to
-use when configuring the server application.
+第一种方法是直接调用服务器程序，传递命令行参数并且有一个 ``paste.deploy`` 配置文件的参数，用于配置服务器应用。
 
-.. note::
+.. 注意::
 
-  Glance ships with an ``etc/`` directory that contains sample ``paste.deploy``
-  configuration files that you can copy to a standard configuation directory and
-  adapt for your own uses. Specifically, bind_host must be set properly.
+  Glance直接部署在 ``etc/`` 目录，这个目录包含了简单的 ``paste.deploy`` 配置文件，你可以拷贝到标准的配置目录然后被你采用。特别的是，bind_host是必须合理地设置。
 
-If you do `not` specify a configuration file on the command line, Glance will
-do its best to locate a configuration file in one of the
-following directories, stopping at the first config file it finds:
+如果你在命令行 `没有` 指定配置文件，Glance会尽力在以下的其中一个目录寻找配置文件，找到第一个它就会停止：
 
 * ``$CWD``
 * ``~/.glance``
@@ -55,16 +47,14 @@ following directories, stopping at the first config file it finds:
 * ``/etc/glance``
 * ``/etc``
 
-The filename that is searched for depends on the server application name. So,
-if you are starting up the API server, ``glance-api.conf`` is searched for,
-otherwise ``glance-registry.conf``.
+搜索的文件名依赖于服务器应用的名字。所以，如果你启动API服务器，它就会搜索 ``glance-api.conf`` ，否则搜索 ``glance-registry.conf`` 。
 
-If no configuration file is found, you will see an error, like::
+如果找不到配置文件，你会看到错误，就像这样：
 
   $> glance-api
   ERROR: Unable to locate any configuration file. Cannot load application glance-api
 
-Here is an example showing how you can manually start the ``glance-api`` server and ``glance-registry`` in a shell.::
+这是个例子，展示了你可以怎样在Shell里启动 ``glance-api`` 服务器和 ``glance-registry`` 。::
 
   $ sudo glance-api --config-file glance-api.conf --debug &
   jsuh@mc-ats1:~$ 2011-04-13 14:50:12    DEBUG [glance-api] ********************************************************************************
@@ -116,49 +106,29 @@ Here is an example showing how you can manually start the ``glance-api`` server 
   root     20012  2.0  0.1  25188 13356 pts/1    S    12:47   0:00 /usr/bin/python /usr/bin/glance-registry glance-registry.conf
   jsuh     20017  0.0  0.0   3368   744 pts/1    S+   12:47   0:00 grep glance
 
-Simply supply the configuration file as the parameter to the ``--config-file`` option
-(the ``etc/glance-api.conf`` and  ``etc/glance-registry.conf`` sample configuration
-files were used in the above example) and then any other options
-you want to use. (``--debug`` was used above to show some of the debugging
-output that the server shows when starting up. Call the server program
-with ``--help`` to see all available options you can specify on the
-command line.)
+通过简单的 ``--config-file`` 选项（ ``etc/glance-api.conf`` 和  ``etc/glance-registry.conf`` 在上面的例子中使用）指定配置文件，还有其他参数你可以使用。（在上面 ``--debug`` 用于展示服务器启动时的调试信息。通过 ``--help`` 可以看到命令行的所有可用参数）。
 
-For more information on configuring the server via the ``paste.deploy``
-configuration files, see the section entitled
+ ``paste.deploy``配置文件可以找到个更多配置服务器的信息，在这个章节可以脏多熬
 :doc:`Configuring Glance servers <configuring>`
 
-Note that the server `daemonizes` itself by using the standard
-shell backgrounding indicator, ``&``, in the previous example. For most use cases, we recommend
-using the ``glance-control`` server daemon wrapper for daemonizing. See below
-for more details on daemonization with ``glance-control``.
+注意服务器可以通过标准的Shell后台标示符（Indicator） ``&`` 来作为 `守护进程` ，这是前面的例子。最常见的用例是，我们建议使用 ``glance-control`` 封装程序来启动守护进程。下面有使用 ``glance-control`` 的详细内容。
 
-Using the ``glance-control`` program to start the server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+使用 ``glance-control`` 程序来启动服务器
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The second way to start up a Glance server is to use the ``glance-control``
-program. ``glance-control`` is a wrapper script that allows the user to
-start, stop, restart, and reload the other Glance server programs in
-a fashion that is more conducive to automation and scripting.
+启动Glance服务器的第二种方法是使用 ``glance-control`` 程序。 ``glance-control`` 是一个封装过的脚本允许用户启动、停止、重启和重新加载Glance服务器，并且更加有效、自动化和脚本化。
 
-Servers started via the ``glance-control`` program are always `daemonized`,
-meaning that the server program process runs in the background.
+通过 ``glance-control`` 启动的服务器都是 `守护进程` ，这意味着服务器进程都是在后台运行的。
 
-To start a Glance server with ``glance-control``, simply call
-``glance-control`` with a server and the word "start", followed by
-any command-line options you wish to provide. Start the server with ``glance-control``
-in the following way::
+要通过 ``glance-control`` 启动Glance服务器，只需简单地使用 "start"来调用 ``glance-control`` 。通过 "start"启动服务器的方法如下::
 
   $> sudo glance-control [OPTIONS] <SERVER> start [CONFPATH]
 
-.. note::
+.. 注意::
 
-  You must use the ``sudo`` program to run ``glance-control`` currently, as the
-  pid files for the server programs are written to /var/run/glance/
+  目前你必须使用  ``sudo`` 程序来运行 ``glance-control`` ，而服务端的Pid文件是写在/var/run/glance/目录。
 
-Here is an example that shows how to start the ``glance-registry`` server
-with the ``glance-control`` wrapper script. ::
-
+这里有个例子显示了如何使用 ``glance-control`` 的封装脚本::
 
   $ sudo glance-control api start glance-api.conf
   Starting glance-api with /home/jsuh/glance.conf
@@ -172,66 +142,51 @@ with the ``glance-control`` wrapper script. ::
   jsuh     20042  0.0  0.0   3368   744 pts/1    S+   12:51   0:00 grep glance
 
 
-The same configuration files are used by ``glance-control`` to start the
-Glance server programs, and you can specify (as the example above shows)
-a configuration file when starting the server.
+ ``glance-control`` 启动Glance服务器程序会使用相同的配置文件，而且你可以在启动服务器的时候指定（像上面的例子）一个配置文件。
 
-
-In order for your launched glance service to be monitored for unexpected death
-and respawned if necessary, use the following option:
+为了让你的Glance服务可以监控非预期的推出和必要时的重启（Respawn），请使用下面的选项：
 
 
   $ sudo glance-control [service] start --respawn ...
 
 
-Note that this will cause ``glance-control`` itself to remain running. Also note
-that deliberately stopped services are not respawned, neither are rapidly bouncing
-services (where process death occurred within one second of the last launch).
+注意这会让 ``glance-control`` 自己保持一直运行。同样要注意特意地停止服务不会引起重启，迅速地重启服务（进程在上次启动一秒内挂了）也不会。
 
-
-By default, output from glance services is discarded when launched with ``glance-control``.
-In order to capture such output via syslog, use the following option:
-
+Glance服务默认的输出会在 ``glance-control`` 启动时丢弃。通过syslog可以获得这类输出，使用以下的选项：
 
   $ sudo glance-control --capture-output ...
 
 
 Stopping a server
+停止服务器
 -----------------
 
-If you started a Glance server manually and did not use the ``&`` backgrounding
-function, simply send a terminate signal to the server process by typing
-``Ctrl-C``
+如果你手动启动Glance服务器并且没有使用 ``&`` 后台执行函数，通过输入``Ctrl-C``简单的给服务器进程发送中止信号即可。
 
-If you started the Glance server using the ``glance-control`` program, you can
-use the ``glance-control`` program to stop it. Simply do the following::
+如果你使用 ``glance-control`` 程序来启动Glance服务器，你可以使用 ``glance-control`` 程序来停止它。简单地按照下面的指示::
 
   $> sudo glance-control <SERVER> stop
 
-as this example shows::
+就像这个例子那样::
 
   $> sudo glance-control registry stop
   Stopping glance-registry  pid: 17602  signal: 15
 
-Restarting a server
--------------------
+重启服务器
+---------
 
-You can restart a server with the ``glance-control`` program, as demonstrated
-here::
+你可以通过 ``glance-control`` 程序来重启服务器，就像这里演示的那样::
 
   $> sudo glance-control registry restart etc/glance-registry.conf
   Stopping glance-registry  pid: 17611  signal: 15
   Starting glance-registry with /home/jpipes/repos/glance/trunk/etc/glance-registry.conf
 
-Reloading a server
--------------------
+重新加载服务器
+------------
 
-You can reload a server with the ``glance-control`` program, as demonstrated
-here::
+你可以通过 ``glance-control`` 程序来重新加载服务器，就像这里演示的那样::
 
   $> sudo glance-control api reload
   Reloading glance-api (pid 18506) with signal(1)
 
-A reload sends a SIGHUP signal to the master process and causes new configuration
-settings to be picked up without any interruption to the running service (provided
-neither bind_host or bind_port has changed).
+重新加载会给主（Master）进程发送SIGHUP信号，并且在不暂停正在运行的服务器的情况下（假定bind_host和bind_port都没变）选择新的配置设置。

@@ -14,9 +14,10 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Metadata Definition Concepts
-============================
+元数据定义的概念
+=============
 
+元数据定义（Metadata Definition）服务在OpenStack的Juno版本中加入到Glance。
 The metadata definition service was added to Glance in the Juno release of
 OpenStack.
 
@@ -26,6 +27,7 @@ can be used on different types of resources (images, artifacts, volumes,
 flavors, aggregates, etc). A definition includes a property's key,
 its description, its constraints, and the resource types to which it can be
 associated.
+它提供了
 
 This catalog does not store the values for specific instance properties.
 
@@ -43,11 +45,11 @@ the property is applied to different types of resources, such as "hw_" for
 images and "hw:" for flavors.  So, on an image, the user would know to set the
 property as "hw_cpu_cores=1".
 
-Terminology
------------
+术语
+----
 
-Background
-~~~~~~~~~~
+背景
+~~~~
 The term *metadata* can become very overloaded and confusing.  This
 catalog is about the additional metadata that is passed as arbitrary
 key / value pairs or tags across various artifacts and OpenStack services.
@@ -67,8 +69,8 @@ OpenStack services today:
 |  + *tags*               |                           |                      |
 +-------------------------+---------------------------+----------------------+
 
-Catalog Concepts
-~~~~~~~~~~~~~~~~
+目录（Catalog）概念
+~~~~~~~~~~~~~~~~~
 
 The below figure illustrates the concept terminology used in the metadata
 definitions catalog::
@@ -102,8 +104,8 @@ definitions catalog::
   Properties may be defined standalone or within the context of an object.
 
 
-Catalog Terminology
-~~~~~~~~~~~~~~~~~~~
+目录术语
+~~~~~~~
 
 The following terminology is used within the metadata definition catalog.
 

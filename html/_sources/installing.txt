@@ -14,35 +14,33 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Installation
-============
+安装
+====
 
-Installing from packages
-~~~~~~~~~~~~~~~~~~~~~~~~
+从包（Packages）中安装
+~~~~~~~~~~~~~~~~~~~~
 
-To install the latest released version of Glance,
-follow the following instructions.
+按照以下的指示安装Glance最新的发布版。
 
 Debian, Ubuntu
 ##############
 
-1. Add the Glance PPA to your sources.lst::
+1. 将Glance PPA加到你的sources.lst::
 
    $> sudo add-apt-repository ppa:glance-core/trunk
    $> sudo apt-get update
 
-2. Install Glance::
+2. 安装Glance::
 
    $> sudo apt-get install glance
 
 Red Hat, Fedora
 ###############
 
-Only RHEL 6, Fedora 18, and newer releases have the necessary
-components packaged.
-On RHEL 6, enable the EPEL repository.
+只有RHEL 6、Fedora 18和更新的发布版有必需的组件。
+在RHEL 6中需要开启（Enable）EPEL仓库（epository）。
 
-Install Glance::
+安装Glance::
 
    $ su -
    # yum install openstack-glance
@@ -52,77 +50,69 @@ openSUSE, SLE
 
 openSUSE 13.2, SLE 12, and the rolling release Factory needs an extra
 repository enabled to install all the OpenStack packages.
+openSUSE 13.2、SLE 12和更新的发布版（Rolling Release Factory）需要开启额外的仓库来安装OpenStack包。
 
-Search the proper repository in the `Cloud:OpenStack:Master <https://build.opensuse.org/project/repositories/Cloud:OpenStack:Master>`_ project. For example, for openSUSE 13.2:
+在这个地址搜索合适的仓库 `Cloud:OpenStack:Master <https://build.opensuse.org/project/repositories/Cloud:OpenStack:Master>`_ project. For example, for openSUSE 13.2:
 
-1. Add the OpenStack master repository::
+1. 添加OpenStack主仓库（Master Repository）::
 
    $ sudo zypper ar -f -g http://download.opensuse.org/repositories/Cloud:/OpenStack:/Master/openSUSE_13.2/ OpenStack
    $ sudo zypper ref
 
-2. Install Glance::
+2. 安装Glance::
 
    $ sudo zypper in openstack-glance
 
-Installing from source tarballs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+从源码压缩包（Tarball）中安装
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To install the latest version of Glance from the Launchpad Bazaar repositories,
-following the following instructions.
+要从Launchpad Bazaar仓库安装最新版的Glance，请按照以下的指令。
 
-1. Grab the source tarball from `Launchpad <http://launchpad.net/glance/+download>`_
+1. 从这个地址获取压缩包 `Launchpad <http://launchpad.net/glance/+download>`_
 
-2. Untar the source tarball::
+2. 解压这个压缩包::
 
    $> tar -xzf <FILE>
 
-3. Change into the package directory and build/install::
+3. 跳转到包路径并且编译和安装::
 
    $> cd glance-<RELEASE>
    $> sudo python setup.py install
 
-Installing from Git
+从Git中安装
 ~~~~~~~~~~~~~~~~~~~
 
-To install the latest version of Glance from the GitHub Git repositories,
-following the following instructions.
+要从GitHub仓库安装最新版的Glance，请按照以下的指令。
 
 Debian, Ubuntu
 ##############
 
-1. Install Git and build dependencies::
+1. 安装Git和它的依赖::
 
    $> sudo apt-get install git
    $> sudo apt-get build-dep glance
 
-.. note::
+.. 注意::
 
-   If you want to build the Glance documentation locally, you will also want
-   to install the python-sphinx package
+   如果你想在本地构建Glance文档，你还需要安装python-sphinx包。
 
-2. Clone Glance's trunk branch from GitHub::
+2. 从GitHub下载（Clone）Glance主干（Trunk）分支::
 
    $> git clone git://github.com/openstack/glance
    $> cd glance
 
-3. Install Glance::
+3. 安装Glance::
 
    $> sudo python setup.py install
 
 Red Hat, Fedora
 ###############
 
-On Fedora, most developers and essentially all users install packages.
-Instructions below are not commonly used, and even then typically in a
-throw-away VM.
+在Fedora中，大部分开发者和几乎所有用户都会安装包。下面的指令不是常用的，而且它们经常用在用一次就抛弃（Throw-away）的虚拟机中。
 
-Since normal build dependencies are resolved by mechanisms of RPM,
-there is no one-line command to install everything needed by
-the source repository in git. One common way to discover the dependencies
-is to search for *BuildRequires:* in the specfile of openstack-glance
-for the appropriate distro.
+由于普通的构建依赖会由RPM的机制解决，这里没有一行命令的解决办法来安装Git源码仓库需要的所有东西。通常的做法是在合适的发行版中openstack-glance的specfile中搜索 *BuildRequires:* 来发现所有的依赖。
 
-In case of Fedora 16, for example, do this::
+举个例子，如果是Fedora 16就这样做::
 
    $ su -
    # yum install git
@@ -130,25 +120,21 @@ In case of Fedora 16, for example, do this::
    # yum install python-webob python-eventlet
    # yum install python-virtualenv
 
-Build Glance::
+构建Glance::
 
    $ python setup.py build
 
-If any missing modules crop up, install them with yum, then retry the build.
+如果出现了缺失的模块，使用yum安装然后重新尝试构建。
 
-.. note::
+.. 注意::
 
-   If you want to build the Glance documentation, you will also want
-   to install the packages python-sphinx and graphviz, then run
-   "python setup.py build_sphinx". Due to required features of
-   python-sphinx 1.0 or better, documentation can only be built
-   on Fedora 15 or later.
+   如果你想在本地构建Glance文档，你还需要安装python-sphinx和graphviz包，然后运行"python setup.py build_sphinx"。由于依赖python-sphinx 1.0及更新的特性，文档只能在Fedora 15以及更新版中才能构建。
 
-Test the build::
+测试构建效果::
 
    $ ./run_tests.sh -s
 
-Once Glance is built and tested, install it::
+一旦Glance构建并测试过，安装这个::
 
    $ su -
    # python setup.py install
@@ -156,24 +142,22 @@ Once Glance is built and tested, install it::
 openSUSE, SLE
 #############
 
-On openSUSE and SLE (also this is valid for Factory), we can install
-all the build dependencies using Zypper.
+在openSUSE和SLE（对工厂也是有效的）中，我们可以使用Zypper来安装所有构建所需的依赖。
 
-1. Install Git and build dependencies::
+1. 安装Git和它的依赖::
 
    $ sudo zypper install git
    $ sudo zypper source-install -d openstack-glance
 
-.. note::
+.. 注意::
 
-   If you want to build the Glance documentation locally, you will also want
-   to install the packages python-sphinx and graphviz.
+   如果你想在本地构建Glance文档，你还需要安装python-sphinx和graphviz包。
 
-2. Clone Glance's trunk branch from GitHub::
+2. 从GitHub下载（Clone）Glance主干（Trunk）分支::
 
    $ git clone git://github.com/openstack/glance
    $ cd glance
 
-3. Install Glance::
+3. 安装Glance::
 
    $ sudo python setup.py install

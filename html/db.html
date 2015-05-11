@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Database Management &mdash; Glance 2015.1.1.dev9 documentation</title>
+    <title>数据库管理 &mdash; Glance 2015.1.1.dev9 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
-    <link rel="next" title="The Glance Image Cache" href="cache.html" />
-    <link rel="prev" title="Controlling Glance Servers" href="controllingservers.html" /> 
+    <link rel="next" title="Glance镜像缓存" href="cache.html" />
+    <link rel="prev" title="控制Glance服务器" href="controllingservers.html" /> 
   </head>
   <body role="document">
   <div id="header">
@@ -50,38 +50,35 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="database-management">
-<h1>Database Management<a class="headerlink" href="#database-management" title="Permalink to this headline">¶</a></h1>
-<p>The default metadata driver for glance uses sqlalchemy, which implies there
-exists a backend database which must be managed. The <code class="docutils literal"><span class="pre">glance-manage</span></code> binary
-provides a set of commands for making this easier.</p>
-<p>The commands should be executed as a subcommand of &#8216;db&#8217;:</p>
+  <div class="section" id="id1">
+<h1>数据库管理<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Glance的默认元数据驱动使用了sqlalchemy，这意味着它存在一个必须管理的后端数据库。 <code class="docutils literal"><span class="pre">glance-manage</span></code> 工具提供了一组命令让管理更加容易。</p>
+<p>这些命令应该作为 &#8216;db&#8217; 的子命令来执行：</p>
 <blockquote>
 <div>glance-manage db &lt;cmd&gt; &lt;args&gt;</div></blockquote>
-<div class="section" id="sync-the-database">
-<h2>Sync the Database<a class="headerlink" href="#sync-the-database" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>同步数据库<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div>glance-manage db sync &lt;version&gt; &lt;current_version&gt;</div></blockquote>
-<p>Place a database under migration control and upgrade, creating it first if necessary.</p>
+<p>如果需要，通过迁移（Migration）控制和升级，创建一个数据库来放置数据库。</p>
 </div>
-<div class="section" id="determining-the-database-version">
-<h2>Determining the Database Version<a class="headerlink" href="#determining-the-database-version" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>确定数据库版本<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div>glance-manage db version</div></blockquote>
-<p>This will print the current migration level of a glance database.</p>
+<p>这回打印Glance数据库当前的迁移级别（Level）。</p>
 </div>
 <div class="section" id="upgrading-an-existing-database">
 <h2>Upgrading an Existing Database<a class="headerlink" href="#upgrading-an-existing-database" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div>glance-manage db upgrade &lt;VERSION&gt;</div></blockquote>
-<p>This will take an existing database and upgrade it to the specified VERSION.</p>
+<p>这会将已经存在的数据库升级到指定的版本。</p>
 </div>
 <div class="section" id="downgrading-an-existing-database">
 <h2>Downgrading an Existing Database<a class="headerlink" href="#downgrading-an-existing-database" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div>glance-manage db downgrade &lt;VERSION&gt;</div></blockquote>
-<p>This will downgrade an existing database from the current version to the
-specified VERSION.</p>
+<p>这会让已经存在的数据库从当前版本降级到指定的版本。</p>
 </div>
 </div>
 
@@ -93,9 +90,9 @@ specified VERSION.</p>
     <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference internal" href="#">Database Management</a><ul>
-<li><a class="reference internal" href="#sync-the-database">Sync the Database</a></li>
-<li><a class="reference internal" href="#determining-the-database-version">Determining the Database Version</a></li>
+<li><a class="reference internal" href="#">数据库管理</a><ul>
+<li><a class="reference internal" href="#id2">同步数据库</a></li>
+<li><a class="reference internal" href="#id3">确定数据库版本</a></li>
 <li><a class="reference internal" href="#upgrading-an-existing-database">Upgrading an Existing Database</a></li>
 <li><a class="reference internal" href="#downgrading-an-existing-database">Downgrading an Existing Database</a></li>
 </ul>
@@ -104,10 +101,10 @@ specified VERSION.</p>
 
             <h4>Previous topic</h4>
             <p class="topless"><a href="controllingservers.html"
-                                  title="previous chapter">Controlling Glance Servers</a></p>
+                                  title="previous chapter">控制Glance服务器</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="cache.html"
-                                  title="next chapter">The Glance Image Cache</a></p>
+                                  title="next chapter">Glance镜像缓存</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="_sources/db.txt"
@@ -135,10 +132,10 @@ specified VERSION.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="cache.html" title="The Glance Image Cache"
+          <a href="cache.html" title="Glance镜像缓存"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="controllingservers.html" title="Controlling Glance Servers"
+          <a href="controllingservers.html" title="控制Glance服务器"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
       </ul>

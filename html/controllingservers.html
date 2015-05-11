@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Controlling Glance Servers &mdash; Glance 2015.1.1.dev9 documentation</title>
+    <title>控制Glance服务器 &mdash; Glance 2015.1.1.dev9 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
-    <link rel="next" title="Database Management" href="db.html" />
-    <link rel="prev" title="Policies" href="policies.html" /> 
+    <link rel="next" title="数据库管理" href="db.html" />
+    <link rel="prev" title="策略" href="policies.html" /> 
   </head>
   <body role="document">
   <div id="header">
@@ -50,33 +50,21 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="controlling-glance-servers">
-<h1>Controlling Glance Servers<a class="headerlink" href="#controlling-glance-servers" title="Permalink to this headline">¶</a></h1>
-<p>This section describes the ways to start, stop, and reload Glance&#8217;s server
-programs.</p>
-<div class="section" id="starting-a-server">
-<h2>Starting a server<a class="headerlink" href="#starting-a-server" title="Permalink to this headline">¶</a></h2>
-<p>There are two ways to start a Glance server (either the API server or the
-registry server):</p>
+  <div class="section" id="glance">
+<h1>控制Glance服务器<a class="headerlink" href="#glance" title="Permalink to this headline">¶</a></h1>
+<p>这部分描述了启动、停止、重新加载（Reload）Glance服务器程序的方法。</p>
+<div class="section" id="id1">
+<h2>启动服务器<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>有两种方法可以启动Glance服务器（通过API服务器或者Registry服务器）：</p>
 <ul class="simple">
-<li>Manually calling the server program</li>
-<li>Using the <code class="docutils literal"><span class="pre">glance-control</span></code> server daemon wrapper program</li>
+<li>手动调用服务器程序</li>
+<li>使用包装过服务器守护进程的 <code class="docutils literal"><span class="pre">glance-control</span></code> 服务器</li>
 </ul>
-<p>We recommend using the second method.</p>
-<div class="section" id="manually-starting-the-server">
-<h3>Manually starting the server<a class="headerlink" href="#manually-starting-the-server" title="Permalink to this headline">¶</a></h3>
-<p>The first is by directly calling the server program, passing in command-line
-options and a single argument for a <code class="docutils literal"><span class="pre">paste.deploy</span></code> configuration file to
-use when configuring the server application.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Glance ships with an <code class="docutils literal"><span class="pre">etc/</span></code> directory that contains sample <code class="docutils literal"><span class="pre">paste.deploy</span></code>
-configuration files that you can copy to a standard configuation directory and
-adapt for your own uses. Specifically, bind_host must be set properly.</p>
-</div>
-<p>If you do <cite>not</cite> specify a configuration file on the command line, Glance will
-do its best to locate a configuration file in one of the
-following directories, stopping at the first config file it finds:</p>
+<p>我们推荐使用第二种方法。</p>
+<div class="section" id="id2">
+<h3>手动启动服务器<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>第一种方法是直接调用服务器程序，传递命令行参数并且有一个 <code class="docutils literal"><span class="pre">paste.deploy</span></code> 配置文件的参数，用于配置服务器应用。</p>
+<p>如果你在命令行 <cite>没有</cite> 指定配置文件，Glance会尽力在以下的其中一个目录寻找配置文件，找到第一个它就会停止：</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">$CWD</span></code></li>
 <li><code class="docutils literal"><span class="pre">~/.glance</span></code></li>
@@ -84,15 +72,12 @@ following directories, stopping at the first config file it finds:</p>
 <li><code class="docutils literal"><span class="pre">/etc/glance</span></code></li>
 <li><code class="docutils literal"><span class="pre">/etc</span></code></li>
 </ul>
-<p>The filename that is searched for depends on the server application name. So,
-if you are starting up the API server, <code class="docutils literal"><span class="pre">glance-api.conf</span></code> is searched for,
-otherwise <code class="docutils literal"><span class="pre">glance-registry.conf</span></code>.</p>
-<p>If no configuration file is found, you will see an error, like:</p>
-<div class="highlight-python"><div class="highlight"><pre>$&gt; glance-api
-ERROR: Unable to locate any configuration file. Cannot load application glance-api
-</pre></div>
-</div>
-<p>Here is an example showing how you can manually start the <code class="docutils literal"><span class="pre">glance-api</span></code> server and <code class="docutils literal"><span class="pre">glance-registry</span></code> in a shell.:</p>
+<p>搜索的文件名依赖于服务器应用的名字。所以，如果你启动API服务器，它就会搜索 <code class="docutils literal"><span class="pre">glance-api.conf</span></code> ，否则搜索 <code class="docutils literal"><span class="pre">glance-registry.conf</span></code> 。</p>
+<p>如果找不到配置文件，你会看到错误，就像这样：</p>
+<blockquote>
+<div>$&gt; glance-api
+ERROR: Unable to locate any configuration file. Cannot load application glance-api</div></blockquote>
+<p>这是个例子，展示了你可以怎样在Shell里启动 <code class="docutils literal"><span class="pre">glance-api</span></code> 服务器和 <code class="docutils literal"><span class="pre">glance-registry</span></code> 。:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ sudo glance-api --config-file glance-api.conf --debug &amp;
 jsuh@mc-ats1:~$ 2011-04-13 14:50:12    DEBUG [glance-api] ********************************************************************************
 2011-04-13 14:50:12    DEBUG [glance-api] Configuration options gathered from config file:
@@ -144,108 +129,75 @@ root     20012  2.0  0.1  25188 13356 pts/1    S    12:47   0:00 /usr/bin/python
 jsuh     20017  0.0  0.0   3368   744 pts/1    S+   12:47   0:00 grep glance
 </pre></div>
 </div>
-<p>Simply supply the configuration file as the parameter to the <code class="docutils literal"><span class="pre">--config-file</span></code> option
-(the <code class="docutils literal"><span class="pre">etc/glance-api.conf</span></code> and  <code class="docutils literal"><span class="pre">etc/glance-registry.conf</span></code> sample configuration
-files were used in the above example) and then any other options
-you want to use. (<code class="docutils literal"><span class="pre">--debug</span></code> was used above to show some of the debugging
-output that the server shows when starting up. Call the server program
-with <code class="docutils literal"><span class="pre">--help</span></code> to see all available options you can specify on the
-command line.)</p>
-<p>For more information on configuring the server via the <code class="docutils literal"><span class="pre">paste.deploy</span></code>
-configuration files, see the section entitled
-<a class="reference internal" href="configuring.html"><em>Configuring Glance servers</em></a></p>
-<p>Note that the server <cite>daemonizes</cite> itself by using the standard
-shell backgrounding indicator, <code class="docutils literal"><span class="pre">&amp;</span></code>, in the previous example. For most use cases, we recommend
-using the <code class="docutils literal"><span class="pre">glance-control</span></code> server daemon wrapper for daemonizing. See below
-for more details on daemonization with <code class="docutils literal"><span class="pre">glance-control</span></code>.</p>
+<p>通过简单的 <code class="docutils literal"><span class="pre">--config-file</span></code> 选项（ <code class="docutils literal"><span class="pre">etc/glance-api.conf</span></code> 和  <code class="docutils literal"><span class="pre">etc/glance-registry.conf</span></code> 在上面的例子中使用）指定配置文件，还有其他参数你可以使用。（在上面 <code class="docutils literal"><span class="pre">--debug</span></code> 用于展示服务器启动时的调试信息。通过 <code class="docutils literal"><span class="pre">--help</span></code> 可以看到命令行的所有可用参数）。</p>
+<blockquote>
+<div><a href="#id3"><span class="problematic" id="id4">``</span></a>paste.deploy``配置文件可以找到个更多配置服务器的信息，在这个章节可以脏多熬</div></blockquote>
+<p><a class="reference internal" href="configuring.html"><em>Configuring Glance servers</em></a></p>
+<p>注意服务器可以通过标准的Shell后台标示符（Indicator） <code class="docutils literal"><span class="pre">&amp;</span></code> 来作为 <cite>守护进程</cite> ，这是前面的例子。最常见的用例是，我们建议使用 <code class="docutils literal"><span class="pre">glance-control</span></code> 封装程序来启动守护进程。下面有使用 <code class="docutils literal"><span class="pre">glance-control</span></code> 的详细内容。</p>
 </div>
-<div class="section" id="using-the-glance-control-program-to-start-the-server">
-<h3>Using the <code class="docutils literal"><span class="pre">glance-control</span></code> program to start the server<a class="headerlink" href="#using-the-glance-control-program-to-start-the-server" title="Permalink to this headline">¶</a></h3>
-<p>The second way to start up a Glance server is to use the <code class="docutils literal"><span class="pre">glance-control</span></code>
-program. <code class="docutils literal"><span class="pre">glance-control</span></code> is a wrapper script that allows the user to
-start, stop, restart, and reload the other Glance server programs in
-a fashion that is more conducive to automation and scripting.</p>
-<p>Servers started via the <code class="docutils literal"><span class="pre">glance-control</span></code> program are always <cite>daemonized</cite>,
-meaning that the server program process runs in the background.</p>
-<p>To start a Glance server with <code class="docutils literal"><span class="pre">glance-control</span></code>, simply call
-<code class="docutils literal"><span class="pre">glance-control</span></code> with a server and the word &#8220;start&#8221;, followed by
-any command-line options you wish to provide. Start the server with <code class="docutils literal"><span class="pre">glance-control</span></code>
-in the following way:</p>
+<div class="section" id="glance-control">
+<h3>使用 <code class="docutils literal"><span class="pre">glance-control</span></code> 程序来启动服务器<a class="headerlink" href="#glance-control" title="Permalink to this headline">¶</a></h3>
+<p>启动Glance服务器的第二种方法是使用 <code class="docutils literal"><span class="pre">glance-control</span></code> 程序。 <code class="docutils literal"><span class="pre">glance-control</span></code> 是一个封装过的脚本允许用户启动、停止、重启和重新加载Glance服务器，并且更加有效、自动化和脚本化。</p>
+<p>通过 <code class="docutils literal"><span class="pre">glance-control</span></code> 启动的服务器都是 <cite>守护进程</cite> ，这意味着服务器进程都是在后台运行的。</p>
+<p>要通过 <code class="docutils literal"><span class="pre">glance-control</span></code> 启动Glance服务器，只需简单地使用 &#8220;start&#8221;来调用 <code class="docutils literal"><span class="pre">glance-control</span></code> 。通过 &#8220;start&#8221;启动服务器的方法如下:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; sudo glance-control [OPTIONS] &lt;SERVER&gt; start [CONFPATH]
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">You must use the <code class="docutils literal"><span class="pre">sudo</span></code> program to run <code class="docutils literal"><span class="pre">glance-control</span></code> currently, as the
-pid files for the server programs are written to /var/run/glance/</p>
-</div>
-<p>Here is an example that shows how to start the <code class="docutils literal"><span class="pre">glance-registry</span></code> server
-with the <code class="docutils literal"><span class="pre">glance-control</span></code> wrapper script.</p>
-<div class="highlight-python"><div class="highlight"><pre>$ sudo glance-control api start glance-api.conf
-Starting glance-api with /home/jsuh/glance.conf
+<p>这里有个例子显示了如何使用 <code class="docutils literal"><span class="pre">glance-control</span></code> 的封装脚本:</p>
+<div class="highlight-python"><div class="highlight"><pre> $ sudo glance-control api start glance-api.conf
+ Starting glance-api with /home/jsuh/glance.conf
 
-$ sudo glance-control registry start glance-registry.conf
-Starting glance-registry with /home/jsuh/glance.conf
+ $ sudo glance-control registry start glance-registry.conf
+ Starting glance-registry with /home/jsuh/glance.conf
 
-$ ps aux | grep glance
-root     20038  4.0  0.1  12728  9116 ?        Ss   12:51   0:00 /usr/bin/python /usr/bin/glance-api /home/jsuh/glance-api.conf
-root     20039  6.0  0.1  25188 13356 ?        Ss   12:51   0:00 /usr/bin/python /usr/bin/glance-registry /home/jsuh/glance-registry.conf
-jsuh     20042  0.0  0.0   3368   744 pts/1    S+   12:51   0:00 grep glance
+ $ ps aux | grep glance
+ root     20038  4.0  0.1  12728  9116 ?        Ss   12:51   0:00 /usr/bin/python /usr/bin/glance-api /home/jsuh/glance-api.conf
+ root     20039  6.0  0.1  25188 13356 ?        Ss   12:51   0:00 /usr/bin/python /usr/bin/glance-registry /home/jsuh/glance-registry.conf
+ jsuh     20042  0.0  0.0   3368   744 pts/1    S+   12:51   0:00 grep glance
+
+
+``glance-control`` 启动Glance服务器程序会使用相同的配置文件，而且你可以在启动服务器的时候指定（像上面的例子）一个配置文件。
 </pre></div>
 </div>
-<p>The same configuration files are used by <code class="docutils literal"><span class="pre">glance-control</span></code> to start the
-Glance server programs, and you can specify (as the example above shows)
-a configuration file when starting the server.</p>
-<p>In order for your launched glance service to be monitored for unexpected death
-and respawned if necessary, use the following option:</p>
+<p>为了让你的Glance服务可以监控非预期的推出和必要时的重启（Respawn），请使用下面的选项：</p>
 <blockquote>
 <div>$ sudo glance-control [service] start &#8211;respawn ...</div></blockquote>
-<p>Note that this will cause <code class="docutils literal"><span class="pre">glance-control</span></code> itself to remain running. Also note
-that deliberately stopped services are not respawned, neither are rapidly bouncing
-services (where process death occurred within one second of the last launch).</p>
-<p>By default, output from glance services is discarded when launched with <code class="docutils literal"><span class="pre">glance-control</span></code>.
-In order to capture such output via syslog, use the following option:</p>
+<p>注意这会让 <code class="docutils literal"><span class="pre">glance-control</span></code> 自己保持一直运行。同样要注意特意地停止服务不会引起重启，迅速地重启服务（进程在上次启动一秒内挂了）也不会。</p>
+<p>Glance服务默认的输出会在 <code class="docutils literal"><span class="pre">glance-control</span></code> 启动时丢弃。通过syslog可以获得这类输出，使用以下的选项：</p>
 <blockquote>
 <div>$ sudo glance-control &#8211;capture-output ...</div></blockquote>
-</div>
-</div>
-<div class="section" id="stopping-a-server">
-<h2>Stopping a server<a class="headerlink" href="#stopping-a-server" title="Permalink to this headline">¶</a></h2>
-<p>If you started a Glance server manually and did not use the <code class="docutils literal"><span class="pre">&amp;</span></code> backgrounding
-function, simply send a terminate signal to the server process by typing
-<code class="docutils literal"><span class="pre">Ctrl-C</span></code></p>
-<p>If you started the Glance server using the <code class="docutils literal"><span class="pre">glance-control</span></code> program, you can
-use the <code class="docutils literal"><span class="pre">glance-control</span></code> program to stop it. Simply do the following:</p>
+<p>Stopping a server
+停止服务器
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
+<p>如果你手动启动Glance服务器并且没有使用 <code class="docutils literal"><span class="pre">&amp;</span></code> 后台执行函数，通过输入``Ctrl-C``简单的给服务器进程发送中止信号即可。</p>
+<p>如果你使用 <code class="docutils literal"><span class="pre">glance-control</span></code> 程序来启动Glance服务器，你可以使用 <code class="docutils literal"><span class="pre">glance-control</span></code> 程序来停止它。简单地按照下面的指示:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; sudo glance-control &lt;SERVER&gt; stop
 </pre></div>
 </div>
-<p>as this example shows:</p>
+<p>就像这个例子那样:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; sudo glance-control registry stop
 Stopping glance-registry  pid: 17602  signal: 15
 </pre></div>
 </div>
 </div>
-<div class="section" id="restarting-a-server">
-<h2>Restarting a server<a class="headerlink" href="#restarting-a-server" title="Permalink to this headline">¶</a></h2>
-<p>You can restart a server with the <code class="docutils literal"><span class="pre">glance-control</span></code> program, as demonstrated
-here:</p>
+</div>
+<div class="section" id="id5">
+<h2>重启服务器<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>你可以通过 <code class="docutils literal"><span class="pre">glance-control</span></code> 程序来重启服务器，就像这里演示的那样:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; sudo glance-control registry restart etc/glance-registry.conf
 Stopping glance-registry  pid: 17611  signal: 15
 Starting glance-registry with /home/jpipes/repos/glance/trunk/etc/glance-registry.conf
 </pre></div>
 </div>
 </div>
-<div class="section" id="reloading-a-server">
-<h2>Reloading a server<a class="headerlink" href="#reloading-a-server" title="Permalink to this headline">¶</a></h2>
-<p>You can reload a server with the <code class="docutils literal"><span class="pre">glance-control</span></code> program, as demonstrated
-here:</p>
+<div class="section" id="id6">
+<h2>重新加载服务器<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>你可以通过 <code class="docutils literal"><span class="pre">glance-control</span></code> 程序来重新加载服务器，就像这里演示的那样:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; sudo glance-control api reload
 Reloading glance-api (pid 18506) with signal(1)
 </pre></div>
 </div>
-<p>A reload sends a SIGHUP signal to the master process and causes new configuration
-settings to be picked up without any interruption to the running service (provided
-neither bind_host or bind_port has changed).</p>
+<p>重新加载会给主（Master）进程发送SIGHUP信号，并且在不暂停正在运行的服务器的情况下（假定bind_host和bind_port都没变）选择新的配置设置。</p>
 </div>
 </div>
 
@@ -257,25 +209,24 @@ neither bind_host or bind_port has changed).</p>
     <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference internal" href="#">Controlling Glance Servers</a><ul>
-<li><a class="reference internal" href="#starting-a-server">Starting a server</a><ul>
-<li><a class="reference internal" href="#manually-starting-the-server">Manually starting the server</a></li>
-<li><a class="reference internal" href="#using-the-glance-control-program-to-start-the-server">Using the <code class="docutils literal"><span class="pre">glance-control</span></code> program to start the server</a></li>
+<li><a class="reference internal" href="#">控制Glance服务器</a><ul>
+<li><a class="reference internal" href="#id1">启动服务器</a><ul>
+<li><a class="reference internal" href="#id2">手动启动服务器</a></li>
+<li><a class="reference internal" href="#glance-control">使用 <code class="docutils literal"><span class="pre">glance-control</span></code> 程序来启动服务器</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#stopping-a-server">Stopping a server</a></li>
-<li><a class="reference internal" href="#restarting-a-server">Restarting a server</a></li>
-<li><a class="reference internal" href="#reloading-a-server">Reloading a server</a></li>
+<li><a class="reference internal" href="#id5">重启服务器</a></li>
+<li><a class="reference internal" href="#id6">重新加载服务器</a></li>
 </ul>
 </li>
 </ul>
 
             <h4>Previous topic</h4>
             <p class="topless"><a href="policies.html"
-                                  title="previous chapter">Policies</a></p>
+                                  title="previous chapter">策略</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="db.html"
-                                  title="next chapter">Database Management</a></p>
+                                  title="next chapter">数据库管理</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="_sources/controllingservers.txt"
@@ -303,10 +254,10 @@ neither bind_host or bind_port has changed).</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="db.html" title="Database Management"
+          <a href="db.html" title="数据库管理"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="policies.html" title="Policies"
+          <a href="policies.html" title="策略"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
       </ul>

@@ -219,7 +219,7 @@ GET resource also accepts additional query parameters:
 获得可用资源类型
 **************
 
-我们想列举Glance中所有可用的资源类型。
+我们想列举Glance中所有可用的资源类型
 
 我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/resource_types`` 来获得所有资源类型。
 
@@ -289,14 +289,12 @@ GET resource also accepts additional query parameters:
     ]
   }
 
-添加命名空间Add Namespace
-*************
+添加命名空间
+**********
 
-我们想创建包含属性、对象等的新命名空间。
+我们想创建包含属性、对象等的新命名空间
 
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-我们发送 ``GET`` 请求来添加命名空间到Glance中::
+我们发送 ``POST`` 请求来添加命名空间到Glance中::
 
   POST http://glance.example.com/v2/metadefs/namespaces/
 
@@ -311,56 +309,39 @@ GET resource also accepts additional query parameters:
   }
 
 .. 注意::
-   Optionally properties, objects and resource type associations could be
-   added in the same input. See GET Namespace output above(input will be
-   similar).
-   todo
+   可选的属性、对象和资源类型关联信息可以用同样的输入加进去。看看上面GET命名空间的输出（输入也是类似的）。
 
-更新命名空间Update Namespace
-****************
+更新命名空间
+**********
 
-We want to update an existing namespace
+我们想更新已经存在的命名空间
 
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
-
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``PUT`` request to update an namespace to Glance::
+我们发送 ``PUT`` 请求来更新Glance中的命名空间::
 
   PUT http://glance.example.com/v2/metadefs/namespaces/{namespace}
 
-The input data is similar to Add Namespace
+输入数据和添加命名空间是类似的。
 
+删除命名空间
+**********
 
-删除命名空间Delete Namespace
-****************
+我们想删除一个存在的命名空间，这包含它所有的对象和属性等等
 
-We want to delete an existing namespace including all its objects,
-properties etc.
-
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
-
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``DELETE`` request to delete an namespace to Glance::
+我们发送 ``DELETE`` 请求来删除Glance中的命名空间::
 
   DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}
 
 
-关联资源类型和命名空间Associate Resource Type with Namespace
-**************************************
+关联资源类型和命名空间
+******************
 
-We want to associate a resource type with an existing namespace
+我们想将资源类型关联到已经存在的命名空间
 
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
-
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``POST`` request to associate resource type to Glance::
+我们发送 ``POST`` 请求来关联资源类型到Glance中::
 
   POST http://glance.example.com/v2/metadefs/namespaces/{namespace}/resource_types
 
-The input data is an JSON-encoded mapping in the following format::
+输入的JSON编码格式如下::
 
    {
            "name" :"OS::Cinder::Volume",
@@ -371,34 +352,24 @@ The input data is an JSON-encoded mapping in the following format::
    }
 
 
-移除命名空间关联的资源类型Remove Resource Type associated with a Namespace
-************************************************
+移除命名空间关联的资源类型
+*********************
 
-We want to de-associate namespace from a resource type
+我们想解除命名空间和资源类型的关联
 
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
-
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``DELETE`` request to de-associate namespace resource type to
-Glance::
+我们发送 ``DELETE`` 请求来解除Glance中的命名空间和资源类型::
 
   DELETE http://glance.example.com/v2//metadefs/namespaces/{namespace}/resource_types/{resource_type}
 
 
-列举命名空间的对象List Objects in Namespace
-*************************
+列举命名空间的对象
+***************
 
-We want to see the list of meta definition objects in a specific namespace
+我们想列举在制定命名空间下的元数据定义对象的列表
 
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects`` 来获取对象。
 
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``GET`` request to ``http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects``
-to retrieve objects.
-
-The data is returned as a JSON-encoded mapping in the following format::
+输入的JSON编码格式如下::
 
   {
         "objects": [
@@ -441,21 +412,16 @@ The data is returned as a JSON-encoded mapping in the following format::
     "schema": "/v2/schemas/metadefs/objects"
   }
 
-添加对象到命名空间Add object in a specific namespace
-**********************************
+添加对象到命名空间
+***************
 
-We want to create a new object which can group the properties
+我们想创建一个对象将属性归组
 
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
-
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``POST`` request to add object to a namespace in Glance::
+我们发送 ``POST`` 请求在Glance中将对象添加到命名空间内::
 
   POST http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects
 
-
-The input data is an JSON-encoded mapping in the following format::
+输入的JSON编码格式如下::
 
   {
     "name": "StorageQOS",
@@ -481,52 +447,36 @@ The input data is an JSON-encoded mapping in the following format::
     }
   }
 
-更新特定命名空间的对象Update Object in a specific namespace
-*************************************
+更新特定命名空间的对象
+******************
 
-We want to update an existing object
+我们想要更新已经存在的对象
 
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
-
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``PUT`` request to update an object to Glance::
+我们发送 ``PUT`` 请求来更新Glance中的对象::
 
   PUT http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects/{object_name}
 
-The input data is similar to Add Object
+输出数据和添加对象是类似的
 
+删除特定命名空间的对象
+******************
 
-删除特定命名空间的对象Delete Object in a specific namespace
-*************************************
+我们想删除已经存在的对象
 
-We want to delete an existing object.
-
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
-
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``DELETE`` request to delete object in a namespace to Glance::
+我们发送 ``DELETE`` 请求在Glance中删除命名空间的对象::
 
   DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}/objects/{object_name}
 
+添加属性定义到制定命名空间
+*********************
 
-Add property definition in a specific namespace
-***********************************************
+我们想要在命名空间创建新的属性定义
 
-We want to create a new property definition in a namespace
-
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
-
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``POST`` request to add property definition to a namespace in
-Glance::
+我们发送 ``POST`` 请求在Glance中添加属性定义到命名空间::
 
   POST http://glance.example.com/v2/metadefs/namespaces/{namespace}/properties
 
-
-The input data is an JSON-encoded mapping in the following format::
+输入的JSON编码格式如下::
 
   {
     "name": "hypervisor_type",
@@ -544,32 +494,23 @@ The input data is an JSON-encoded mapping in the following format::
   }
 
 
-更新指定命名空间的属性定义Update property definition in a specific namespace
-**************************************************
+更新指定命名空间的属性定义
+*********************
 
-We want to update an existing object
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+我们想要更新已经存在的对象
 
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``PUT`` request to update an property definition in a namespace to
-Glance::
+我们发送 ``PUT`` 请求来更新Glance中明明空间的属性定义::
 
   PUT http://glance.example.com/v2/metadefs/namespaces/{namespace}/properties/{property_name}
 
-The input data is similar to Add property definition
+输入数据和添加属性定义是类似的
 
+删除指定命名空间的属性定义
+**********************
 
-删除指定命名空间的属性定义Delete property definition in a specific namespace
-**************************************************
+我们想删除已经存在的对象
 
-We want to delete an existing object.
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
-
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
-
-We issue a ``DELETE`` request to delete property definition in a namespace to
-Glance::
+我们你发送 ``DELETE`` 请求来删除Glance中一个命名空间内的属性定义::
 
   DELETE http://glance.example.com/v2/metadefs/namespaces/{namespace}/properties/{property_name}
 

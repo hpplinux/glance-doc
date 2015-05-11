@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Metadata Definition Concepts &mdash; Glance 2015.1.1.dev9 documentation</title>
+    <title>元数据定义的概念 &mdash; Glance 2015.1.1.dev9 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
-    <link rel="next" title="Installation" href="installing.html" />
-    <link rel="prev" title="Common Image Properties" href="common-image-properties.html" /> 
+    <link rel="next" title="安装" href="installing.html" />
+    <link rel="prev" title="常见镜像属性" href="common-image-properties.html" /> 
   </head>
   <body role="document">
   <div id="header">
@@ -50,16 +50,18 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="metadata-definition-concepts">
-<h1>Metadata Definition Concepts<a class="headerlink" href="#metadata-definition-concepts" title="Permalink to this headline">¶</a></h1>
-<p>The metadata definition service was added to Glance in the Juno release of
+  <div class="section" id="id1">
+<h1>元数据定义的概念<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>元数据定义（Metadata Definition）服务在OpenStack的Juno版本中加入到Glance。
+The metadata definition service was added to Glance in the Juno release of
 OpenStack.</p>
 <p>It provides a common API for vendors, admins, services, and users to
 meaningfully <strong>define</strong> available key / value pair metadata that
 can be used on different types of resources (images, artifacts, volumes,
 flavors, aggregates, etc). A definition includes a property&#8217;s key,
 its description, its constraints, and the resource types to which it can be
-associated.</p>
+associated.
+它提供了</p>
 <p>This catalog does not store the values for specific instance properties.</p>
 <p>For example, a definition of a virtual CPU topology property for the number of
 cores will include the base key to use (for example, cpu_cores), a description,
@@ -70,13 +72,13 @@ virtual CPU topology property in the list and know that it must be an integer.</
 <p>When the user adds the property its key and value will be stored in the
 service that owns that resource (for example, Nova for flavors and in Glance
 for images). The catalog also includes any additional prefix required when
-the property is applied to different types of resources, such as &#8220;<a href="#id1"><span class="problematic" id="id2">hw_</span></a>&#8221; for
+the property is applied to different types of resources, such as &#8220;<a href="#id5"><span class="problematic" id="id6">hw_</span></a>&#8221; for
 images and &#8220;hw:&#8221; for flavors.  So, on an image, the user would know to set the
 property as &#8220;hw_cpu_cores=1&#8221;.</p>
-<div class="section" id="terminology">
-<h2>Terminology<a class="headerlink" href="#terminology" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="background">
-<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h2>术语<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>背景<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>The term <em>metadata</em> can become very overloaded and confusing.  This
 catalog is about the additional metadata that is passed as arbitrary
 key / value pairs or tags across various artifacts and OpenStack services.</p>
@@ -142,8 +144,8 @@ OpenStack services today:</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="catalog-concepts">
-<h3>Catalog Concepts<a class="headerlink" href="#catalog-concepts" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="catalog">
+<h3>目录（Catalog）概念<a class="headerlink" href="#catalog" title="Permalink to this headline">¶</a></h3>
 <p>The below figure illustrates the concept terminology used in the metadata
 definitions catalog:</p>
 <div class="highlight-python"><div class="highlight"><pre>A namespace is associated with 0 to many resource types, making it visible to
@@ -176,8 +178,8 @@ managed at a namespace level.
 </pre></div>
 </div>
 </div>
-<div class="section" id="catalog-terminology">
-<h3>Catalog Terminology<a class="headerlink" href="#catalog-terminology" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>目录术语<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>The following terminology is used within the metadata definition catalog.</p>
 <p><strong>Namespaces</strong></p>
 <p>Metadata definitions are contained in namespaces.</p>
@@ -248,11 +250,11 @@ needs to be set based on which filter is enabled.</p>
     <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference internal" href="#">Metadata Definition Concepts</a><ul>
-<li><a class="reference internal" href="#terminology">Terminology</a><ul>
-<li><a class="reference internal" href="#background">Background</a></li>
-<li><a class="reference internal" href="#catalog-concepts">Catalog Concepts</a></li>
-<li><a class="reference internal" href="#catalog-terminology">Catalog Terminology</a></li>
+<li><a class="reference internal" href="#">元数据定义的概念</a><ul>
+<li><a class="reference internal" href="#id2">术语</a><ul>
+<li><a class="reference internal" href="#id3">背景</a></li>
+<li><a class="reference internal" href="#catalog">目录（Catalog）概念</a></li>
+<li><a class="reference internal" href="#id4">目录术语</a></li>
 </ul>
 </li>
 </ul>
@@ -261,10 +263,10 @@ needs to be set based on which filter is enabled.</p>
 
             <h4>Previous topic</h4>
             <p class="topless"><a href="common-image-properties.html"
-                                  title="previous chapter">Common Image Properties</a></p>
+                                  title="previous chapter">常见镜像属性</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="installing.html"
-                                  title="next chapter">Installation</a></p>
+                                  title="next chapter">安装</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="_sources/metadefs-concepts.txt"
@@ -292,10 +294,10 @@ needs to be set based on which filter is enabled.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="installing.html" title="Installation"
+          <a href="installing.html" title="安装"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="common-image-properties.html" title="Common Image Properties"
+          <a href="common-image-properties.html" title="常见镜像属性"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
       </ul>

@@ -14,117 +14,75 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-The Glance Image Cache
-======================
+Glance镜像缓存
+=============
 
-The Glance API server may be configured to have an optional local image cache.
-A local image cache stores a copy of image files, essentially enabling multiple
-API servers to serve the same image file, resulting in an increase in
-scalability due to an increased number of endpoints serving an image file.
+Glance API服务器可以配置使用可选的本地镜像缓存。本地镜像缓存保存了镜像文件的拷贝，本质上是支持多个API服务器提供同一个镜像文件的服务，由于同一镜像文件的服务终端（Endpoint）的增加来提高可拓展性。
 
-This local image cache is transparent to the end user -- in other words, the
-end user doesn't know that the Glance API is streaming an image file from
-its local cache or from the actual backend storage system.
+这个本地镜像缓存对终端用户是透明的 -- 换句话说，终端用户并不知道Glance API是通过本地缓存还是实际的后端存储系统来传输镜像文件。
 
-Managing the Glance Image Cache
--------------------------------
+管理Glance镜像缓存
+----------------
 
-While image files are automatically placed in the image cache on successful
-requests to ``GET /images/<IMAGE_ID>``, the image cache is not automatically
-managed. Here, we describe the basics of how to manage the local image cache
-on Glance API servers and how to automate this cache management.
+当请求 ``GET /images/<IMAGE_ID>`` 成功将镜像文件自动放到镜像缓存中时，镜像缓存没有自动被管理。这里我们描述了在Glance API服务器如何管理本地镜像缓存和自动化管理这些缓存的基础。
 
-Controlling the Growth of the Image Cache
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+控制镜像缓存的增长
+~~~~~~~~~~~~~~~
 
-The image cache has a configurable maximum size (the ``image_cache_max_size``
-configuration file option). The ``image_cache_max_size`` is an upper limit
-beyond which pruner, if running, starts cleaning the images cache.
-However, when images are successfully returned from a call to
-``GET /images/<IMAGE_ID>``, the image cache automatically writes the image
-file to its cache, regardless of whether the resulting write would make the
-image cache's size exceed the value of ``image_cache_max_size``.
-In order to keep the image cache at or below this maximum cache size,
-you need to run the ``glance-cache-pruner`` executable.
+镜像缓存有一个可配置的最大值（ ``image_cache_max_size`` 的配置项）。 ``image_cache_max_size`` 是一个上限，如果正在运行，它开始清理镜像缓存。然后，当镜像调用 ``GET /images/<IMAGE_ID>`` 成功返回时，镜像缓存自动地将将镜像文件写到它的缓存中，无论最终写的镜像缓存文件大小是否超过 ``image_cache_max_size`` 。为了让镜像缓存等于或低于最大的缓存大小，你需要执行 ``glance-cache-pruner`` 。
 
-The recommended practice is to use ``cron`` to fire ``glance-cache-pruner``
-at a regular interval.
+推荐的实践是使用 ``cron`` 在一定时间间隔后启动 ``glance-cache-pruner`` 。
 
-Cleaning the Image Cache
-~~~~~~~~~~~~~~~~~~~~~~~~
+清理镜像缓存
+~~~~~~~~~~
 
-Over time, the image cache can accumulate image files that are either in
-a stalled or invalid state. Stalled image files are the result of an image
-cache write failing to complete. Invalid image files are the result of an
-image file not being written properly to disk.
+随着时间增长，镜像缓存会积累延后（Stalled）或无效状态的镜像文件。延后镜像文件时由于写镜像缓存时没有完成导致的。无效镜像文件时由于镜像没有很好得写到磁盘导致的。
 
-To remove these types of files, you run the ``glance-cache-cleaner``
-executable.
+要移除这些类型的文件， ``glance-cache-cleaner`` 可执行程序。
 
-The recommended practice is to use ``cron`` to fire ``glance-cache-cleaner``
-at a semi-regular interval.
+推荐的时间是使用 ``cron`` 在非常规（Semi-regular）间隔内启动 ``glance-cache-cleaner`` 。
 
-Prefetching Images into the Image Cache
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+预读镜像到镜像缓存
+~~~~~~~~~~~~~~~
 
-Some installations have base (sometimes called "golden") images that are
-very commonly used to boot virtual machines. When spinning up a new API
-server, administrators may wish to prefetch these image files into the
-local image cache to ensure that reads of those popular image files come
-from a local cache.
+一些安装会有基本（有时称为“黄金”）镜，他们通常用于启动虚拟机。当启动一个新的API服务器，管理员希望提前加载这些镜像文件到本地镜像缓存中，以保证这些流行（Popular）的镜像都能从本地缓存中读到。
 
-To queue an image for prefetching, you can use one of the following methods:
+要将镜像添加到预取队列，你可以使用下面方法的任意一种：
 
- * If the ``cache_manage`` middleware is enabled in the application pipeline,
-   you may call ``PUT /queued-images/<IMAGE_ID>`` to queue the image with
-   identifier ``<IMAGE_ID>``
+ * 如果在应用流水线（Pipeline）中 ``cache_manage`` 中间件是已经启用的，你可以调用 ``PUT /queued-images/<IMAGE_ID>`` 把标识符为 ``<IMAGE_ID>`` 的镜像添加到队列中。
 
-   Alternately, you can use the ``glance-cache-manage`` program to queue the
-   image. This program may be run from a different host than the host
-   containing the image cache. Example usage::
+   可选的是，你可以使用 ``glance-cache-manage`` 程序来添加镜像到队列。这个程序可以运行在不包含这个镜像混存的主机上。使用示例如下::
 
      $> glance-cache-manage --host=<HOST> queue-image <IMAGE_ID>
 
-   This will queue the image with identifier ``<IMAGE_ID>`` for prefetching
+   这会将标识符为 ``<IMAGE_ID>`` 的镜像添加到预取队列中。
 
-Once you have queued the images you wish to prefetch, call the
-``glance-cache-prefetcher`` executable, which will prefetch all queued images
-concurrently, logging the results of the fetch for each image.
+一旦你把你想要预取的镜像添加到队列，调用 ``glance-cache-prefetcher`` 可执行程序将会并发地预取队列中所有的镜像，并且把每个镜像的日志的结果记录到日志中。
 
-Finding Which Images are in the Image Cache
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+查找哪些镜像在镜像缓存
+~~~~~~~~~~~~~~~~~~
 
-You can find out which images are in the image cache using one of the
-following methods:
+你可以使用以下的方法来查看什么镜像在镜像缓存中：
 
-  * If the ``cachemanage`` middleware is enabled in the application pipeline,
-    you may call ``GET /cached-images`` to see a JSON-serialized list of
-    mappings that show cached images, the number of cache hits on each image,
-    the size of the image, and the times they were last accessed.
+  * 如果在应用流水线（Pipeline）中 ``cache_manage`` 中间件是已经启用的，你可以调用 ``GET /cached-images`` 查看一个包含缓存镜像的用JSON序列化的列表，还包含每个镜像的缓存命中次数、镜像的大小和上次访问的时间。
 
-    Alternately, you can use the ``glance-cache-manage`` program. This program
-    may be run from a different host than the host containing the image cache.
-    Example usage::
+    可选的是，你可以使用 ``glance-cache-manage`` 程序。这个程序可以在不包含这个镜像缓存的主机上运行。使用示例如下::
 
     $> glance-cache-manage --host=<HOST> list-cached
 
-  * You can issue the following call on \*nix systems (on the host that contains
-    the image cache)::
+  * 你可以在类Unix（\*nix）系统中定位下面的调用（必须在包含此镜像缓存的主机上::
 
       $> ls -lhR $IMAGE_CACHE_DIR
 
-    where ``$IMAGE_CACHE_DIR`` is the value of the ``image_cache_dir``
-    configuration variable.
+     ``$IMAGE_CACHE_DIR`` 是配置文件中 ``image_cache_dir`` 变量的值。
 
-    Note that the image's cache hit is not shown using this method.
+    注意使用这个方法镜像的缓存命中次数并没有显示出来。
 
-Manually Removing Images from the Image Cache
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+手动从镜像胡那村中移除镜像
+~~~~~~~~~~~~~~~~~~~~~
 
-If the ``cachemanage`` middleware is enabled, you may call
-``DELETE /cached-images/<IMAGE_ID>`` to remove the image file for image
-with identifier ``<IMAGE_ID>`` from the cache.
+如果在应用流水线（Pipeline）中 ``cache_manage`` 中间件是已经启用的，你可以调用``DELETE /cached-images/<IMAGE_ID>`` 来将标识符为 ``<IMAGE_ID>`` 的镜像文件移出缓存。
 
-Alternately, you can use the ``glance-cache-manage`` program. Example usage::
+可选的是，你可以使用 ``glance-cache-manage`` 程序。使用示例如下::
 
   $> glance-cache-manage --host=<HOST> delete-cached-image <IMAGE_ID>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The Glance Image Cache &mdash; Glance 2015.1.1.dev9 documentation</title>
+    <title>Glance镜像缓存 &mdash; Glance 2015.1.1.dev9 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
-    <link rel="next" title="Notifications" href="notifications.html" />
-    <link rel="prev" title="Database Management" href="db.html" /> 
+    <link rel="next" title="通知" href="notifications.html" />
+    <link rel="prev" title="数据库管理" href="db.html" /> 
   </head>
   <body role="document">
   <div id="header">
@@ -50,108 +50,67 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="the-glance-image-cache">
-<h1>The Glance Image Cache<a class="headerlink" href="#the-glance-image-cache" title="Permalink to this headline">¶</a></h1>
-<p>The Glance API server may be configured to have an optional local image cache.
-A local image cache stores a copy of image files, essentially enabling multiple
-API servers to serve the same image file, resulting in an increase in
-scalability due to an increased number of endpoints serving an image file.</p>
-<p>This local image cache is transparent to the end user &#8211; in other words, the
-end user doesn&#8217;t know that the Glance API is streaming an image file from
-its local cache or from the actual backend storage system.</p>
-<div class="section" id="managing-the-glance-image-cache">
-<h2>Managing the Glance Image Cache<a class="headerlink" href="#managing-the-glance-image-cache" title="Permalink to this headline">¶</a></h2>
-<p>While image files are automatically placed in the image cache on successful
-requests to <code class="docutils literal"><span class="pre">GET</span> <span class="pre">/images/&lt;IMAGE_ID&gt;</span></code>, the image cache is not automatically
-managed. Here, we describe the basics of how to manage the local image cache
-on Glance API servers and how to automate this cache management.</p>
-<div class="section" id="controlling-the-growth-of-the-image-cache">
-<h3>Controlling the Growth of the Image Cache<a class="headerlink" href="#controlling-the-growth-of-the-image-cache" title="Permalink to this headline">¶</a></h3>
-<p>The image cache has a configurable maximum size (the <code class="docutils literal"><span class="pre">image_cache_max_size</span></code>
-configuration file option). The <code class="docutils literal"><span class="pre">image_cache_max_size</span></code> is an upper limit
-beyond which pruner, if running, starts cleaning the images cache.
-However, when images are successfully returned from a call to
-<code class="docutils literal"><span class="pre">GET</span> <span class="pre">/images/&lt;IMAGE_ID&gt;</span></code>, the image cache automatically writes the image
-file to its cache, regardless of whether the resulting write would make the
-image cache&#8217;s size exceed the value of <code class="docutils literal"><span class="pre">image_cache_max_size</span></code>.
-In order to keep the image cache at or below this maximum cache size,
-you need to run the <code class="docutils literal"><span class="pre">glance-cache-pruner</span></code> executable.</p>
-<p>The recommended practice is to use <code class="docutils literal"><span class="pre">cron</span></code> to fire <code class="docutils literal"><span class="pre">glance-cache-pruner</span></code>
-at a regular interval.</p>
+  <div class="section" id="glance">
+<h1>Glance镜像缓存<a class="headerlink" href="#glance" title="Permalink to this headline">¶</a></h1>
+<p>Glance API服务器可以配置使用可选的本地镜像缓存。本地镜像缓存保存了镜像文件的拷贝，本质上是支持多个API服务器提供同一个镜像文件的服务，由于同一镜像文件的服务终端（Endpoint）的增加来提高可拓展性。</p>
+<p>这个本地镜像缓存对终端用户是透明的 &#8211; 换句话说，终端用户并不知道Glance API是通过本地缓存还是实际的后端存储系统来传输镜像文件。</p>
+<div class="section" id="id1">
+<h2>管理Glance镜像缓存<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>当请求 <code class="docutils literal"><span class="pre">GET</span> <span class="pre">/images/&lt;IMAGE_ID&gt;</span></code> 成功将镜像文件自动放到镜像缓存中时，镜像缓存没有自动被管理。这里我们描述了在Glance API服务器如何管理本地镜像缓存和自动化管理这些缓存的基础。</p>
+<div class="section" id="id2">
+<h3>控制镜像缓存的增长<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>镜像缓存有一个可配置的最大值（ <code class="docutils literal"><span class="pre">image_cache_max_size</span></code> 的配置项）。 <code class="docutils literal"><span class="pre">image_cache_max_size</span></code> 是一个上限，如果正在运行，它开始清理镜像缓存。然后，当镜像调用 <code class="docutils literal"><span class="pre">GET</span> <span class="pre">/images/&lt;IMAGE_ID&gt;</span></code> 成功返回时，镜像缓存自动地将将镜像文件写到它的缓存中，无论最终写的镜像缓存文件大小是否超过 <code class="docutils literal"><span class="pre">image_cache_max_size</span></code> 。为了让镜像缓存等于或低于最大的缓存大小，你需要执行 <code class="docutils literal"><span class="pre">glance-cache-pruner</span></code> 。</p>
+<p>推荐的实践是使用 <code class="docutils literal"><span class="pre">cron</span></code> 在一定时间间隔后启动 <code class="docutils literal"><span class="pre">glance-cache-pruner</span></code> 。</p>
 </div>
-<div class="section" id="cleaning-the-image-cache">
-<h3>Cleaning the Image Cache<a class="headerlink" href="#cleaning-the-image-cache" title="Permalink to this headline">¶</a></h3>
-<p>Over time, the image cache can accumulate image files that are either in
-a stalled or invalid state. Stalled image files are the result of an image
-cache write failing to complete. Invalid image files are the result of an
-image file not being written properly to disk.</p>
-<p>To remove these types of files, you run the <code class="docutils literal"><span class="pre">glance-cache-cleaner</span></code>
-executable.</p>
-<p>The recommended practice is to use <code class="docutils literal"><span class="pre">cron</span></code> to fire <code class="docutils literal"><span class="pre">glance-cache-cleaner</span></code>
-at a semi-regular interval.</p>
+<div class="section" id="id3">
+<h3>清理镜像缓存<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>随着时间增长，镜像缓存会积累延后（Stalled）或无效状态的镜像文件。延后镜像文件时由于写镜像缓存时没有完成导致的。无效镜像文件时由于镜像没有很好得写到磁盘导致的。</p>
+<p>要移除这些类型的文件， <code class="docutils literal"><span class="pre">glance-cache-cleaner</span></code> 可执行程序。</p>
+<p>推荐的时间是使用 <code class="docutils literal"><span class="pre">cron</span></code> 在非常规（Semi-regular）间隔内启动 <code class="docutils literal"><span class="pre">glance-cache-cleaner</span></code> 。</p>
 </div>
-<div class="section" id="prefetching-images-into-the-image-cache">
-<h3>Prefetching Images into the Image Cache<a class="headerlink" href="#prefetching-images-into-the-image-cache" title="Permalink to this headline">¶</a></h3>
-<p>Some installations have base (sometimes called &#8220;golden&#8221;) images that are
-very commonly used to boot virtual machines. When spinning up a new API
-server, administrators may wish to prefetch these image files into the
-local image cache to ensure that reads of those popular image files come
-from a local cache.</p>
-<p>To queue an image for prefetching, you can use one of the following methods:</p>
+<div class="section" id="id4">
+<h3>预读镜像到镜像缓存<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>一些安装会有基本（有时称为“黄金”）镜，他们通常用于启动虚拟机。当启动一个新的API服务器，管理员希望提前加载这些镜像文件到本地镜像缓存中，以保证这些流行（Popular）的镜像都能从本地缓存中读到。</p>
+<p>要将镜像添加到预取队列，你可以使用下面方法的任意一种：</p>
 <blockquote>
 <div><ul>
-<li><p class="first">If the <code class="docutils literal"><span class="pre">cache_manage</span></code> middleware is enabled in the application pipeline,
-you may call <code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/queued-images/&lt;IMAGE_ID&gt;</span></code> to queue the image with
-identifier <code class="docutils literal"><span class="pre">&lt;IMAGE_ID&gt;</span></code></p>
-<p>Alternately, you can use the <code class="docutils literal"><span class="pre">glance-cache-manage</span></code> program to queue the
-image. This program may be run from a different host than the host
-containing the image cache. Example usage:</p>
+<li><p class="first">如果在应用流水线（Pipeline）中 <code class="docutils literal"><span class="pre">cache_manage</span></code> 中间件是已经启用的，你可以调用 <code class="docutils literal"><span class="pre">PUT</span> <span class="pre">/queued-images/&lt;IMAGE_ID&gt;</span></code> 把标识符为 <code class="docutils literal"><span class="pre">&lt;IMAGE_ID&gt;</span></code> 的镜像添加到队列中。</p>
+<p>可选的是，你可以使用 <code class="docutils literal"><span class="pre">glance-cache-manage</span></code> 程序来添加镜像到队列。这个程序可以运行在不包含这个镜像混存的主机上。使用示例如下:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; glance-cache-manage --host=&lt;HOST&gt; queue-image &lt;IMAGE_ID&gt;
 </pre></div>
 </div>
-<p>This will queue the image with identifier <code class="docutils literal"><span class="pre">&lt;IMAGE_ID&gt;</span></code> for prefetching</p>
+<p>这会将标识符为 <code class="docutils literal"><span class="pre">&lt;IMAGE_ID&gt;</span></code> 的镜像添加到预取队列中。</p>
 </li>
 </ul>
 </div></blockquote>
-<p>Once you have queued the images you wish to prefetch, call the
-<code class="docutils literal"><span class="pre">glance-cache-prefetcher</span></code> executable, which will prefetch all queued images
-concurrently, logging the results of the fetch for each image.</p>
+<p>一旦你把你想要预取的镜像添加到队列，调用 <code class="docutils literal"><span class="pre">glance-cache-prefetcher</span></code> 可执行程序将会并发地预取队列中所有的镜像，并且把每个镜像的日志的结果记录到日志中。</p>
 </div>
-<div class="section" id="finding-which-images-are-in-the-image-cache">
-<h3>Finding Which Images are in the Image Cache<a class="headerlink" href="#finding-which-images-are-in-the-image-cache" title="Permalink to this headline">¶</a></h3>
-<p>You can find out which images are in the image cache using one of the
-following methods:</p>
+<div class="section" id="id5">
+<h3>查找哪些镜像在镜像缓存<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>你可以使用以下的方法来查看什么镜像在镜像缓存中：</p>
 <blockquote>
 <div><ul>
-<li><p class="first">If the <code class="docutils literal"><span class="pre">cachemanage</span></code> middleware is enabled in the application pipeline,
-you may call <code class="docutils literal"><span class="pre">GET</span> <span class="pre">/cached-images</span></code> to see a JSON-serialized list of
-mappings that show cached images, the number of cache hits on each image,
-the size of the image, and the times they were last accessed.</p>
-<p>Alternately, you can use the <code class="docutils literal"><span class="pre">glance-cache-manage</span></code> program. This program
-may be run from a different host than the host containing the image cache.
-Example usage:</p>
+<li><p class="first">如果在应用流水线（Pipeline）中 <code class="docutils literal"><span class="pre">cache_manage</span></code> 中间件是已经启用的，你可以调用 <code class="docutils literal"><span class="pre">GET</span> <span class="pre">/cached-images</span></code> 查看一个包含缓存镜像的用JSON序列化的列表，还包含每个镜像的缓存命中次数、镜像的大小和上次访问的时间。</p>
+<p>可选的是，你可以使用 <code class="docutils literal"><span class="pre">glance-cache-manage</span></code> 程序。这个程序可以在不包含这个镜像缓存的主机上运行。使用示例如下:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; glance-cache-manage --host=&lt;HOST&gt; list-cached
 </pre></div>
 </div>
 </li>
-<li><p class="first">You can issue the following call on *nix systems (on the host that contains
-the image cache):</p>
-<div class="highlight-python"><div class="highlight"><pre>$&gt; ls -lhR $IMAGE_CACHE_DIR
+<li><p class="first">你可以在类Unix（*nix）系统中定位下面的调用（必须在包含此镜像缓存的主机上:</p>
+<div class="highlight-python"><div class="highlight"><pre> $&gt; ls -lhR $IMAGE_CACHE_DIR
+
+``$IMAGE_CACHE_DIR`` 是配置文件中 ``image_cache_dir`` 变量的值。
 </pre></div>
 </div>
-<p>where <code class="docutils literal"><span class="pre">$IMAGE_CACHE_DIR</span></code> is the value of the <code class="docutils literal"><span class="pre">image_cache_dir</span></code>
-configuration variable.</p>
-<p>Note that the image&#8217;s cache hit is not shown using this method.</p>
+<p>注意使用这个方法镜像的缓存命中次数并没有显示出来。</p>
 </li>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="manually-removing-images-from-the-image-cache">
-<h3>Manually Removing Images from the Image Cache<a class="headerlink" href="#manually-removing-images-from-the-image-cache" title="Permalink to this headline">¶</a></h3>
-<p>If the <code class="docutils literal"><span class="pre">cachemanage</span></code> middleware is enabled, you may call
-<code class="docutils literal"><span class="pre">DELETE</span> <span class="pre">/cached-images/&lt;IMAGE_ID&gt;</span></code> to remove the image file for image
-with identifier <code class="docutils literal"><span class="pre">&lt;IMAGE_ID&gt;</span></code> from the cache.</p>
-<p>Alternately, you can use the <code class="docutils literal"><span class="pre">glance-cache-manage</span></code> program. Example usage:</p>
+<div class="section" id="id6">
+<h3>手动从镜像胡那村中移除镜像<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>如果在应用流水线（Pipeline）中 <code class="docutils literal"><span class="pre">cache_manage</span></code> 中间件是已经启用的，你可以调用``DELETE /cached-images/&lt;IMAGE_ID&gt;`` 来将标识符为 <code class="docutils literal"><span class="pre">&lt;IMAGE_ID&gt;</span></code> 的镜像文件移出缓存。</p>
+<p>可选的是，你可以使用 <code class="docutils literal"><span class="pre">glance-cache-manage</span></code> 程序。使用示例如下:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; glance-cache-manage --host=&lt;HOST&gt; delete-cached-image &lt;IMAGE_ID&gt;
 </pre></div>
 </div>
@@ -167,13 +126,13 @@ with identifier <code class="docutils literal"><span class="pre">&lt;IMAGE_ID&gt
     <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference internal" href="#">The Glance Image Cache</a><ul>
-<li><a class="reference internal" href="#managing-the-glance-image-cache">Managing the Glance Image Cache</a><ul>
-<li><a class="reference internal" href="#controlling-the-growth-of-the-image-cache">Controlling the Growth of the Image Cache</a></li>
-<li><a class="reference internal" href="#cleaning-the-image-cache">Cleaning the Image Cache</a></li>
-<li><a class="reference internal" href="#prefetching-images-into-the-image-cache">Prefetching Images into the Image Cache</a></li>
-<li><a class="reference internal" href="#finding-which-images-are-in-the-image-cache">Finding Which Images are in the Image Cache</a></li>
-<li><a class="reference internal" href="#manually-removing-images-from-the-image-cache">Manually Removing Images from the Image Cache</a></li>
+<li><a class="reference internal" href="#">Glance镜像缓存</a><ul>
+<li><a class="reference internal" href="#id1">管理Glance镜像缓存</a><ul>
+<li><a class="reference internal" href="#id2">控制镜像缓存的增长</a></li>
+<li><a class="reference internal" href="#id3">清理镜像缓存</a></li>
+<li><a class="reference internal" href="#id4">预读镜像到镜像缓存</a></li>
+<li><a class="reference internal" href="#id5">查找哪些镜像在镜像缓存</a></li>
+<li><a class="reference internal" href="#id6">手动从镜像胡那村中移除镜像</a></li>
 </ul>
 </li>
 </ul>
@@ -182,10 +141,10 @@ with identifier <code class="docutils literal"><span class="pre">&lt;IMAGE_ID&gt
 
             <h4>Previous topic</h4>
             <p class="topless"><a href="db.html"
-                                  title="previous chapter">Database Management</a></p>
+                                  title="previous chapter">数据库管理</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="notifications.html"
-                                  title="next chapter">Notifications</a></p>
+                                  title="next chapter">通知</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="_sources/cache.txt"
@@ -213,10 +172,10 @@ with identifier <code class="docutils literal"><span class="pre">&lt;IMAGE_ID&gt
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="notifications.html" title="Notifications"
+          <a href="notifications.html" title="通知"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="db.html" title="Database Management"
+          <a href="db.html" title="数据库管理"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
       </ul>

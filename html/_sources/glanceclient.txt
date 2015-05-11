@@ -14,13 +14,11 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Using Glance's Client Tools
-===========================
+使用Glance客户端工具
+==================
 
-The command-line tool and python library for Glance are both installed
-through the python-glanceclient project. Explore the following resources
-for more information:
+Glance的命令行工具和Python库都是通过python-glanceclient项目安装的。在下面的资源中可以找到更多信息：
 
-* `Official Docs <http://docs.openstack.org/developer/python-glanceclient/>`_
-* `Pypi Page <http://pypi.python.org/pypi/python-glanceclient>`_
-* `GitHub Project <http://github.com/openstack/python-glanceclient>`_
+* `官方文档 <http://docs.openstack.org/developer/python-glanceclient/>`_
+* `Pypi页面 <http://pypi.python.org/pypi/python-glanceclient>`_
+* `GitHub项目 <http://github.com/openstack/python-glanceclient>`_

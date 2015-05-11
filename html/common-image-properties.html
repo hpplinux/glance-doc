@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Common Image Properties &mdash; Glance 2015.1.1.dev9 documentation</title>
+    <title>常见镜像属性 &mdash; Glance 2015.1.1.dev9 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Glance 2015.1.1.dev9 documentation" href="index.html" />
-    <link rel="next" title="Metadata Definition Concepts" href="metadefs-concepts.html" />
-    <link rel="prev" title="Disk and Container Formats" href="formats.html" /> 
+    <link rel="next" title="元数据定义的概念" href="metadefs-concepts.html" />
+    <link rel="prev" title="磁盘和容器格式" href="formats.html" /> 
   </head>
   <body role="document">
   <div id="header">
@@ -50,40 +50,36 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="common-image-properties">
-<h1>Common Image Properties<a class="headerlink" href="#common-image-properties" title="Permalink to this headline">¶</a></h1>
-<p>When adding an image to Glance, you may specify some common image properties
-that may prove useful to consumers of your image.</p>
-<p>This document explains the names of these properties and the expected values.</p>
-<p>The common image properties are also described in a JSON schema, found in
-etc/schema-image.json in the Glance source code.</p>
+  <div class="section" id="id1">
+<h1>常见镜像属性<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>当添加镜像到Glance时，你可以指定一些常见的镜像数据，这对使用你镜像的客户有好处。</p>
+<p>这个文档解释了这些属性名和它们预期的值。</p>
+<p>常见的镜像属性是用JSON格式（Schema）来描述的，在Glance源代码的etc/schema-image.json中可以找到。</p>
 <div class="section" id="architecture">
 <h2><strong>architecture</strong><a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
-<p>Operating system architecture as specified in
+<p>操作系统架构在这里指定
 <a class="reference external" href="http://docs.openstack.org/trunk/openstack-compute/admin/content/adding-images.html">http://docs.openstack.org/trunk/openstack-compute/admin/content/adding-images.html</a></p>
 </div>
 <div class="section" id="instance-uuid">
 <h2><strong>instance_uuid</strong><a class="headerlink" href="#instance-uuid" title="Permalink to this headline">¶</a></h2>
-<p>The ID of the instance used to create this image.</p>
+<p>用于创建这个镜像的实例的ID。</p>
 </div>
 <div class="section" id="kernel-id">
 <h2><strong>kernel_id</strong><a class="headerlink" href="#kernel-id" title="Permalink to this headline">¶</a></h2>
-<p>The ID of image stored in Glance that should be used as the kernel when booting
-an AMI-style image.</p>
+<p>保存在Glance的镜像ID，当启动一个类似AWS镜像时它应该当做内核来使用。</p>
 </div>
 <div class="section" id="ramdisk-id">
 <h2><strong>ramdisk_id</strong><a class="headerlink" href="#ramdisk-id" title="Permalink to this headline">¶</a></h2>
-<p>The ID of image stored in Glance that should be used as the ramdisk when
-booting an AMI-style image.</p>
+<p>保存在Glance的镜像ID，当启动一个类似AWS镜像时它应该当做Ramdisk来使用。</p>
 </div>
 <div class="section" id="os-distro">
 <h2><strong>os_distro</strong><a class="headerlink" href="#os-distro" title="Permalink to this headline">¶</a></h2>
-<p>The common name of the operating system distribution as specified in
+<p>常见的操作系统分发版名字在这里定义
 <a class="reference external" href="http://docs.openstack.org/trunk/openstack-compute/admin/content/adding-images.html">http://docs.openstack.org/trunk/openstack-compute/admin/content/adding-images.html</a></p>
 </div>
 <div class="section" id="os-version">
 <h2><strong>os_version</strong><a class="headerlink" href="#os-version" title="Permalink to this headline">¶</a></h2>
-<p>The operating system version as specified by the distributor.</p>
+<p>由发布者（Distributor）指定的操作系统版本。</p>
 </div>
 </div>
 
@@ -95,7 +91,7 @@ booting an AMI-style image.</p>
     <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference internal" href="#">Common Image Properties</a><ul>
+<li><a class="reference internal" href="#">常见镜像属性</a><ul>
 <li><a class="reference internal" href="#architecture"><strong>architecture</strong></a></li>
 <li><a class="reference internal" href="#instance-uuid"><strong>instance_uuid</strong></a></li>
 <li><a class="reference internal" href="#kernel-id"><strong>kernel_id</strong></a></li>
@@ -108,10 +104,10 @@ booting an AMI-style image.</p>
 
             <h4>Previous topic</h4>
             <p class="topless"><a href="formats.html"
-                                  title="previous chapter">Disk and Container Formats</a></p>
+                                  title="previous chapter">磁盘和容器格式</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="metadefs-concepts.html"
-                                  title="next chapter">Metadata Definition Concepts</a></p>
+                                  title="next chapter">元数据定义的概念</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="_sources/common-image-properties.txt"
@@ -139,10 +135,10 @@ booting an AMI-style image.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="metadefs-concepts.html" title="Metadata Definition Concepts"
+          <a href="metadefs-concepts.html" title="元数据定义的概念"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="formats.html" title="Disk and Container Formats"
+          <a href="formats.html" title="磁盘和容器格式"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Glance 2015.1.1.dev9 documentation</a> &raquo;</li> 
       </ul>

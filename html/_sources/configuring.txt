@@ -14,8 +14,8 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Basic Configuration
-===================
+基本配置
+=======
 
 Glance has a number of options that you can use to configure the Glance API
 server, the Glance Registry server, and the various storage backends that

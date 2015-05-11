@@ -14,147 +14,131 @@
       License for the specific language governing permissions and limitations
       under the License.
 
-Policies
-========
+策略
+====
 
-Glance's public API calls may be restricted to certain sets of users using a
-policy configuration file. This document explains exactly how policies are
-configured and what they apply to.
+Glance的公共API通过一个策略文件让部分用户才能调用。这个文档解释了策略是如何配置的和它们应用在那些方面。
 
-A policy is composed of a set of rules that are used by the policy "Brain" in
-determining if a particular action may be performed by the authorized tenant.
+策略是由一组规则组成，这些规则可以由授权的租户通过 "Brain" 策略执行。
 
-Constructing a Policy Configuration File
-----------------------------------------
+构建策略的配置文件
+---------------
 
-A policy configuration file is a simply JSON object that contain sets of
-rules. Each top-level key is the name of a rule. Each rule
-is a string that describes an action that may be performed in the Glance API.
+策略的配置文件时一个简单的JSON对象，它包含了一组规则。每个顶级（Top-level）键是规则的名字。每个规则是一个字符串，它描述了在Glance API中可以执行的行为（Action）。
+、
+拥有规则的行为包括以下这些：
 
-The actions that may have a rule enforced on them are:
-
-* ``get_images`` - List available image entities
+* ``get_images`` - 列举可见的镜像实体（Entity）
 
   * ``GET /v1/images``
   * ``GET /v1/images/detail``
   * ``GET /v2/images``
 
-* ``get_image`` - Retrieve a specific image entity
+* ``get_image`` - 获得特定的镜像实体
 
   * ``HEAD /v1/images/<IMAGE_ID>``
   * ``GET /v1/images/<IMAGE_ID>``
   * ``GET /v2/images/<IMAGE_ID>``
 
-* ``download_image`` - Download binary image data
+* ``download_image`` - 下载二进制镜像数据
 
   * ``GET /v1/images/<IMAGE_ID>``
   * ``GET /v2/images/<IMAGE_ID>/file``
 
-* ``upload_image`` - Upload binary image data
+* ``upload_image`` - 上传二进制镜像数据
 
   * ``POST /v1/images``
   * ``PUT /v1/images/<IMAGE_ID>``
   * ``PUT /v2/images/<IMAGE_ID>/file``
 
-* ``copy_from`` - Copy binary image data from URL
+* ``copy_from`` - 从URL拷贝二进制镜像数据
 
   * ``POST /v1/images``
   * ``PUT /v1/images/<IMAGE_ID>``
 
-* ``add_image`` - Create an image entity
+* ``add_image`` - 创建镜像实体
 
   * ``POST /v1/images``
   * ``POST /v2/images``
 
-* ``modify_image`` - Update an image entity
+* ``modify_image`` - 更新镜像实体
 
   * ``PUT /v1/images/<IMAGE_ID>``
   * ``PUT /v2/images/<IMAGE_ID>``
 
-* ``publicize_image`` - Create or update images with attribute
+* ``publicize_image`` - 创建或上传带属性的镜像
 
-  * ``POST /v1/images`` with attribute ``is_public`` = ``true``
-  * ``PUT /v1/images/<IMAGE_ID>`` with attribute ``is_public`` = ``true``
-  * ``POST /v2/images`` with attribute ``visibility`` = ``public``
-  * ``PUT /v2/images/<IMAGE_ID>`` with attribute ``visibility`` = ``public``
+  * ``POST /v1/images`` 其中属性 ``is_public`` = ``true``
+  * ``PUT /v1/images/<IMAGE_ID>`` 其中属性 ``is_public`` = ``true``
+  * ``POST /v2/images`` 其中属性 ``visibility`` = ``public``
+  * ``PUT /v2/images/<IMAGE_ID>`` 其中属性 ``visibility`` = ``public``
 
-* ``delete_image`` - Delete an image entity and associated binary data
+* ``delete_image`` - 删除镜像实体和相关的二进制数据
 
   * ``DELETE /v1/images/<IMAGE_ID>``
   * ``DELETE /v2/images/<IMAGE_ID>``
 
-* ``add_member`` - Add a membership to the member repo of an image
+* ``add_member`` - 为镜像的成员仓库（Repo）添加成员关系
 
   * ``POST /v2/images/<IMAGE_ID>/members``
 
-* ``get_members`` - List the members of an image
+* ``get_members`` - 列举几个捏茶能的成员
 
   * ``GET /v1/images/<IMAGE_ID>/members``
   * ``GET /v2/images/<IMAGE_ID>/members``
 
-* ``delete_member`` - Delete a membership of an image
+* ``delete_member`` - 删除镜像的成员关系
 
   * ``DELETE /v1/images/<IMAGE_ID>/members/<MEMBER_ID>``
   * ``DELETE /v2/images/<IMAGE_ID>/members/<MEMBER_ID>``
 
-* ``modify_member`` - Create or update the membership of an image
+* ``modify_member`` - 创建或更新镜像的成员关系
 
   * ``PUT /v1/images/<IMAGE_ID>/members/<MEMBER_ID>``
   * ``PUT /v1/images/<IMAGE_ID>/members``
   * ``POST /v2/images/<IMAGE_ID>/members``
   * ``PUT /v2/images/<IMAGE_ID>/members/<MEMBER_ID>``
 
-* ``manage_image_cache`` - Allowed to use the image cache management API
+* ``manage_image_cache`` - 允许使用镜像缓存管理API
 
 
-To limit an action to a particular role or roles, you list the roles like so ::
+为了限制某个角色或者一组角色的行为，你可以像这样列举角色 ::
 
   {
     "delete_image": ["role:admin", "role:superuser"]
   }
 
-The above would add a rule that only allowed users that had roles of either
-"admin" or "superuser" to delete an image.
+上面可以添加规则只允许拥有"admin"或者"superuser"角色的用户才能删除镜像。
 
-Writing Rules
--------------
+写规则
+-----
 
-Role checks are going to continue to work exactly as they already do. If the
-role defined in the check is one that the user holds, then that will pass,
-e.g., ``role:admin``.
+角色检查可以像它以前那样继续工作。如果检查中定义的角色是它拥有的用户，那检查就会通过，例如 ``role:admin`` 。
 
-To write a generic rule, you need to know that there are three values provided
-by Glance that can be used in a rule on the left side of the colon (``:``).
-Those values are the current user's credentials in the form of:
+要写一个普遍的规则，你需要知道Glance提供的三个值，它们在规则中的冒号(``:``)左边使用。当前用户认证的那些值是下面的格式：
 
 - role
 - tenant
 - owner
 
-The left side of the colon can also contain any value that Python can
-understand, e.g.,:
+冒号左边可以包含Python理解的任意值，例如：
 
 - ``True``
 - ``False``
 - ``"a string"``
 - &c.
 
-Using ``tenant`` and ``owner`` will only work with images. Consider the
-following rule::
+使用 ``tenant`` 和 ``owner`` 只在镜像藏獒功能有用。可以考虑下面的格式::
 
     tenant:%(owner)s
 
-This will use the ``tenant`` value of the currently authenticated user. It
-will also use ``owner`` from the image it is acting upon. If those two
-values are equivalent the check will pass. All attributes on an image (as well
-as extra image properties) are available for use on the right side of the
-colon. The most useful are the following:
+这将会使用当前认证用户的 ``tenant`` 的值。它也会用正在使用（Acting upon）的镜像的 ``owner`` 值。如果这两个值都相等那么检查就会通过。镜像中所有属性（也就是镜像额外的属性）可以使用冒号右边的值。以下就是最有用的：
 
 - ``owner``
 - ``protected``
 - ``is_public``
 
-Therefore, you could construct a set of rules like the following::
+所以，你可以像下面这样构建一系列规则::
 
     {
         "not_protected": "False:%(protected)s",
@@ -167,10 +151,10 @@ Therefore, you could construct a set of rules like the following::
         "add_member": "rule:not_protected_and_is_owner"
     }
 
-Examples
---------
+实例
+----
 
-Example 1. (The default policy configuration)
+例子1。（默认的策略配置）
 
  ::
 
@@ -178,10 +162,9 @@ Example 1. (The default policy configuration)
       "default": ""
   }
 
-Note that an empty JSON list means that all methods of the
-Glance API are callable by anyone.
+注意这里空的JSON列表意味着任何人都可以调用所有Glance API的方法。
 
-Example 2. Disallow modification calls to non-admins
+例子2。不允许非管理员的修改调用。
 
  ::
 

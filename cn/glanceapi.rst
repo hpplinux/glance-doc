@@ -173,31 +173,16 @@ These two resources also accept additional query parameters:
   Use of the `is_public` parameter is restricted to admin users. For all other
   users it will be ignored.
 
-获得镜像元数据Retrieve Image Metadata
-***********************
+获得镜像元数据
+************
 
-We want to see detailed information for a specific virtual machine image
-that the Glance server knows about.
-todo
-我们想列举授权用户可以访问的命名空间的更详细信息。这包括了属性、对象和资源类型的相关信息（Association）。
+我们想看看Glance服务器知道的指定虚拟机镜像的详细信息。
 
-我们发送 ``GET`` 请求到 ``http://glance.example.com/v2/metadefs/namespaces/{namespace}`` 来请求这些可用命名空间的详细信息。返回的数据是以下格式的JSON编码映射::
+我们已经请求过Glance服务器的镜像列表，返回的数据包括每个可用镜像的 `uri` 字段。这个 `uri` 字段值包含需要获得制定镜像元数据的实际地址。
 
-We have queried the Glance server for a list of images and the
-data returned includes the `uri` field for each available image. This
-`uri` field value contains the exact location needed to get the metadata
-for a specific image.
+继续上面的例子，为了获得第一个返回镜像的元数据，我们用镜像URI可以发送 ``HEAD`` 请求到Gance服务器。
 
-Continuing the example from above, in order to get metadata about the
-first image returned, we can issue a ``HEAD`` request to the Glance
-server for the image's URI.
-
-We issue a ``HEAD`` request to
-``http://glance.example.com/v1/images/71c675ab-d94f-49cd-a114-e12490b328d9`` to
-retrieve complete metadata for that image. The metadata is returned as a
-set of HTTP headers that begin with the prefix ``x-image-meta-``. The
-following shows an example of the HTTP headers returned from the above
-``HEAD`` request::
+我们发送 ``HEAD`` 请求到 ``http://glance.example.com/v1/images/71c675ab-d94f-49cd-a114-e12490b328d9`` 来获得该镜像的完整元数据。元数据是按照HTTP头集合的形式返回，这些都以 ``x-image-meta-`` 为前缀。下面展示从上面 ``HEAD`` 请求返回的HTTP头例子::
 
   x-image-meta-uri              http://glance.example.com/v1/images/71c675ab-d94f-49cd-a114-e12490b328d9
   x-image-meta-name             Ubuntu 10.04 Plain 5GB
@@ -238,29 +223,16 @@ following shows an example of the HTTP headers returned from the above
   be null or which will indicate the owner of the image
 
 
-获得镜像原始数据Retrieve Raw Image Data
-***********************
+获得镜像原始数据
+*************
 
-We want to retrieve that actual raw data for a specific virtual machine image
-that the Glance server knows about.
+我们想看看Glance服务器知道的指定虚拟机镜像的实际原始数据。
 
-We have queried the Glance server for a list of images and the
-data returned includes the `uri` field for each available image. This
-`uri` field value contains the exact location needed to get the metadata
-for a specific image.
+我们已经请求过Glance服务器的镜像列表，返回的数据包括每个可用镜像的 `uri` 字段。这个 `uri` 字段值包含需要获得制定镜像元数据的实际地址。
 
-Continuing the example from above, in order to get metadata about the
-first image returned, we can issue a ``HEAD`` request to the Glance
-server for the image's URI.
+我们发送 ``GET`` 请求到 ``http://glance.example.com/v1/images/71c675ab-d94f-49cd-a114-e12490b328d9`` 来获得镜像的元数据，同样镜像本身会编码在响应Body中。
 
-We issue a ``GET`` request to
-``http://glance.example.com/v1/images/71c675ab-d94f-49cd-a114-e12490b328d9`` to
-retrieve metadata for that image as well as the image itself encoded
-into the response body.
-
-The metadata is returned as a set of HTTP headers that begin with the
-prefix ``x-image-meta-``. The following shows an example of the HTTP headers
-returned from the above ``GET`` request::
+元数据是按照HTTP头集合的形式返回，这些都以 ``x-image-meta-`` 为前缀。下面展示从上面 ``GET`` 请求返回的HTTP头例子::
 
   x-image-meta-uri              http://glance.example.com/v1/images/71c675ab-d94f-49cd-a114-e12490b328d9
   x-image-meta-name             Ubuntu 10.04 Plain 5GB
@@ -308,8 +280,8 @@ returned from the above ``GET`` request::
   `application/octet-stream`.
 
 
-添加新的镜像Add a New Image
-***************
+添加新的镜像
+**********
 
 We have created a new virtual machine image in some way (created a
 "golden image" or snapshotted/backed up an existing image) and we
@@ -330,8 +302,8 @@ of the HTTP request to the Glance API will be the MIME-encoded disk
 image data.
 
 
-保留新的镜像Reserve a New Image
-*******************
+保留新的镜像
+**********
 
 We can also perform the activities described in `Add a New Image`_ using two
 separate calls to the Image API; the first to register the image metadata, and
@@ -352,7 +324,7 @@ The image data can then be added using a ``PUT`` to
 The image status will then be set to ``active`` by Glance.
 
 
-**镜像元数据的HTTP头Image Metadata in HTTP Headers**
+**镜像元数据的HTTP头**
 
 Glance will view as image metadata any HTTP header that it receives in a
 ``POST`` request where the header key is prefixed with the strings
@@ -486,9 +458,8 @@ The list of metadata headers that Glance accepts are listed below.
   size of all HTTP headers sent in a request will effectively limit the number
   of image properties.
 
-
-Update an Image
-***************
+更新镜像
+*******
 
 Glance will view as image metadata any HTTP header that it receives in a
 ``PUT`` request where the header key is prefixed with the strings
@@ -505,8 +476,8 @@ headers.
 See more about image statuses here: :doc:`Image Statuses <statuses>`
 
 
-列举镜像成员关系（Membership）List Image Memberships
-**********************
+列举镜像成员关系（Membership）
+**************************
 
 We want to see a list of the other system tenants (or users, if
 "owner_is_tenant" is False) that may access a given virtual machine image that
@@ -529,8 +500,8 @@ that tenant is authorized to further share the image, the `can_share` field is
 `true`.
 
 
-列举共享的镜像List Shared Images
-******************
+列举共享的镜像
+************
 
 We want to see a list of images which are shared with a given tenant.  We issue
 a ``GET`` request to ``http://glance.example.com/v1/shared-images/tenant1``.  We
@@ -546,8 +517,8 @@ The `image_id` field identifies an image shared with the tenant named by
 `can_share` field is `true`.
 
 
-添加镜像成员Add a Member to an Image
-************************
+添加镜像成员
+**********
 
 We want to authorize a tenant to access a private image.  We issue a ``PUT``
 request to
@@ -565,16 +536,16 @@ If such a body is provided, both existing and new memberships will have
 will return a 204 ("No Content") status code.
 
 
-从镜像中移除成员Remove a Member from an Image
-*****************************
+从镜像中移除成员
+*************
 
 We want to revoke a tenant's right to access a private image.  We issue a
 ``DELETE`` request to ``http://glance.example.com/v1/images/1/members/tenant1``.
 This query will return a 204 ("No Content") status code.
 
 
-代替镜像的成员关系列表Replace a Membership List for an Image
-**************************************
+代替镜像的成员关系列表
+******************
 
 The full membership list for a given image may be replaced.  We issue a ``PUT``
 request to
@@ -593,8 +564,8 @@ setting to remain unchanged in the existing memberships.)  All new memberships
 will be created, with `can_share` defaulting to `false` if it is not specified.
 
 
-在2.0版本镜像成员的修改Image Membership Changes in Version 2.0
----------------------------------------
+在2.0版本镜像成员的修改
+--------------------
 
 Version 2.0 of the Images API eliminates the ``can_share`` attribute of image
 membership.  In the version 2.0 model, image sharing is not transitive.
@@ -615,8 +586,8 @@ image should be treated with respect to that image member's image list.
   status of a member.
 
 
-1.x API调用的区别Distinctions from Version 1.x API Calls
-***************************************
+1.x API调用的区别
+****************
 
 * The response to a request to list the members of an image has changed.
 
@@ -636,8 +607,8 @@ image should be treated with respect to that image member's image list.
 
   The member status of a newly created image member is ``pending``.
 
-新API调用New API Calls
-*************
+新API调用
+*********
 
 * Change the status of an image member
 
