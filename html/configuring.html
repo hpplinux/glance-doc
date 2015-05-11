@@ -85,8 +85,8 @@ This pathname for the paste config is configurable, as follows:</p>
 config_file = /path/to/paste/config
 </pre></div>
 </div>
-<div class="section" id="common-configuration-options-in-glance">
-<h2>Common Configuration Options in Glance<a class="headerlink" href="#common-configuration-options-in-glance" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="glance">
+<h2>Glance的通用配置项<a class="headerlink" href="#glance" title="Permalink to this headline">¶</a></h2>
 <p>Glance has a few command-line options that are common to all Glance programs:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">--verbose</span></code></li>
@@ -160,8 +160,8 @@ the same section and name set in the other two. Similarly, options in
 This tool is planning to stop loading <code class="docutils literal"><span class="pre">glance-registry.conf</span></code> and
 <code class="docutils literal"><span class="pre">glance-api.conf</span></code> in a future cycle.</p>
 </div>
-<div class="section" id="configuring-server-startup-options">
-<h2>Configuring Server Startup Options<a class="headerlink" href="#configuring-server-startup-options" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>配置服务器启动选项<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>You can put the following options in the <code class="docutils literal"><span class="pre">glance-api.conf</span></code> and
 <code class="docutils literal"><span class="pre">glance-registry.conf</span></code> files, under the <code class="docutils literal"><span class="pre">[DEFAULT]</span></code> section. They enable
 startup and binding behaviour for the API and registry servers, respectively.</p>
@@ -195,8 +195,8 @@ performance (especially if using SSL with compression enabled). Typically
 it is recommended to have one worker process per CPU. The value <cite>0</cite>
 will prevent any new processes from being created.</p>
 <p>Optional. Default: The number of CPUs available will be used by default.</p>
-<div class="section" id="configuring-ssl-support">
-<h3>Configuring SSL Support<a class="headerlink" href="#configuring-ssl-support" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="ssl">
+<h3>配置支持SSL<a class="headerlink" href="#ssl" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">cert_file=PATH</span></code></li>
 </ul>
@@ -217,8 +217,8 @@ certificates provided during an SSL handshake. This is ignored if
 <code class="docutils literal"><span class="pre">cert_file</span></code> and &#8216;&#8217;key_file`` are not set.</p>
 <p>Optional. Default: not enabled.</p>
 </div>
-<div class="section" id="configuring-registry-access">
-<h3>Configuring Registry Access<a class="headerlink" href="#configuring-registry-access" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="registry">
+<h3>配置Registry访问<a class="headerlink" href="#registry" title="Permalink to this headline">¶</a></h3>
 <p>There are a number of configuration options in Glance that control how
 the API server accesses the registry server.</p>
 <ul class="simple">
@@ -309,8 +309,8 @@ specified. Use this parameter to specify the region.</p>
 <p>Optional. Default: None</p>
 </div>
 </div>
-<div class="section" id="configuring-logging-in-glance">
-<h2>Configuring Logging in Glance<a class="headerlink" href="#configuring-logging-in-glance" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>配置Glance日志<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>There are a number of configuration options in Glance that control how Glance
 servers log messages.</p>
 <ul class="simple">
@@ -319,8 +319,8 @@ servers log messages.</p>
 <p>Optional. Default: <code class="docutils literal"><span class="pre">None</span></code></p>
 <p>Specified on the command line only.</p>
 <p>Takes a path to a configuration file to use for configuring logging.</p>
-<div class="section" id="logging-options-available-only-in-configuration-files">
-<h3>Logging Options Available Only in Configuration Files<a class="headerlink" href="#logging-options-available-only-in-configuration-files" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>日志选项仅在配置文件中有效<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>You will want to place the different logging options in the <strong>[DEFAULT]</strong> section
 in your application configuration file. As an example, you might do the following
 for the API server, in a configuration file called <code class="docutils literal"><span class="pre">etc/glance-api.conf</span></code>:</p>
@@ -354,8 +354,8 @@ more information on setting this format string.</p>
 <p>Defaults to False.</p>
 </div>
 </div>
-<div class="section" id="configuring-glance-storage-backends">
-<h2>Configuring Glance Storage Backends<a class="headerlink" href="#configuring-glance-storage-backends" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>配置Glance存储后端<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <p>There are a number of configuration options in Glance that control how Glance
 stores disk images. These configuration options are specified in the
 <code class="docutils literal"><span class="pre">glance-api.conf</span></code> config file in the section <code class="docutils literal"><span class="pre">[glance_store]</span></code>.</p>
@@ -377,8 +377,8 @@ in the format of glance.store.OPTION.Store.  Some available options for this
 option are (<code class="docutils literal"><span class="pre">filesystem</span></code>, <code class="docutils literal"><span class="pre">http</span></code>, <code class="docutils literal"><span class="pre">rbd</span></code>, <code class="docutils literal"><span class="pre">s3</span></code>, <code class="docutils literal"><span class="pre">swift</span></code>, <code class="docutils literal"><span class="pre">sheepdog</span></code>,
 <code class="docutils literal"><span class="pre">cinder</span></code>, <code class="docutils literal"><span class="pre">gridfs</span></code>, <code class="docutils literal"><span class="pre">vmware_datastore</span></code>)</p>
 </div>
-<div class="section" id="configuring-glance-image-size-limit">
-<h2>Configuring Glance Image Size Limit<a class="headerlink" href="#configuring-glance-image-size-limit" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2>配置Glance镜像大小限制<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration option is specified in the
 <code class="docutils literal"><span class="pre">glance-api.conf</span></code> config file in the section <code class="docutils literal"><span class="pre">[DEFAULT]</span></code>.</p>
 <ul class="simple">
@@ -389,8 +389,8 @@ option are (<code class="docutils literal"><span class="pre">filesystem</span></
 <p><strong>IMPORTANT NOTE</strong>: this value should only be increased after careful consideration
 and must be set to a value under 8 EB (9223372036854775808).</p>
 </div>
-<div class="section" id="configuring-glance-user-storage-quota">
-<h2>Configuring Glance User Storage Quota<a class="headerlink" href="#configuring-glance-user-storage-quota" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="glance-quota">
+<h2>配置Glance用户存储限额（Quota）<a class="headerlink" href="#glance-quota" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration option is specified in the
 <code class="docutils literal"><span class="pre">glance-api.conf</span></code> config file in the section <code class="docutils literal"><span class="pre">[DEFAULT]</span></code>.</p>
 <ul class="simple">
@@ -405,8 +405,8 @@ MegaBytes, GigaBytes and TeraBytes respectively. Default unit is Bytes.</p>
 <dt>Example values would be,</dt>
 <dd>user_storage_quota=20GB</dd>
 </dl>
-<div class="section" id="configuring-the-filesystem-storage-backend">
-<h3>Configuring the Filesystem Storage Backend<a class="headerlink" href="#configuring-the-filesystem-storage-backend" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>配置文件系统存储后端<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">filesystem_store_datadir=PATH</span></code></li>
 </ul>
@@ -432,8 +432,8 @@ will be logged and the BadStoreConfiguration exception will be raised.  If the G
 service has insufficient privileges to change file access permissions, a file will still
 be saved, but a warning message will appear in the Glance log.</p>
 </div>
-<div class="section" id="configuring-the-filesystem-storage-backend-with-multiple-stores">
-<h3>Configuring the Filesystem Storage Backend with multiple stores<a class="headerlink" href="#configuring-the-filesystem-storage-backend-with-multiple-stores" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>配置多个存储文件系统存储后端<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">filesystem_store_datadirs=PATH:PRIORITY</span></code></li>
 </ul>
@@ -462,8 +462,8 @@ will be chosen to store the image.</li>
 exception will be raised.</li>
 </ul>
 </div>
-<div class="section" id="configuring-the-swift-storage-backend">
-<h3>Configuring the Swift Storage Backend<a class="headerlink" href="#configuring-the-swift-storage-backend" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="swift">
+<h3>配置Swift存储后端<a class="headerlink" href="#swift" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">swift_store_auth_address=URL</span></code></li>
 </ul>
@@ -642,8 +642,8 @@ fails.
 Optional. Default: <code class="docutils literal"><span class="pre">0</span></code></p>
 </div>
 </div>
-<div class="section" id="configuring-multiple-swift-accounts-stores">
-<h2>Configuring Multiple Swift Accounts/Stores<a class="headerlink" href="#configuring-multiple-swift-accounts-stores" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h2>配置多个Swift账号和存储<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
 <p>In order to not store Swift account credentials in the database, and to
 have support for multiple accounts (or multiple Swift backing stores), a
 reference is stored in the database and the corresponding configuration
@@ -666,8 +666,8 @@ service will not be configured.</strong>
 <p>Can only be specified in configuration files.</p>
 <p><cite>This option is specific to the Swift storage backend.</cite></p>
 <p>Optional. Default: <code class="docutils literal"><span class="pre">False</span></code></p>
-<div class="section" id="configuring-the-s3-storage-backend">
-<h3>Configuring the S3 Storage Backend<a class="headerlink" href="#configuring-the-s3-storage-backend" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="s3">
+<h3>配置S3存储后端<a class="headerlink" href="#s3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">s3_store_host=URL</span></code></li>
 </ul>
@@ -753,8 +753,8 @@ equal to 5MB. The default is 10MB.</p>
 <p>The number of thread pools to perform a multipart upload
 in S3. The default is 10.</p>
 </div>
-<div class="section" id="configuring-the-rbd-storage-backend">
-<h3>Configuring the RBD Storage Backend<a class="headerlink" href="#configuring-the-rbd-storage-backend" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="rbd">
+<h3>配置RBD存储后端<a class="headerlink" href="#rbd" title="Permalink to this headline">¶</a></h3>
 <p><strong>Note</strong>: the RBD storage backend requires the python bindings for
 librados and librbd. These are in the python-ceph package on
 Debian-based distributions.</p>
@@ -804,8 +804,8 @@ ceph auth add client.glance -i /etc/glance/rbd.keyring
 </pre></div>
 </div>
 </div>
-<div class="section" id="configuring-the-sheepdog-storage-backend">
-<h3>Configuring the Sheepdog Storage Backend<a class="headerlink" href="#configuring-the-sheepdog-storage-backend" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sheepdog">
+<h3>配置Sheepdog存储后端<a class="headerlink" href="#sheepdog" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">sheepdog_store_address=ADDR</span></code></li>
 </ul>
@@ -829,8 +829,8 @@ ceph auth add client.glance -i /etc/glance/rbd.keyring
 <p>Images will be chunked into objects of this size (in megabytes).
 For best performance, this should be a power of two.</p>
 </div>
-<div class="section" id="configuring-the-cinder-storage-backend">
-<h3>Configuring the Cinder Storage Backend<a class="headerlink" href="#configuring-the-cinder-storage-backend" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="cinder">
+<h3>配置Cinder存储后端<a class="headerlink" href="#cinder" title="Permalink to this headline">¶</a></h3>
 <p><strong>Note</strong>: Currently Cinder store is a partial implementation.
 After Cinder expose &#8216;brick&#8217; library, and &#8216;Readonly-volume-attaching&#8217;,
 &#8216;volume-multiple-attaching&#8217; enhancement ready, the store will support
@@ -875,8 +875,8 @@ e.g. <a class="reference external" href="http://localhost:8776/v1/%(project_id)s
 <p>Can only be specified in configuration files.</p>
 <p>Allow to perform insecure SSL requests to cinder.</p>
 </div>
-<div class="section" id="configuring-the-vmware-storage-backend">
-<h3>Configuring the VMware Storage Backend<a class="headerlink" href="#configuring-the-vmware-storage-backend" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="vmware">
+<h3>配置VMWare存储后端<a class="headerlink" href="#vmware" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">vmware_server_host=ADDRESS</span></code></li>
 </ul>
@@ -969,8 +969,8 @@ retried upon connection related issues.</p>
 <p>Can only be specified in configuration files.</p>
 <p>Allow to perform insecure SSL requests to ESX/VC server.</p>
 </div>
-<div class="section" id="configuring-the-storage-endpoint">
-<h3>Configuring the Storage Endpoint<a class="headerlink" href="#configuring-the-storage-endpoint" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="endpoint">
+<h3>配置存储Endpoint<a class="headerlink" href="#endpoint" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">swift_store_endpoint=URL</span></code></li>
 </ul>
@@ -982,8 +982,8 @@ obtained by appending the container and object to the configured URL.
 e.g. <code class="docutils literal"><span class="pre">https://www.my-domain.com/v1/path_up_to_container</span></code></p>
 </div>
 </div>
-<div class="section" id="configuring-the-image-cache">
-<h2>Configuring the Image Cache<a class="headerlink" href="#configuring-the-image-cache" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id10">
+<h2>配置镜像缓存<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
 <p>Glance API servers can be configured to have a local image cache. Caching of
 image files is transparent and happens using a piece of middleware that can
 optionally be placed in the server application pipeline.</p>
@@ -991,8 +991,8 @@ optionally be placed in the server application pipeline.</p>
 &lt;component&gt;-paste.ini. You should not generally have to edit this file
 directly, as it ships with ready-made pipelines for all common deployment
 flavors.</p>
-<div class="section" id="enabling-the-image-cache-middleware">
-<h3>Enabling the Image Cache Middleware<a class="headerlink" href="#enabling-the-image-cache-middleware" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>启用镜像缓存中间件<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p>To enable the image cache middleware, the cache middleware must occur in
 the application pipeline <strong>after</strong> the appropriate context middleware.</p>
 <p>The cache middleware should be in your <code class="docutils literal"><span class="pre">glance-api-paste.ini</span></code> in a section
@@ -1014,8 +1014,8 @@ configuration file, select the appropriate deployment flavor like so:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="enabling-the-image-cache-management-middleware">
-<h3>Enabling the Image Cache Management Middleware<a class="headerlink" href="#enabling-the-image-cache-management-middleware" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>启用镜像缓存管理中间件<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <p>There is an optional <code class="docutils literal"><span class="pre">cachemanage</span></code> middleware that allows you to
 directly interact with cache images. Use this flavor in place of the
 <code class="docutils literal"><span class="pre">cache</span></code> flavor in your api config file.</p>
@@ -1023,8 +1023,8 @@ directly interact with cache images. Use this flavor in place of the
 <div>[paste_deploy]
 flavor = cachemanage</div></blockquote>
 </div>
-<div class="section" id="configuration-options-affecting-the-image-cache">
-<h3>Configuration Options Affecting the Image Cache<a class="headerlink" href="#configuration-options-affecting-the-image-cache" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>配置梗镜像缓存相关的选项<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">These configuration options must be set in both the glance-cache
@@ -1084,14 +1084,14 @@ to be run via cron on a regular basis. See more about this executable in
 <a class="reference internal" href="cache.html"><em>Controlling the Growth of the Image Cache</em></a></p>
 </div>
 </div>
-<div class="section" id="configuring-the-glance-registry">
-<h2>Configuring the Glance Registry<a class="headerlink" href="#configuring-the-glance-registry" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="glance-registry">
+<h2>配置Glance Registry<a class="headerlink" href="#glance-registry" title="Permalink to this headline">¶</a></h2>
 <p>There are a number of configuration options in Glance that control how
 this registry server operates. These configuration options are specified in the
 <code class="docutils literal"><span class="pre">glance-registry.conf</span></code> config file in the section <code class="docutils literal"><span class="pre">[DEFAULT]</span></code>.</p>
 <p><strong>IMPORTANT NOTE</strong>: The glance-registry service is only used in conjunction
 with the glance-api service when clients are using the v1 REST API. See
-<a class="reference internal" href="#configuring-glance-apis">Configuring Glance APIs</a> for more info.</p>
+<a href="#id18"><span class="problematic" id="id19">`Configuring Glance APIs`_</span></a> for more info.</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">sql_connection=CONNECTION_STRING</span></code> (<code class="docutils literal"><span class="pre">--sql-connection</span></code> when specified
 on command line)</li>
@@ -1126,8 +1126,8 @@ If the Glance API server parameter <code class="docutils literal"><span class="p
 the parameter <code class="docutils literal"><span class="pre">data_api</span></code> has been set to <code class="docutils literal"><span class="pre">glance.db.registry.api</span></code> the
 <code class="docutils literal"><span class="pre">enable_v2_registry</span></code> has to be set to <code class="docutils literal"><span class="pre">True</span></code></p>
 </div>
-<div class="section" id="configuring-notifications">
-<h2>Configuring Notifications<a class="headerlink" href="#configuring-notifications" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id14">
+<h2>配置通知<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <p>Glance can optionally generate notifications to be logged or sent to
 a message queue. The configuration options are specified in the
 <code class="docutils literal"><span class="pre">glance-api.conf</span></code> config file in the section <code class="docutils literal"><span class="pre">[DEFAULT]</span></code>.</p>
@@ -1150,8 +1150,8 @@ to disable all events within a group.</p>
 then &#8220;image.create&#8221; notification will not be sent after image is created and
 none of the notifications for metadefinition namespaces will be sent.</p>
 </div>
-<div class="section" id="configuring-glance-property-protections">
-<h2>Configuring Glance Property Protections<a class="headerlink" href="#configuring-glance-property-protections" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id15">
+<h2>配置Glance属性保护<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
 <p>Access to image meta properties may be configured using a
 <a class="reference internal" href="property-protections.html"><em>Property Protections Configuration file</em></a>.  The
 location for this file can be specified in the <code class="docutils literal"><span class="pre">glance-api.conf</span></code> config file
@@ -1168,8 +1168,8 @@ to specify property protections.</p>
 </ul>
 <p>Optional. Default: <code class="docutils literal"><span class="pre">roles</span></code>.</p>
 </div>
-<div class="section" id="configuring-glance-apis">
-<h2>Configuring Glance APIs<a class="headerlink" href="#configuring-glance-apis" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="glance-api">
+<h2>配置Glance API<a class="headerlink" href="#glance-api" title="Permalink to this headline">¶</a></h2>
 <p>The glance-api service implements versions 1 and 2 of the OpenStack
 Images API. Disable either version of the Images API using the
 following options:</p>
@@ -1187,8 +1187,8 @@ in order to use the v2 API, you must copy the necessary sql
 configuration from your glance-registry service to your
 glance-api configuration file.</p>
 </div>
-<div class="section" id="configuring-glance-tasks">
-<h2>Configuring Glance Tasks<a class="headerlink" href="#configuring-glance-tasks" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id16">
+<h2>配置Glance任务<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
 <p>Glance Tasks are implemented only for version 2 of the OpenStack Images API.</p>
 <p>The config value <code class="docutils literal"><span class="pre">task_time_to_live</span></code> is used to determine how long a task
 would be visible to the user after transitioning to either the <code class="docutils literal"><span class="pre">success</span></code> or
@@ -1215,8 +1215,8 @@ instantiated per executor instance.</p>
 <p>The default value for the <code class="docutils literal"><span class="pre">engine_mode</span></code> is <code class="docutils literal"><span class="pre">parallel</span></code>, whereas
 the default number of <code class="docutils literal"><span class="pre">max_workers</span></code> is <code class="docutils literal"><span class="pre">10</span></code>.</p>
 </div>
-<div class="section" id="configuring-glance-performance-profiling">
-<h2>Configuring Glance performance profiling<a class="headerlink" href="#configuring-glance-performance-profiling" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id17">
+<h2>配置Glance性能调优<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
 <p>Glance supports using osprofiler to trace the performance of each key internal
 handling, including RESTful API calling, DB operation and etc.</p>
 <p><code class="docutils literal"><span class="pre">Please</span> <span class="pre">be</span> <span class="pre">aware</span> <span class="pre">that</span> <span class="pre">Glance</span> <span class="pre">performance</span> <span class="pre">profiling</span> <span class="pre">is</span> <span class="pre">currently</span> <span class="pre">a</span> <span class="pre">work</span> <span class="pre">in</span>
@@ -1244,8 +1244,8 @@ to make profiling work as designed operator needs to make those values of HMAC
 key be consistent for all services in your deployment. Without HMAC key the
 profiling will not be triggered even profiling feature is enabled.</p>
 </div>
-<div class="section" id="configuring-glance-public-endpoint">
-<h2>Configuring Glance public endpoint<a class="headerlink" href="#configuring-glance-public-endpoint" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="glanceendpoint">
+<h2>配置Glance公共Endpoint<a class="headerlink" href="#glanceendpoint" title="Permalink to this headline">¶</a></h2>
 <p>This setting allows an operator to configure the endpoint URL that will
 appear in the Glance &#8220;versions&#8221; response (that is, the response to
 <code class="docutils literal"><span class="pre">GET</span> <span class="pre">/</span></code> ).  This can be necessary when the Glance API service is run
@@ -1259,8 +1259,8 @@ load balancer URL would be used for this value.</p>
 </ul>
 <p>Optional. Default: <code class="docutils literal"><span class="pre">None</span></code></p>
 </div>
-<div class="section" id="configuring-glance-digest-algorithm">
-<h2>Configuring Glance digest algorithm<a class="headerlink" href="#configuring-glance-digest-algorithm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="glance-digest">
+<h2>配置Glance消化（Digest）算法<a class="headerlink" href="#glance-digest" title="Permalink to this headline">¶</a></h2>
 <p>Digest algorithm which will be used for digital signature; the default is
 sha1 for a smooth upgrade process but the recommended value is sha256. Use the
 command:</p>
@@ -1276,8 +1276,8 @@ return a ValueError exception with &#8220;No such digest method&#8221; error.</p
 </ul>
 <p>Optional. Default: <code class="docutils literal"><span class="pre">sha1</span></code></p>
 </div>
-<div class="section" id="configuring-http-keepalive-option">
-<h2>Configuring http_keepalive option<a class="headerlink" href="#configuring-http-keepalive-option" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="http-keepalive">
+<h2>配置http_keepalive选项<a class="headerlink" href="#http-keepalive" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">http_keepalive=&lt;True|False&gt;</span></code></li>
 </ul>
@@ -1298,48 +1298,48 @@ you create a wsgi server.</p>
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
 <li><a class="reference internal" href="#">基本配置</a><ul>
-<li><a class="reference internal" href="#common-configuration-options-in-glance">Common Configuration Options in Glance</a></li>
-<li><a class="reference internal" href="#configuring-server-startup-options">Configuring Server Startup Options</a><ul>
-<li><a class="reference internal" href="#configuring-ssl-support">Configuring SSL Support</a></li>
-<li><a class="reference internal" href="#configuring-registry-access">Configuring Registry Access</a></li>
+<li><a class="reference internal" href="#glance">Glance的通用配置项</a></li>
+<li><a class="reference internal" href="#id2">配置服务器启动选项</a><ul>
+<li><a class="reference internal" href="#ssl">配置支持SSL</a></li>
+<li><a class="reference internal" href="#registry">配置Registry访问</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#configuring-logging-in-glance">Configuring Logging in Glance</a><ul>
-<li><a class="reference internal" href="#logging-options-available-only-in-configuration-files">Logging Options Available Only in Configuration Files</a></li>
+<li><a class="reference internal" href="#id3">配置Glance日志</a><ul>
+<li><a class="reference internal" href="#id4">日志选项仅在配置文件中有效</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#configuring-glance-storage-backends">Configuring Glance Storage Backends</a></li>
-<li><a class="reference internal" href="#configuring-glance-image-size-limit">Configuring Glance Image Size Limit</a></li>
-<li><a class="reference internal" href="#configuring-glance-user-storage-quota">Configuring Glance User Storage Quota</a><ul>
-<li><a class="reference internal" href="#configuring-the-filesystem-storage-backend">Configuring the Filesystem Storage Backend</a></li>
-<li><a class="reference internal" href="#configuring-the-filesystem-storage-backend-with-multiple-stores">Configuring the Filesystem Storage Backend with multiple stores</a></li>
-<li><a class="reference internal" href="#configuring-the-swift-storage-backend">Configuring the Swift Storage Backend</a></li>
+<li><a class="reference internal" href="#id5">配置Glance存储后端</a></li>
+<li><a class="reference internal" href="#id6">配置Glance镜像大小限制</a></li>
+<li><a class="reference internal" href="#glance-quota">配置Glance用户存储限额（Quota）</a><ul>
+<li><a class="reference internal" href="#id7">配置文件系统存储后端</a></li>
+<li><a class="reference internal" href="#id8">配置多个存储文件系统存储后端</a></li>
+<li><a class="reference internal" href="#swift">配置Swift存储后端</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#configuring-multiple-swift-accounts-stores">Configuring Multiple Swift Accounts/Stores</a><ul>
-<li><a class="reference internal" href="#configuring-the-s3-storage-backend">Configuring the S3 Storage Backend</a></li>
-<li><a class="reference internal" href="#configuring-the-rbd-storage-backend">Configuring the RBD Storage Backend</a></li>
-<li><a class="reference internal" href="#configuring-the-sheepdog-storage-backend">Configuring the Sheepdog Storage Backend</a></li>
-<li><a class="reference internal" href="#configuring-the-cinder-storage-backend">Configuring the Cinder Storage Backend</a></li>
-<li><a class="reference internal" href="#configuring-the-vmware-storage-backend">Configuring the VMware Storage Backend</a></li>
-<li><a class="reference internal" href="#configuring-the-storage-endpoint">Configuring the Storage Endpoint</a></li>
+<li><a class="reference internal" href="#id9">配置多个Swift账号和存储</a><ul>
+<li><a class="reference internal" href="#s3">配置S3存储后端</a></li>
+<li><a class="reference internal" href="#rbd">配置RBD存储后端</a></li>
+<li><a class="reference internal" href="#sheepdog">配置Sheepdog存储后端</a></li>
+<li><a class="reference internal" href="#cinder">配置Cinder存储后端</a></li>
+<li><a class="reference internal" href="#vmware">配置VMWare存储后端</a></li>
+<li><a class="reference internal" href="#endpoint">配置存储Endpoint</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#configuring-the-image-cache">Configuring the Image Cache</a><ul>
-<li><a class="reference internal" href="#enabling-the-image-cache-middleware">Enabling the Image Cache Middleware</a></li>
-<li><a class="reference internal" href="#enabling-the-image-cache-management-middleware">Enabling the Image Cache Management Middleware</a></li>
-<li><a class="reference internal" href="#configuration-options-affecting-the-image-cache">Configuration Options Affecting the Image Cache</a></li>
+<li><a class="reference internal" href="#id10">配置镜像缓存</a><ul>
+<li><a class="reference internal" href="#id11">启用镜像缓存中间件</a></li>
+<li><a class="reference internal" href="#id12">启用镜像缓存管理中间件</a></li>
+<li><a class="reference internal" href="#id13">配置梗镜像缓存相关的选项</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#configuring-the-glance-registry">Configuring the Glance Registry</a></li>
-<li><a class="reference internal" href="#configuring-notifications">Configuring Notifications</a></li>
-<li><a class="reference internal" href="#configuring-glance-property-protections">Configuring Glance Property Protections</a></li>
-<li><a class="reference internal" href="#configuring-glance-apis">Configuring Glance APIs</a></li>
-<li><a class="reference internal" href="#configuring-glance-tasks">Configuring Glance Tasks</a></li>
-<li><a class="reference internal" href="#configuring-glance-performance-profiling">Configuring Glance performance profiling</a></li>
-<li><a class="reference internal" href="#configuring-glance-public-endpoint">Configuring Glance public endpoint</a></li>
-<li><a class="reference internal" href="#configuring-glance-digest-algorithm">Configuring Glance digest algorithm</a></li>
-<li><a class="reference internal" href="#configuring-http-keepalive-option">Configuring http_keepalive option</a></li>
+<li><a class="reference internal" href="#glance-registry">配置Glance Registry</a></li>
+<li><a class="reference internal" href="#id14">配置通知</a></li>
+<li><a class="reference internal" href="#id15">配置Glance属性保护</a></li>
+<li><a class="reference internal" href="#glance-api">配置Glance API</a></li>
+<li><a class="reference internal" href="#id16">配置Glance任务</a></li>
+<li><a class="reference internal" href="#id17">配置Glance性能调优</a></li>
+<li><a class="reference internal" href="#glanceendpoint">配置Glance公共Endpoint</a></li>
+<li><a class="reference internal" href="#glance-digest">配置Glance消化（Digest）算法</a></li>
+<li><a class="reference internal" href="#http-keepalive">配置http_keepalive选项</a></li>
 </ul>
 </li>
 </ul>

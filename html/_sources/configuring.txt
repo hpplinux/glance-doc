@@ -55,8 +55,8 @@ This pathname for the paste config is configurable, as follows::
   config_file = /path/to/paste/config
 
 
-Common Configuration Options in Glance
---------------------------------------
+Glance的通用配置项
+----------------
 
 Glance has a few command-line options that are common to all Glance programs:
 
@@ -141,8 +141,8 @@ the same section and name set in the other two. Similarly, options in
 This tool is planning to stop loading ``glance-registry.conf`` and
 ``glance-api.conf`` in a future cycle.
 
-Configuring Server Startup Options
-----------------------------------
+配置服务器启动选项
+---------------
 
 You can put the following options in the ``glance-api.conf`` and
 ``glance-registry.conf`` files, under the ``[DEFAULT]`` section. They enable
@@ -183,8 +183,8 @@ will prevent any new processes from being created.
 
 Optional. Default: The number of CPUs available will be used by default.
 
-Configuring SSL Support
-~~~~~~~~~~~~~~~~~~~~~~~~~
+配置支持SSL
+~~~~~~~~~~
 
 * ``cert_file=PATH``
 
@@ -208,8 +208,8 @@ certificates provided during an SSL handshake. This is ignored if
 
 Optional. Default: not enabled.
 
-Configuring Registry Access
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置Registry访问
+~~~~~~~~~~~~~~~
 
 There are a number of configuration options in Glance that control how
 the API server accesses the registry server.
@@ -308,9 +308,8 @@ specified. Use this parameter to specify the region.
 
 Optional. Default: None
 
-
-Configuring Logging in Glance
------------------------------
+配置Glance日志
+-------------
 
 There are a number of configuration options in Glance that control how Glance
 servers log messages.
@@ -323,8 +322,8 @@ Specified on the command line only.
 
 Takes a path to a configuration file to use for configuring logging.
 
-Logging Options Available Only in Configuration Files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+日志选项仅在配置文件中有效
+~~~~~~~~~~~~~~~~~~~~~~
 
 You will want to place the different logging options in the **[DEFAULT]** section
 in your application configuration file. As an example, you might do the following
@@ -359,8 +358,8 @@ Use syslog logging functionality.
 
 Defaults to False.
 
-Configuring Glance Storage Backends
------------------------------------
+配置Glance存储后端
+----------------
 
 There are a number of configuration options in Glance that control how Glance
 stores disk images. These configuration options are specified in the
@@ -386,8 +385,8 @@ in the format of glance.store.OPTION.Store.  Some available options for this
 option are (``filesystem``, ``http``, ``rbd``, ``s3``, ``swift``, ``sheepdog``,
 ``cinder``, ``gridfs``, ``vmware_datastore``)
 
-Configuring Glance Image Size Limit
------------------------------------
+配置Glance镜像大小限制
+--------------------
 
 The following configuration option is specified in the
 ``glance-api.conf`` config file in the section ``[DEFAULT]``.
@@ -401,8 +400,8 @@ Maximum image size, in bytes, which can be uploaded through the Glance API serve
 **IMPORTANT NOTE**: this value should only be increased after careful consideration
 and must be set to a value under 8 EB (9223372036854775808).
 
-Configuring Glance User Storage Quota
--------------------------------------
+配置Glance用户存储限额（Quota）
+---------------------------
 
 The following configuration option is specified in the
 ``glance-api.conf`` config file in the section ``[DEFAULT]``.
@@ -419,8 +418,8 @@ MegaBytes, GigaBytes and TeraBytes respectively. Default unit is Bytes.
 Example values would be,
     user_storage_quota=20GB
 
-Configuring the Filesystem Storage Backend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置文件系统存储后端
+~~~~~~~~~~~~~~~~~
 
 * ``filesystem_store_datadir=PATH``
 
@@ -452,8 +451,8 @@ will be logged and the BadStoreConfiguration exception will be raised.  If the G
 service has insufficient privileges to change file access permissions, a file will still
 be saved, but a warning message will appear in the Glance log.
 
-Configuring the Filesystem Storage Backend with multiple stores
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置多个存储文件系统存储后端
+~~~~~~~~~~~~~~~~~~~~~~~
 
 * ``filesystem_store_datadirs=PATH:PRIORITY``
 
@@ -484,8 +483,8 @@ Each directory can be coupled with its priority.
 * If same store is specified multiple times then BadStoreConfiguration
   exception will be raised.
 
-Configuring the Swift Storage Backend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置Swift存储后端
+~~~~~~~~~~~~~~~
 
 * ``swift_store_auth_address=URL``
 
@@ -715,8 +714,8 @@ The number of times a Swift download will be retried before the request
 fails.
 Optional. Default: ``0``
 
-Configuring Multiple Swift Accounts/Stores
-------------------------------------------
+配置多个Swift账号和存储
+--------------------
 
 In order to not store Swift account credentials in the database, and to
 have support for multiple accounts (or multiple Swift backing stores), a
@@ -750,8 +749,8 @@ Can only be specified in configuration files.
 
 Optional. Default: ``False``
 
-Configuring the S3 Storage Backend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置S3存储后端
+~~~~~~~~~~~~
 
 * ``s3_store_host=URL``
 
@@ -872,8 +871,8 @@ Can only be specified in configuration files.
 The number of thread pools to perform a multipart upload
 in S3. The default is 10.
 
-Configuring the RBD Storage Backend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置RBD存储后端
+~~~~~~~~~~~~~
 
 **Note**: the RBD storage backend requires the python bindings for
 librados and librbd. These are in the python-ceph package on
@@ -936,8 +935,8 @@ To set up a user named ``glance`` with minimal permissions, using a pool called
   ceph-authtool --gen-key --name client.glance --cap mon 'allow r' --cap osd 'allow rwx pool=images' /etc/glance/rbd.keyring
   ceph auth add client.glance -i /etc/glance/rbd.keyring
 
-Configuring the Sheepdog Storage Backend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置Sheepdog存储后端
+~~~~~~~~~~~~~~~~~~
 
 * ``sheepdog_store_address=ADDR``
 
@@ -970,8 +969,8 @@ Can only be specified in configuration files.
 Images will be chunked into objects of this size (in megabytes).
 For best performance, this should be a power of two.
 
-Configuring the Cinder Storage Backend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置Cinder存储后端
+~~~~~~~~~~~~~~~~
 
 **Note**: Currently Cinder store is a partial implementation.
 After Cinder expose 'brick' library, and 'Readonly-volume-attaching',
@@ -1030,8 +1029,8 @@ Can only be specified in configuration files.
 
 Allow to perform insecure SSL requests to cinder.
 
-Configuring the VMware Storage Backend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置VMWare存储后端
+~~~~~~~~~~~~~~~~
 
 * ``vmware_server_host=ADDRESS``
 
@@ -1144,8 +1143,8 @@ Can only be specified in configuration files.
 
 Allow to perform insecure SSL requests to ESX/VC server.
 
-Configuring the Storage Endpoint
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置存储Endpoint
+~~~~~~~~~~~~~~~
 
 * ``swift_store_endpoint=URL``
 
@@ -1158,8 +1157,8 @@ path up to and excluding the container. The location of an object is
 obtained by appending the container and object to the configured URL.
 e.g. ``https://www.my-domain.com/v1/path_up_to_container``
 
-Configuring the Image Cache
----------------------------
+配置镜像缓存
+----------
 
 Glance API servers can be configured to have a local image cache. Caching of
 image files is transparent and happens using a piece of middleware that can
@@ -1170,8 +1169,8 @@ This pipeline is configured in the PasteDeploy configuration file,
 directly, as it ships with ready-made pipelines for all common deployment
 flavors.
 
-Enabling the Image Cache Middleware
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+启用镜像缓存中间件
+~~~~~~~~~~~~~~~
 
 To enable the image cache middleware, the cache middleware must occur in
 the application pipeline **after** the appropriate context middleware.
@@ -1194,8 +1193,8 @@ configuration file, select the appropriate deployment flavor like so::
   [paste_deploy]
   flavor = caching
 
-Enabling the Image Cache Management Middleware
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+启用镜像缓存管理中间件
+~~~~~~~~~~~~~~~~~~
 
 There is an optional ``cachemanage`` middleware that allows you to
 directly interact with cache images. Use this flavor in place of the
@@ -1204,8 +1203,8 @@ directly interact with cache images. Use this flavor in place of the
   [paste_deploy]
   flavor = cachemanage
 
-Configuration Options Affecting the Image Cache
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+配置梗镜像缓存相关的选项
+~~~~~~~~~~~~~~~~~~~~
 
 .. note::
 
@@ -1267,9 +1266,8 @@ to or less than this value. The ``glance-cache-pruner`` executable is designed
 to be run via cron on a regular basis. See more about this executable in
 :doc:`Controlling the Growth of the Image Cache <cache>`
 
-
-Configuring the Glance Registry
--------------------------------
+配置Glance Registry
+-------------------
 
 There are a number of configuration options in Glance that control how
 this registry server operates. These configuration options are specified in the
@@ -1317,9 +1315,8 @@ If the Glance API server parameter ``enable_v2_api`` has been set to ``True`` an
 the parameter ``data_api`` has been set to ``glance.db.registry.api`` the
 ``enable_v2_registry`` has to be set to ``True``
 
-
-Configuring Notifications
--------------------------
+配置通知
+-------
 
 Glance can optionally generate notifications to be logged or sent to
 a message queue. The configuration options are specified in the
@@ -1347,8 +1344,8 @@ Example: if this config option is set to ["image.create", "metadef_namespace"],
 then "image.create" notification will not be sent after image is created and
 none of the notifications for metadefinition namespaces will be sent.
 
-Configuring Glance Property Protections
----------------------------------------
+配置Glance属性保护
+----------------
 
 Access to image meta properties may be configured using a
 :doc:`Property Protections Configuration file <property-protections>`.  The
@@ -1367,8 +1364,8 @@ to specify property protections.
 
 Optional. Default: ``roles``.
 
-Configuring Glance APIs
------------------------
+配置Glance API
+--------------
 
 The glance-api service implements versions 1 and 2 of the OpenStack
 Images API. Disable either version of the Images API using the
@@ -1388,8 +1385,8 @@ in order to use the v2 API, you must copy the necessary sql
 configuration from your glance-registry service to your
 glance-api configuration file.
 
-Configuring Glance Tasks
-------------------------
+配置Glance任务
+-------------
 
 Glance Tasks are implemented only for version 2 of the OpenStack Images API.
 
@@ -1421,8 +1418,8 @@ instantiated per executor instance.
 The default value for the ``engine_mode`` is ``parallel``, whereas
 the default number of ``max_workers`` is ``10``.
 
-Configuring Glance performance profiling
-----------------------------------------
+配置Glance性能调优
+----------------
 
 Glance supports using osprofiler to trace the performance of each key internal
 handling, including RESTful API calling, DB operation and etc.
@@ -1455,8 +1452,8 @@ to make profiling work as designed operator needs to make those values of HMAC
 key be consistent for all services in your deployment. Without HMAC key the
 profiling will not be triggered even profiling feature is enabled.
 
-Configuring Glance public endpoint
-----------------------------------
+配置Glance公共Endpoint
+---------------------
 
 This setting allows an operator to configure the endpoint URL that will
 appear in the Glance "versions" response (that is, the response to
@@ -1471,8 +1468,8 @@ load balancer URL would be used for this value.
 
 Optional. Default: ``None``
 
-Configuring Glance digest algorithm
------------------------------------
+配置Glance消化（Digest）算法
+-------------------------
 
 Digest algorithm which will be used for digital signature; the default is
 sha1 for a smooth upgrade process but the recommended value is sha256. Use the
@@ -1489,8 +1486,8 @@ return a ValueError exception with "No such digest method" error.
 
 Optional. Default: ``sha1``
 
-Configuring http_keepalive option
-----------------------------------
+配置http_keepalive选项
+---------------------
 
 * ``http_keepalive=<True|False>``
 
